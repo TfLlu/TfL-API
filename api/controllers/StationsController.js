@@ -19,7 +19,7 @@ var stationsUrl = 'http://travelplanner.mobiliteit.lu'
 module.exports = {
 
 	list: function(req, res) {
-		var result = [];
+		var result = {};
 
 		// load stations from remote url
 		request(stationsUrl, function (error, response, body) {
@@ -32,18 +32,13 @@ module.exports = {
 						var keyVal = paramParts[j].split('=', 2);
 						params[keyVal[0]] = keyVal[1];
 					}
-					result.push({
-						id: parseInt(params.L, 10),
+					var id = parseInt(params.L, 10);
+					result[id] ={
 						name: params.O,
 						longitude: parseFloat(params.X.replace(',', '.')),
 						latitude: parseFloat(params.Y.replace(',', '.'))
-					});
+					};
 				}
-
-				// sort result by id
-				result.sort(function(a, b) {
-  					return a.id - b.id;
-				});
 
 				res.json(result);
 			}
