@@ -46,6 +46,7 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  'get /stations': 'StationsController.list'
+  'get /stations': 'StationsController.list',
+  'get /stations/:id': 'StationsController.get'
 
 };
