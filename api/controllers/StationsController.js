@@ -24,7 +24,7 @@ module.exports = {
 		// load stations from remote url
 		request(stationsUrl, function (error, response, body) {
 			if (!error && response.statusCode == 200) {
-				var stations = body.split("\n");
+				var stations = body.trim().split("\n");
 				for (var i = 0; i < stations.length; i++) {
 					var paramParts = stations[i].split('@');
 					var params = {};
@@ -33,10 +33,10 @@ module.exports = {
 						params[keyVal[0]] = keyVal[1];
 					}
 					result.push({
-						id: params.L,
+						id: parseInt(params.L, 10),
 						name: params.O,
-						longitude: params.X,
-						latitude: params.Y
+						longitude: parseFloat(params.X.replace(',', '.')),
+						latitude: parseFloat(params.Y.replace(',', '.'))
 					});
 				}
 
