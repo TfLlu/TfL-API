@@ -40,6 +40,11 @@ module.exports = {
 					});
 				}
 
+				// sort result by id
+				result.sort(function(a, b) {
+  					return a.id - b.id;
+				});
+
 				res.json(result);
 			}
 		});
