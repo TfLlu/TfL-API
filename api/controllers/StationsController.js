@@ -33,7 +33,7 @@ module.exports = {
 						params[keyVal[0]] = keyVal[1];
 					}
 					result.push({
-						id: params.id,
+						id: params.L,
 						name: params.O,
 						longitude: params.X,
 						latitude: params.Y
