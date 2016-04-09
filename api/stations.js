@@ -63,6 +63,14 @@ module.exports = {
             }
             return null;
         });
-	}
+	},
+
+    search: function(name) {
+        return this.list().then(function(stations) {
+            return stations.filter(function(station) {
+                return station.name.indexOf(name) >= 0;
+            });
+        });
+    }
 
 };

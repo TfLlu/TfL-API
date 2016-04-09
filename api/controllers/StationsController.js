@@ -19,6 +19,12 @@ module.exports = {
 		stations.get(req.params.id).then(function(result) {
 			res.json(result);
 		});
+	},
+
+	search: function(req, res) {
+		stations.search(req.params.id).then(function(result) {
+			res.json(result);
+		});
 	}
 
 };
