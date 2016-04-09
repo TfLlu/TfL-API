@@ -22,7 +22,14 @@ module.exports = {
 	},
 
 	search: function(req, res) {
-		stations.search(req.params.id).then(function(result) {
+		stations.search(req.params.name).then(function(result) {
+			res.json(result);
+		});
+	},
+
+	nearby: function(req, res) {
+		stations.nearby(req.param('lon'), req.param('lat'), req.param('distance'))
+		.then(function(result) {
 			res.json(result);
 		});
 	}

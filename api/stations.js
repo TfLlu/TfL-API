@@ -1,28 +1,35 @@
 var request = require('request'),
+    querystring = require('querystring'),
     Q = require('q');
 
-var stationsUrl = 'http://travelplanner.mobiliteit.lu'
-	+ '/hafas/query.exe/dot'
-  	+ '?performLocating=2'
-  	+ '&tpl=stop2csv'
-  	+ '&look_maxdist=150000'
-  	+ '&look_x=6112550'
-  	+ '&look_y=49610700'
-  	+ '&stationProxy=yes';
+var apiHost = 'http://travelplanner.mobiliteit.lu';
+var apiEndpoint = '/hafas/query.exe/dot';
+var apiQuery = {
+    performLocating: 2,
+    tpl: 'stop2csv',
+    look_maxdist: 9999999999,
+    look_x: 6112550,
+    look_y: 49610700,
+    stationProxy: 'yes'
+};
 
 var stationsCache;
 
 module.exports = {
 
-	list: function() {
-        if (stationsCache)
+	list: function(query) {
+        if (!query && stationsCache)
             return stationsCache;
 
 		var result = [];
         var deferred = Q.defer();
+        if (!query)
+            stationsCache = deferred.promise;
+
+        query = Object.assign({}, apiQuery, query || {});
 
 		// load stations from remote url
-		request(stationsUrl, function (error, response, body) {
+		request(apiHost + apiEndpoint + '?' + querystring.stringify(query), function (error, response, body) {
 			if (!error && response.statusCode == 200) {
 				var stations = body.trim().split("\n");
 				for (var i = 0; i < stations.length; i++) {
@@ -51,8 +58,7 @@ module.exports = {
             }
 		});
 
-        stationsCache = deferred.promise;
-        return stationsCache;
+        return deferred.promise;
 	},
 
 	get: function(id) {
@@ -71,6 +77,15 @@ module.exports = {
             return stations.filter(function(station) {
                 return station.name.toLowerCase().indexOf(name) >= 0;
             });
+        });
+    },
+
+    nearby: function(lon, lat, distance) {
+        distance = distance || 1000;
+        return this.list({
+            look_maxdist: distance,
+            look_x: lon,
+            look_y: lat
         });
     }
 
