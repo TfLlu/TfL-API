@@ -2,6 +2,19 @@ var request = require('request'),
     querystring = require('querystring'),
     Q = require('q');
 
+var distance = function(lat1, lon1, lat2, lon2) {
+	var R = 6378137;
+	var dLat = (lat2 - lat1) * Math.PI / 180;
+	var dLon = (lon2 - lon1) * Math.PI / 180;
+	var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+		Math.cos(lat1 * Math.PI / 180 ) * Math.cos(lat2 * Math.PI / 180 ) *
+		Math.sin(dLon / 2) * Math.sin(dLon / 2);
+	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	var d = R * c;
+    console.log(d);
+    return d;
+}
+
 var apiHost = 'http://travelplanner.mobiliteit.lu';
 var apiEndpoint = '/hafas/query.exe/dot';
 var apiQuery = {
@@ -80,12 +93,17 @@ module.exports = {
         });
     },
 
-    nearby: function(lon, lat, distance) {
-        distance = distance || 1000;
-        return this.list({
-            look_maxdist: distance,
-            look_x: lon,
-            look_y: lat
+    nearby: function(lon, lat, maxDistance) {
+        maxDistance = maxDistance || 1000;
+        return this.list().then(function(stations) {
+            return stations.filter(function(station) {
+                return distance(
+                    parseFloat(lat),
+                    parseFloat(lon),
+                    station.latitude,
+                    station.longitude
+                ) <= maxDistance;
+            });
         });
     }
 
