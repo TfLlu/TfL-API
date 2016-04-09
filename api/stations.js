@@ -66,9 +66,10 @@ module.exports = {
 	},
 
     search: function(name) {
+        name = name.toLowerCase();
         return this.list().then(function(stations) {
             return stations.filter(function(station) {
-                return station.name.indexOf(name) >= 0;
+                return station.name.toLowerCase().indexOf(name) >= 0;
             });
         });
     }
