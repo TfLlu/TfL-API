@@ -1,10 +1,13 @@
 var request = require('request'),
+    querystring = require('querystring'),
     Q = require('q');
 
-var departuresUrl = 'http://travelplanner.mobiliteit.lu/restproxy/departureBoard'
-	+ '?accessId=cdt'
-	+ '&format=json'
-	+ '&id=';
+var apiHost = 'http://travelplanner.mobiliteit.lu';
+var apiEndpoint = '/restproxy/departureBoard';
+var apiQuery = {
+    accessId: 'cdt',
+    format: 'json'
+};
 
 module.exports = {
 
@@ -13,7 +16,11 @@ module.exports = {
         var deferred = Q.defer();
 
         var specialId = 'A=1@L=' + id;
-        request(departuresUrl + encodeURI(specialId), function (error, response, body) {
+        var query = Object.assign({}, apiQuery, {
+            id: specialId
+        });
+
+        request(apiHost + apiEndpoint + '?' + querystring.stringify(query), function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 var departures = JSON.parse(body).Departure;
                 if (departures) {
