@@ -46,12 +46,12 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  'get /stations': 'StationsController.list',
-  'get /stations/:id': 'StationsController.get',
-  'get /stations/search/:name': 'StationsController.search',
-  'get /stations/nearby/:lon/:lat': 'StationsController.nearby',
-  'get /stations/nearby/:lon/:lat/:distance': 'StationsController.nearby',
+  'GET /stations': 'StationsController.list',
+  'GET /stations/:id': 'StationsController.get',
+  'GET /stations/search/:name': 'StationsController.search',
+  'GET /stations/nearby/:lon/:lat': 'StationsController.nearby',
+  'GET /stations/nearby/:lon/:lat/:distance': 'StationsController.nearby',
 
-  'get /departures/:id': 'DeparturesController.list'
+  'GET /departures/:id': 'DeparturesController.list'
 
 };
