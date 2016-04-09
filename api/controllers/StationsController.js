@@ -15,6 +15,12 @@ module.exports = {
 			var format = req.param('format');
 			if (format && formatter[format]) {
 				result = result.map(formatter[format]);
+				if (format == 'geojson') {
+					result = {
+						type: 'FeatureCollection',
+  						features: result
+					}
+				}
 			}
 			res.json(result);
 		});
@@ -35,6 +41,12 @@ module.exports = {
 			var format = req.param('format');
 			if (format && formatter[format]) {
 				result = result.map(formatter[format]);
+				if (format == 'geojson') {
+					result = {
+						type: 'FeatureCollection',
+  						features: result
+					}
+				}
 			}
 			res.json(result);
 		});
@@ -46,6 +58,12 @@ module.exports = {
 			var format = req.param('format');
 			if (format && formatter[format]) {
 				result = result.map(formatter[format]);
+				if (format == 'geojson') {
+					result = {
+						type: 'FeatureCollection',
+  						features: result
+					}
+				}
 			}
 			res.json(result);
 		});

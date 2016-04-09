@@ -5,7 +5,7 @@ module.exports = {
             type: 'Feature',
             geometry: {
                 type: 'Point',
-                coordinates: [data.latitude, data.longitude]
+                coordinates: [data.longitude, data.latitude]
             },
             properties: {
                 id: data.id,
