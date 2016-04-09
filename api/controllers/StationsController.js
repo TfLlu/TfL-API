@@ -22,12 +22,20 @@ module.exports = {
 
 	get: function(req, res) {
 		stations.get(req.params.id).then(function(result) {
+			var format = req.param('format');
+			if (format && formatter[format]) {
+				result = formatter[format](result);
+			}
 			res.json(result);
 		});
 	},
 
 	search: function(req, res) {
 		stations.search(req.params.name).then(function(result) {
+			var format = req.param('format');
+			if (format && formatter[format]) {
+				result = result.map(formatter[format]);
+			}
 			res.json(result);
 		});
 	},
@@ -35,6 +43,10 @@ module.exports = {
 	nearby: function(req, res) {
 		stations.nearby(req.param('lon'), req.param('lat'), req.param('distance'))
 		.then(function(result) {
+			var format = req.param('format');
+			if (format && formatter[format]) {
+				result = result.map(formatter[format]);
+			}
 			res.json(result);
 		});
 	}

@@ -93,7 +93,6 @@ module.exports = {
     },
 
     nearby: function(lon, lat, maxDistance) {
-        maxDistance = maxDistance || 1000;
         return this.list().then(function(stations) {
             return stations.filter(function(station) {
                 return distance(
