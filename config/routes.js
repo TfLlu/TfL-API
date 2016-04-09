@@ -47,6 +47,7 @@ module.exports.routes = {
   ***************************************************************************/
 
   'GET /stations': 'StationsController.list',
+  'GET /stations.:format': 'StationsController.list',
   'GET /stations/:id': 'StationsController.get',
   'GET /stations/search/:name': 'StationsController.search',
   'GET /stations/nearby/:lon/:lat': 'StationsController.nearby',

@@ -5,12 +5,17 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
-var stations = require('../stations.js');
+var stations = require('../stations.js'),
+formatter = require('../stations/formatter.js');
 
 module.exports = {
 
 	list: function(req, res) {
 		stations.list().then(function(result) {
+			var format = req.param('format');
+			if (format && formatter[format]) {
+				result = result.map(formatter[format]);
+			}
 			res.json(result);
 		});
 	},
