@@ -55,6 +55,7 @@ module.exports.routes = {
   'GET /stations.:format': 'StationsController.list',
   'GET /stations': 'StationsController.list',
 
+  'GET /departures/live/:id': 'DeparturesController.live',
   'GET /departures/:id': 'DeparturesController.list'
 
 };
