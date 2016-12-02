@@ -1,5 +1,5 @@
-import Koa       from 'koa';
-import KoaRouter from 'koa-router';
+import Koa        from 'koa';
+import KoaRouter  from 'koa-router';
 import controller from './controller';
 
 const app    = new Koa();
