@@ -1,5 +1,6 @@
-const gulp = require('gulp');
-const babel = require('gulp-babel');
+const gulp        = require('gulp');
+const babel       = require('gulp-babel');
+const nodemon     = require('gulp-nodemon');
 
 // https://gist.github.com/just-boris/89ee7c1829e87e2db04c
 function wrapPipe(taskFn) {
@@ -26,3 +27,12 @@ gulp.task('build', wrapPipe(function(success, error) {
         .pipe(babel().on('error', error))
         .pipe(gulp.dest('dist'));
 }));
+
+gulp.task('nodemon', () => {
+    return nodemon({
+        script: 'dist/index.js',
+        watch: [ 'dist' ]
+    });
+});
+
+gulp.task('develop', ['default', 'nodemon']);
