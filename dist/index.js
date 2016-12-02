@@ -16,6 +16,10 @@ var _monitor = require('./monitor');
 
 var _monitor2 = _interopRequireDefault(_monitor);
 
+var _config = require('./config');
+
+var _config2 = _interopRequireDefault(_config);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const app = new _koa2.default();
@@ -25,4 +29,4 @@ router.get('/', _controller2.default.home.index);
 
 app.use(_monitor2.default).use(router.routes()).use(router.allowedMethods());
 
-app.listen(9000);
+app.listen((0, _config2.default)('SERVER_PORT', true));

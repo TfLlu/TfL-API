@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/TfLlu/TfL-API#readme",
   "dependencies": {
+    "dotenv": "^2.0.0",
     "koa": "^2.0.0",
     "koa-router": "^7.0.1",
     "request": "^2.79.0",
