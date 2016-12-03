@@ -18,11 +18,13 @@ function wrapPipe(taskFn) {
     };
 }
 
-gulp.task('default', function() { // (D)
-    gulp.watch('src/**/*.js', ['build']);
+gulp.task('default', [ 'nodemon' ]);
+
+gulp.task('watch', () => {
+    gulp.watch('src/**/*.js', [ 'build' ]);
 });
 
-gulp.task('build', wrapPipe(function(success, error) {
+gulp.task('build', wrapPipe((success, error) => {
     return gulp.src('src/**/*.js')
         .pipe(babel().on('error', error))
         .pipe(gulp.dest('dist'));
@@ -31,7 +33,8 @@ gulp.task('build', wrapPipe(function(success, error) {
 gulp.task('nodemon', () => {
     return nodemon({
         script: 'dist/index.js',
-        watch: [ 'dist' ]
+        watch: [ 'src' ],
+        tasks: [ 'build' ]
     });
 });
 
