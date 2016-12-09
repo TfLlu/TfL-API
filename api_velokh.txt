@@ -1,0 +1,13 @@
+x number
+x name
+x address
+x position.lat
+x position.lng
+- banking
+- bonus
+x status
+- contract_name
+x bike_stands
+x available_bike_stands
+x available_bikes
+x last_update

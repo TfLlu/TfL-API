@@ -1,0 +1,19 @@
+x nstation
+x nom
+x lieu
+x latitude
+x longitude
+x nomlocalite
+- nomcommune
+x urlphoto
+- urlvignette
+- urlpicto
+x active
+x bikes
+x ebikes
+x attaches
+x libres
+attache1
+attache2
+
+attacheN
