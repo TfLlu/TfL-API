@@ -1,27 +1,13 @@
 import request from 'request-promise-native';
-import {parseString} from 'xml2js';
-
-var xmlOptions = {
-    async: true,
-    trim: true,
-    explicitArray: false
-};
+import xmlParser from '../../helpers/xmlParser';
 
 const getRaw = () => request('https://webservice.velok.lu/station.aspx');
 
 export const get = async () => {
-
     var raw = await getRaw();
+    var data = await xmlParser(raw);
 
-    return new Promise((resolve, reject) => {
-        parseString(raw, xmlOptions, (error, data) => {
-
-            if (error) {
-                reject(error);
-            }
-            resolve(data['velok']['station']);
-        });
-    });
+    return data['velok']['station'];
 };
 
 export const stations = async () => {
