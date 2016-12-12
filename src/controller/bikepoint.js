@@ -1,5 +1,5 @@
-import * as velok from '../sources/bikepoint/velok';
-import * as veloh from '../sources/bikepoint/veloh';
+import * as velok from '../source/bikepoint/velok';
+import * as veloh from '../source/bikepoint/veloh';
 
 export const index = async ctx => {
 

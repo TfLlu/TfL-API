@@ -9,7 +9,7 @@ var _requestPromiseNative = require('request-promise-native');
 
 var _requestPromiseNative2 = _interopRequireDefault(_requestPromiseNative);
 
-var _xmlParser = require('../../helpers/xmlParser');
+var _xmlParser = require('../../helper/xmlParser');
 
 var _xmlParser2 = _interopRequireDefault(_xmlParser);
 

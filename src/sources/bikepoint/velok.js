@@ -1,5 +1,5 @@
 import request from 'request-promise-native';
-import xmlParser from '../../helpers/xmlParser';
+import xmlParser from '../../helper/xmlParser';
 
 const getRaw = () => request('https://webservice.velok.lu/stationattache.aspx');
 

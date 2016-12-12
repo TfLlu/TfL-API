@@ -5,11 +5,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.index = undefined;
 
-var _velok = require('../sources/bikepoint/velok');
+var _velok = require('../source/bikepoint/velok');
 
 var velok = _interopRequireWildcard(_velok);
 
-var _veloh = require('../sources/bikepoint/veloh');
+var _veloh = require('../source/bikepoint/veloh');
 
 var veloh = _interopRequireWildcard(_veloh);
 
