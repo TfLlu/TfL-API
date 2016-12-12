@@ -43,14 +43,14 @@ const stations = exports.stations = (() => {
     };
 })();
 
-const compileStation = exports.compileStation = item => {
+const compileStation = exports.compileStation = station => {
 
     var dock_status = [];
     var attache, status, bikeType;
 
-    for (var i = 1; i <= item.attaches; i++) {
+    for (var i = 1; i <= station.attaches; i++) {
 
-        attache = parseInt(item['attache' + i]);
+        attache = parseInt(station['attache' + i]);
 
         switch (attache) {
             case 0:
@@ -76,20 +76,20 @@ const compileStation = exports.compileStation = item => {
     }
 
     return {
-        id: parseInt(item.nstation),
-        open: item.active == 1,
-        name: item.nom,
+        id: parseInt(station.nstation),
+        open: station.active == 1,
+        name: station.nom,
         position: {
-            longitude: parseFloat(item.latitude),
-            latitude: parseFloat(item.longitude)
+            longitude: parseFloat(station.latitude),
+            latitude: parseFloat(station.longitude)
         },
-        city: item.nomlocalite,
-        address: item.lieu,
-        photo: item.urlphoto,
-        docks: parseInt(item.attaches),
-        available_bikes: parseInt(item.bikes),
-        available_ebikes: parseInt(item.ebikes),
-        available_docks: parseInt(item.libres),
+        city: station.nomlocalite,
+        address: station.lieu,
+        photo: station.urlphoto,
+        docks: parseInt(station.attaches),
+        available_bikes: parseInt(station.bikes),
+        available_ebikes: parseInt(station.ebikes),
+        available_docks: parseInt(station.libres),
         last_update: null,
         dock_status: dock_status
 
