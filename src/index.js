@@ -9,7 +9,7 @@ const router = new KoaRouter();
 
 router.get('/', controller.home.index);
 router.get('/BikePoint', controller.bikepoint.index);
-router.get('/BikePoint/:id', controller.bikepoint.index);
+router.get('/BikePoint/:bikePoint', controller.bikepoint.show);
 
 app.use(monitor)
    .use(router.routes())

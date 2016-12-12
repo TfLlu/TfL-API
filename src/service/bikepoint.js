@@ -29,6 +29,10 @@ export const stations = () => {
 
 };
 
+export const station = id => {
+    return id;
+};
+
 export const compileStation = function(provider, station) {
 
     station.id = provider + ':' + station.id;

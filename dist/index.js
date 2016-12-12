@@ -27,7 +27,7 @@ const router = new _koaRouter2.default();
 
 router.get('/', _controller2.default.home.index);
 router.get('/BikePoint', _controller2.default.bikepoint.index);
-router.get('/BikePoint/:id', _controller2.default.bikepoint.index);
+router.get('/BikePoint/:bikePoint', _controller2.default.bikepoint.show);
 
 app.use(_monitor2.default).use(router.routes()).use(router.allowedMethods());
 

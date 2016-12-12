@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.compileStation = exports.stations = undefined;
+exports.compileStation = exports.station = exports.stations = undefined;
 
 var _velok = require('../source/bikepoint/velok');
 
@@ -36,6 +36,10 @@ const stations = exports.stations = () => {
 
         return stations;
     });
+};
+
+const station = exports.station = id => {
+    return id;
 };
 
 const compileStation = exports.compileStation = function (provider, station) {
