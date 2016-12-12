@@ -8,6 +8,7 @@ const app    = new Koa();
 const router = new KoaRouter();
 
 router.get('/', controller.home.index);
+router.get('/BikePoint', controller.bikepoint.index);
 router.get('/BikePoint/:id', controller.bikepoint.index);
 
 app.use(monitor)
