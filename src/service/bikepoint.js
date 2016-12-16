@@ -1,5 +1,6 @@
 import * as velok from '../source/bikepoint/velok';
 import * as veloh from '../source/bikepoint/veloh';
+import request from 'request-promise-native';
 
 export const stations = () => {
 
@@ -29,8 +30,9 @@ export const stations = () => {
 
 };
 
-export const station = id => {
-    return id;
+export const station = async bikePoint => {
+    bikePoint = bikePoint.split(':');
+    return await veloh.station(bikePoint[1]);
 };
 
 export const compileStation = function(provider, station) {

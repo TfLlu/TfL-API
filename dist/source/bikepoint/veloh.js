@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.compileStation = exports.stations = exports.get = undefined;
+exports.compileStation = exports.station = exports.stations = exports.get = undefined;
 
 var _requestPromiseNative = require('request-promise-native');
 
@@ -13,15 +13,19 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-const getRaw = () => (0, _requestPromiseNative2.default)('https://api.jcdecaux.com/vls/v1/stations?contract=Luxembourg&apiKey=1835af14f29db63b765a3335ba42891323ce8f12');
+const getRaw = bikePoint => {
+    if (typeof bikePoint === 'undefined') return (0, _requestPromiseNative2.default)('https://api.jcdecaux.com/vls/v1/stations?contract=Luxembourg&apiKey=1835af14f29db63b765a3335ba42891323ce8f12');
+
+    return (0, _requestPromiseNative2.default)('https://api.jcdecaux.com/vls/v1/stations/' + bikePoint + '?contract=Luxembourg&apiKey=1835af14f29db63b765a3335ba42891323ce8f12');
+};
 
 const get = exports.get = (() => {
-    var _ref = _asyncToGenerator(function* () {
-        var raw = yield getRaw();
+    var _ref = _asyncToGenerator(function* (bikePoint) {
+        var raw = yield getRaw(bikePoint);
         return JSON.parse(raw);
     });
 
-    return function get() {
+    return function get(_x) {
         return _ref.apply(this, arguments);
     };
 })();
@@ -34,6 +38,17 @@ const stations = exports.stations = (() => {
 
     return function stations() {
         return _ref2.apply(this, arguments);
+    };
+})();
+
+const station = exports.station = (() => {
+    var _ref3 = _asyncToGenerator(function* (bikePoint) {
+        var station = yield get(bikePoint);
+        return compileStation(station);
+    });
+
+    return function station(_x2) {
+        return _ref3.apply(this, arguments);
     };
 })();
 

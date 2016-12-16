@@ -1,15 +1,25 @@
 import request from 'request-promise-native';
 
-const getRaw = () => request('https://api.jcdecaux.com/vls/v1/stations?contract=Luxembourg&apiKey=1835af14f29db63b765a3335ba42891323ce8f12');
+const getRaw = bikePoint => {
+    if (typeof bikePoint === 'undefined')
+        return request('https://api.jcdecaux.com/vls/v1/stations?contract=Luxembourg&apiKey=1835af14f29db63b765a3335ba42891323ce8f12');
 
-export const get = async () => {
-    var raw = await getRaw();
+    return request('https://api.jcdecaux.com/vls/v1/stations/' + bikePoint + '?contract=Luxembourg&apiKey=1835af14f29db63b765a3335ba42891323ce8f12');
+};
+
+export const get = async bikePoint => {
+    var raw = await getRaw(bikePoint);
     return JSON.parse(raw);
 };
 
 export const stations = async () => {
     var stations = await get();
     return stations.map(compileStation);
+};
+
+export const station = async bikePoint => {
+    var station = await get(bikePoint);
+    return compileStation(station);
 };
 
 export const compileStation = station => {
