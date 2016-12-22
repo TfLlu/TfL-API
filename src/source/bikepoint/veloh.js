@@ -1,10 +1,11 @@
 import request from 'request-promise-native';
+import config  from '../../config';
 
 const getRaw = bikePoint => {
     if (typeof bikePoint === 'undefined')
-        return request('https://api.jcdecaux.com/vls/v1/stations?contract=Luxembourg&apiKey=1835af14f29db63b765a3335ba42891323ce8f12');
+        return request('https://api.jcdecaux.com/vls/v1/stations?contract=Luxembourg&apiKey=' + config('API_KEY_JCD', true));
 
-    return request('https://api.jcdecaux.com/vls/v1/stations/' + bikePoint + '?contract=Luxembourg&apiKey=1835af14f29db63b765a3335ba42891323ce8f12');
+    return request('https://api.jcdecaux.com/vls/v1/stations/' + bikePoint + '?contract=Luxembourg&apiKey=' + config('API_KEY_JCD', true));
 };
 
 export const get = async bikePoint => {

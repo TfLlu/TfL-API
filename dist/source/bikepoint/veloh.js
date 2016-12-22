@@ -9,14 +9,18 @@ var _requestPromiseNative = require('request-promise-native');
 
 var _requestPromiseNative2 = _interopRequireDefault(_requestPromiseNative);
 
+var _config = require('../../config');
+
+var _config2 = _interopRequireDefault(_config);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 const getRaw = bikePoint => {
-    if (typeof bikePoint === 'undefined') return (0, _requestPromiseNative2.default)('https://api.jcdecaux.com/vls/v1/stations?contract=Luxembourg&apiKey=1835af14f29db63b765a3335ba42891323ce8f12');
+    if (typeof bikePoint === 'undefined') return (0, _requestPromiseNative2.default)('https://api.jcdecaux.com/vls/v1/stations?contract=Luxembourg&apiKey=' + (0, _config2.default)('API_KEY_JCD', true));
 
-    return (0, _requestPromiseNative2.default)('https://api.jcdecaux.com/vls/v1/stations/' + bikePoint + '?contract=Luxembourg&apiKey=1835af14f29db63b765a3335ba42891323ce8f12');
+    return (0, _requestPromiseNative2.default)('https://api.jcdecaux.com/vls/v1/stations/' + bikePoint + '?contract=Luxembourg&apiKey=' + (0, _config2.default)('API_KEY_JCD', true));
 };
 
 const get = exports.get = (() => {
