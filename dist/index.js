@@ -28,6 +28,7 @@ const router = new _koaRouter2.default();
 router.get('/', _controller2.default.home.index);
 router.get('/BikePoint', _controller2.default.bikepoint.index);
 router.get('/BikePoint/:bikePoint', _controller2.default.bikepoint.show);
+router.get('/Occupancy/CarPark', _controller2.default.carpark.index);
 router.get('/StopPoint', _controller2.default.stoppoint.index);
 
 app.use(_monitor2.default).use(router.routes()).use(router.allowedMethods());
