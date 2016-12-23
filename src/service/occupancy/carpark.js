@@ -1,9 +1,9 @@
-import * as parkingVDL from '../source/occupancy/parking/vdl';
+import * as parkingVDL from '../../source/occupancy/carpark/vdl';
 
 export const items = () => {
 
     const sources = {
-        'parkingVDL': parkingVDL.items()
+        'carparkVDL': parkingVDL.items()
     };
 
     var providers = Object.keys(sources);

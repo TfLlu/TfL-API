@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.compileStation = exports.item = exports.items = undefined;
 
-var _vdl = require('../source/occupancy/carpark/vdl');
+var _vdl = require('../../source/occupancy/carpark/vdl');
 
 var parkingVDL = _interopRequireWildcard(_vdl);
 
