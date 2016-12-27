@@ -32,8 +32,13 @@ export const compileParking = parking => {
         trend = null;
     }
 
+    var id = parseInt(parking.id);
+    if (isNaN(id)) {
+        id = /id=(\d+)/g.exec(parking.guid)[1];
+    }
+
     return {
-        id:                     parseInt(parking.id),
+        id:                     id,
         name:                   parking.title,
         open:                   parseInt(parking['vdlxml:ouvert']) == 1,
         elevator:               parseInt(parking['vdlxml:divers']['vdlxml:diversAscenseur']) == 1,
