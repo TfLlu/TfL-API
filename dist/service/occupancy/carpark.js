@@ -7,7 +7,7 @@ exports.compileStation = exports.item = exports.items = undefined;
 
 var _vdl = require('../../source/occupancy/carpark/vdl');
 
-var parkingVDL = _interopRequireWildcard(_vdl);
+var vdl = _interopRequireWildcard(_vdl);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -16,7 +16,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 const items = exports.items = () => {
 
     const sources = {
-        'carparkVDL': parkingVDL.items()
+        'vdl': vdl.items()
     };
 
     var providers = Object.keys(sources);
@@ -38,7 +38,7 @@ const items = exports.items = () => {
 const item = exports.item = (() => {
     var _ref = _asyncToGenerator(function* (_item) {
         _item = _item.split(':');
-        return yield parkingVDL.item(_item[1]);
+        return yield vdl.item(_item[1]);
     });
 
     return function item(_x) {
