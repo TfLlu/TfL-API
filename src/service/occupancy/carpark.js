@@ -1,9 +1,9 @@
-import * as parkingVDL from '../../source/occupancy/carpark/vdl';
+import * as vdl from '../../source/occupancy/carpark/vdl';
 
 export const items = () => {
 
     const sources = {
-        'carparkVDL': parkingVDL.items()
+        'vdl': vdl.items()
     };
 
     var providers = Object.keys(sources);
@@ -29,7 +29,7 @@ export const items = () => {
 
 export const item = async item => {
     item = item.split(':');
-    return await parkingVDL.item(item[1]);
+    return await vdl.item(item[1]);
 };
 
 export const compileStation = function(provider, item) {
