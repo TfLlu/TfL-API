@@ -55,12 +55,12 @@ export const compileParking = parking => {
         bicycle_docks:          parseInt(parking['vdlxml:nominal']['vdlxml:nominalVelos']),
         payment_methods: {
             cash:               parseInt(parking['vdlxml:paiement']['vdlxml:paiementEspeces']) == 1,
-            VPay:               parseInt(parking['vdlxml:paiement']['vdlxml:paiementMaestro']) == 1,
-            Visa:               parseInt(parking['vdlxml:paiement']['vdlxml:paiementVisa']) == 1,
-            Mastercard:         parseInt(parking['vdlxml:paiement']['vdlxml:paiementMastercard']) == 1,
-            Eurocard:           parseInt(parking['vdlxml:paiement']['vdlxml:paiementEurocard']) == 1,
-            AmEx:               parseInt(parking['vdlxml:paiement']['vdlxml:paiementAmex']) == 1,
-            Call2Park:          parseInt(parking['vdlxml:paiement']['vdlxml:paiementCall2park']) == 1
+            vpay:               parseInt(parking['vdlxml:paiement']['vdlxml:paiementMaestro']) == 1,
+            visa:               parseInt(parking['vdlxml:paiement']['vdlxml:paiementVisa']) == 1,
+            mastercard:         parseInt(parking['vdlxml:paiement']['vdlxml:paiementMastercard']) == 1,
+            eurocard:           parseInt(parking['vdlxml:paiement']['vdlxml:paiementEurocard']) == 1,
+            amex:               parseInt(parking['vdlxml:paiement']['vdlxml:paiementAmex']) == 1,
+            call2park:          parseInt(parking['vdlxml:paiement']['vdlxml:paiementCall2park']) == 1
         },
         restrictions: {
             allowed_gpl:        parseInt(parking['vdlxml:restrictions']['vdlxml:restrictionsNoGpl']) == 1,
