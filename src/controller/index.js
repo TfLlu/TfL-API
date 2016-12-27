@@ -3,5 +3,6 @@ import * as bikepoint from './bikepoint';
 import * as occupancy from './occupancy';
 import * as carpark from './occupancy/carpark';
 import * as stoppoint from './stoppoint';
+import * as journey from './journey';
 
-export default { home, bikepoint, occupancy, carpark, stoppoint };
+export default { home, bikepoint, occupancy, carpark, stoppoint, journey };
