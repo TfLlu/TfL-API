@@ -13,25 +13,45 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-const points = exports.points = (() => {
+var cron = require('node-cron');
+
+var stoppoints = false;
+
+cron.schedule('* 15 6 * *', function () {
+    getStoppoints();
+});
+
+const getStoppoints = (() => {
     var _ref = _asyncToGenerator(function* () {
-        const points = yield mobiliteit.points();
-        return points;
+        console.log('refreshing mobiliteit');
+        stoppoints = yield mobiliteit.points();
     });
 
-    return function points() {
+    return function getStoppoints() {
         return _ref.apply(this, arguments);
     };
 })();
 
+const points = exports.points = (() => {
+    var _ref2 = _asyncToGenerator(function* () {
+        if (!stoppoints) {
+            yield getStoppoints();
+        }
+        return stoppoints;
+    });
+
+    return function points() {
+        return _ref2.apply(this, arguments);
+    };
+})();
+
 const point = exports.point = (() => {
-    var _ref2 = _asyncToGenerator(function* (_point) {
-        _point = _point.split(':');
-        return yield mobiliteit.station(_point[1]);
+    var _ref3 = _asyncToGenerator(function* (_point) {
+        return yield mobiliteit.station(_point);
     });
 
     return function point(_x) {
-        return _ref2.apply(this, arguments);
+        return _ref3.apply(this, arguments);
     };
 })();
 

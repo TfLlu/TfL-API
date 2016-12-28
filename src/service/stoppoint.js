@@ -1,13 +1,26 @@
 import * as mobiliteit from '../source/stoppoint/mobiliteit';
+var cron = require('node-cron');
+
+var stoppoints = false;
+
+cron.schedule('* 15 6 * *', function(){
+    getStoppoints();
+});
+
+const getStoppoints = async () => {
+    console.log('refreshing mobiliteit');
+    stoppoints = await mobiliteit.points();
+};
 
 export const points = async () => {
-    const points = await mobiliteit.points();
-    return points;
+    if (!stoppoints) {
+        await getStoppoints();
+    }
+    return stoppoints;
 };
 
 export const point = async point => {
-    point = point.split(':');
-    return await mobiliteit.station(point[1]);
+    return await mobiliteit.station(point);
 };
 
 export const compilePoint = function(provider, point) {
