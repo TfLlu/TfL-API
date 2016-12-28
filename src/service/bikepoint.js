@@ -1,6 +1,5 @@
 import * as velok from '../source/bikepoint/velok';
 import * as veloh from '../source/bikepoint/veloh';
-import request from 'request-promise-native';
 
 export const stations = () => {
 
