@@ -113,7 +113,7 @@ const compileSituation = exports.compileSituation = situation => {
         clouds: {
             all: null
         },
-        dt: null,
+        dt: Math.round(new Date().getTime() / 1000),
         sys: {
             type: null,
             id: null,
