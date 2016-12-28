@@ -5,5 +5,5 @@ export const index = async ctx => {
 };
 
 export const show = async ctx => {
-    ctx.body = await stoppoint.point(ctx.params.stoppoint);
+    ctx.body = await stoppoint.point(ctx.params.stopPoint);
 };
