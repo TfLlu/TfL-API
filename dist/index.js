@@ -31,6 +31,7 @@ router.get('/BikePoint/:bikePoint', _controller2.default.bikepoint.show);
 router.get('/Occupancy/CarPark', _controller2.default.carpark.index);
 router.get('/StopPoint', _controller2.default.stoppoint.index);
 router.get('/Journey/:from/to/:to', _controller2.default.journey.plan);
+router.get('/Weather', _controller2.default.weather.current);
 
 app.use(_monitor2.default).use(router.routes()).use(router.allowedMethods());
 
