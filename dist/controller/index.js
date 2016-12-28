@@ -28,6 +28,10 @@ var _journey = require('./journey');
 
 var journey = _interopRequireWildcard(_journey);
 
+var _weather = require('./weather');
+
+var weather = _interopRequireWildcard(_weather);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-exports.default = { home, bikepoint, occupancy, carpark, stoppoint, journey };
+exports.default = { home, bikepoint, occupancy, carpark, stoppoint, journey, weather };
