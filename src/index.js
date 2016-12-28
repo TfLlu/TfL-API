@@ -11,6 +11,9 @@ router.get('/', controller.home.index);
 router.get('/BikePoint', controller.bikepoint.index);
 router.get('/BikePoint/:bikePoint', controller.bikepoint.show);
 router.get('/Occupancy/CarPark', controller.carpark.index);
+router.get('/StopPoint', controller.stoppoint.index);
+router.get('/Journey/:from/to/:to', controller.journey.plan);
+router.get('/Weather', controller.weather.current);
 
 app.use(monitor)
    .use(router.routes())
