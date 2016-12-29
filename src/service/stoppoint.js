@@ -7,8 +7,3 @@ export const all = async () => {
 export const get = async stopPoint => {
     return await mobiliteit.get(stopPoint);
 };
-
-export const compilePoint = function(provider, point) {
-    point.id = provider + ':' + point.id;
-    return point;
-};

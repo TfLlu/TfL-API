@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.compilePoint = exports.get = exports.all = undefined;
+exports.get = exports.all = undefined;
 
 var _mobiliteit = require('../source/stoppoint/mobiliteit');
 
@@ -32,8 +32,3 @@ const get = exports.get = (() => {
         return _ref2.apply(this, arguments);
     };
 })();
-
-const compilePoint = exports.compilePoint = function (provider, point) {
-    point.id = provider + ':' + point.id;
-    return point;
-};
