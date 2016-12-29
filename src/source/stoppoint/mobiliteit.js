@@ -85,14 +85,12 @@ export const around = async (lon, lat, radius) => {
 
 export const box = async (swlon, swlat, nelon, nelat) => {
     await cache();
-    var whybox = false;
     return stopPoints.filter(function(stopPoint) {
-        whybox = inbox(
+        return inbox(
             swlon, swlat, nelon, nelat,
             stopPoint.longitude,
             stopPoint.latitude
         );
-        return whybox;
     });
 };
 

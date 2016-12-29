@@ -140,10 +140,8 @@ const around = exports.around = (() => {
 const box = exports.box = (() => {
     var _ref7 = _asyncToGenerator(function* (swlon, swlat, nelon, nelat) {
         yield cache();
-        var whybox = false;
         return stopPoints.filter(function (stopPoint) {
-            whybox = (0, _inbox2.default)(swlon, swlat, nelon, nelat, stopPoint.longitude, stopPoint.latitude);
-            return whybox;
+            return (0, _inbox2.default)(swlon, swlat, nelon, nelat, stopPoint.longitude, stopPoint.latitude);
         });
     });
 
