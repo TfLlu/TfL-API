@@ -11,3 +11,7 @@ export const get = async stopPoint => {
 export const around = async (lon, lat, radius) => {
     return await mobiliteit.around(lon, lat, radius);
 };
+
+export const box = async (swlon, swlat, nelon, nelat) => {
+    return await mobiliteit.box(swlon, swlat, nelon, nelat);
+};

@@ -15,3 +15,12 @@ export const around = async ctx => {
         ctx.params.radius
     );
 };
+
+export const box = async ctx => {
+    ctx.body = await stoppoint.box(
+        parseFloat(ctx.params.swlon),
+        parseFloat(ctx.params.swlat),
+        parseFloat(ctx.params.nelon),
+        parseFloat(ctx.params.nelat)
+    );
+};

@@ -1,6 +1,7 @@
-import request from 'request-promise-native';
-import config  from '../../config';
+import request  from 'request-promise-native';
+import config   from '../../config';
 import distance from '../../helper/distance';
+import inbox    from '../../helper/inbox';
 var cron = require('node-cron');
 
 var stopPoints = [];
@@ -84,4 +85,17 @@ export const around = async (lon, lat, radius) => {
         }
     }
     return stopPointsAround;
+};
+
+export const box = async (swlon, swlat, nelon, nelat) => {
+    await cache();
+    var whybox = false;
+    return stopPoints.filter(function(stopPoint) {
+        whybox = inbox(
+            swlon, swlat, nelon, nelat,
+            stopPoint.longitude,
+            stopPoint.latitude
+        );
+        return whybox;
+    });
 };

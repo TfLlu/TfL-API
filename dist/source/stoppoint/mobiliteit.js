@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.around = exports.get = exports.all = exports.load = undefined;
+exports.box = exports.around = exports.get = exports.all = exports.load = undefined;
 
 var _requestPromiseNative = require('request-promise-native');
 
@@ -16,6 +16,10 @@ var _config2 = _interopRequireDefault(_config);
 var _distance = require('../../helper/distance');
 
 var _distance2 = _interopRequireDefault(_distance);
+
+var _inbox = require('../../helper/inbox');
+
+var _inbox2 = _interopRequireDefault(_inbox);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -133,5 +137,20 @@ const around = exports.around = (() => {
 
     return function around(_x2, _x3, _x4) {
         return _ref6.apply(this, arguments);
+    };
+})();
+
+const box = exports.box = (() => {
+    var _ref7 = _asyncToGenerator(function* (swlon, swlat, nelon, nelat) {
+        yield cache();
+        var whybox = false;
+        return stopPoints.filter(function (stopPoint) {
+            whybox = (0, _inbox2.default)(swlon, swlat, nelon, nelat, stopPoint.longitude, stopPoint.latitude);
+            return whybox;
+        });
+    });
+
+    return function box(_x5, _x6, _x7, _x8) {
+        return _ref7.apply(this, arguments);
     };
 })();
