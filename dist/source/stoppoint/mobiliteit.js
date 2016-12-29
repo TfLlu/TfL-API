@@ -9,6 +9,10 @@ var _requestPromiseNative = require('request-promise-native');
 
 var _requestPromiseNative2 = _interopRequireDefault(_requestPromiseNative);
 
+var _fuzzy = require('fuzzy');
+
+var _fuzzy2 = _interopRequireDefault(_fuzzy);
+
 var _config = require('../../config');
 
 var _config2 = _interopRequireDefault(_config);
@@ -28,6 +32,11 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 var cron = require('node-cron');
 
 var stopPoints = [];
+var fuzzyOptions = {
+    extract: function (obj) {
+        return obj.name;
+    }
+};
 
 const getRaw = (() => {
     var _ref = _asyncToGenerator(function* () {
@@ -188,8 +197,10 @@ const box = exports.box = (() => {
 const search = exports.search = (() => {
     var _ref9 = _asyncToGenerator(function* (searchString) {
         yield cache();
-        return stopPoints.filter(function (stopPoint) {
-            return stopPoint.name.toLowerCase().indexOf(searchString) >= 0;
+
+        var results = _fuzzy2.default.filter(searchString, stopPoints, fuzzyOptions);
+        return results.map(function (res) {
+            return res.original;
         });
     });
 
