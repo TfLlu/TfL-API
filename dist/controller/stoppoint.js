@@ -25,10 +25,7 @@ const index = exports.index = (() => {
 
 const show = exports.show = (() => {
     var _ref2 = _asyncToGenerator(function* (ctx) {
-        var result = yield stoppoint.get(ctx.params.stopPoint);
-        if (result) {
-            ctx.body = result;
-        }
+        ctx.body = yield stoppoint.get(ctx.params.stopPoint);
     });
 
     return function show(_x2) {
