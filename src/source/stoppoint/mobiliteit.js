@@ -1,5 +1,6 @@
 import request from 'request-promise-native';
 import config  from '../../config';
+import distance from '../../helper/distance';
 var cron = require('node-cron');
 
 var stopPoints = [];
@@ -61,4 +62,26 @@ export const get = async stopPoint => {
         }
     }
     return false;
+};
+
+export const around = async (lon, lat, radius) => {
+    await cache();
+    var dist = 0;
+    var stopPointsAround = [];
+
+    for (var i = 0; i < stopPoints.length; i++) {
+        dist = distance(
+            parseFloat(lon),
+            parseFloat(lat),
+            stopPoints[i].longitude,
+            stopPoints[i].latitude
+        );
+
+        if (dist <= radius) {
+            var temp = stopPoints[i];
+            temp.distance = parseFloat(dist.toFixed(2));
+            stopPointsAround.push(temp);
+        }
+    }
+    return stopPointsAround;
 };

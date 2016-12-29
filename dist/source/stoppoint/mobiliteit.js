@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.get = exports.all = exports.load = undefined;
+exports.around = exports.get = exports.all = exports.load = undefined;
 
 var _requestPromiseNative = require('request-promise-native');
 
@@ -12,6 +12,10 @@ var _requestPromiseNative2 = _interopRequireDefault(_requestPromiseNative);
 var _config = require('../../config');
 
 var _config2 = _interopRequireDefault(_config);
+
+var _distance = require('../../helper/distance');
+
+var _distance2 = _interopRequireDefault(_distance);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -106,5 +110,28 @@ const get = exports.get = (() => {
 
     return function get(_x) {
         return _ref5.apply(this, arguments);
+    };
+})();
+
+const around = exports.around = (() => {
+    var _ref6 = _asyncToGenerator(function* (lon, lat, radius) {
+        yield cache();
+        var dist = 0;
+        var stopPointsAround = [];
+
+        for (var i = 0; i < stopPoints.length; i++) {
+            dist = (0, _distance2.default)(parseFloat(lon), parseFloat(lat), stopPoints[i].longitude, stopPoints[i].latitude);
+
+            if (dist <= radius) {
+                var temp = stopPoints[i];
+                temp.distance = parseFloat(dist.toFixed(2));
+                stopPointsAround.push(temp);
+            }
+        }
+        return stopPointsAround;
+    });
+
+    return function around(_x2, _x3, _x4) {
+        return _ref6.apply(this, arguments);
     };
 })();

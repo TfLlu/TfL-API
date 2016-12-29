@@ -7,3 +7,7 @@ export const all = async () => {
 export const get = async stopPoint => {
     return await mobiliteit.get(stopPoint);
 };
+
+export const around = async (lon, lat, radius) => {
+    return await mobiliteit.around(lon, lat, radius);
+};
