@@ -39,7 +39,6 @@ cron.schedule((0, _config2.default)('MOBILITEIT_REFRESH_CRON', true), function (
 
 const loadStoppoints = (() => {
     var _ref = _asyncToGenerator(function* () {
-        console.log('loading mobiliteit');
         stopPoints = yield load();
     });
 
@@ -50,7 +49,6 @@ const loadStoppoints = (() => {
 
 const load = exports.load = (() => {
     var _ref2 = _asyncToGenerator(function* () {
-
         var raw = yield getRaw();
         var stations = raw.trim().split('\n');
         var newStopPoints = [];
@@ -69,7 +67,6 @@ const load = exports.load = (() => {
                 latitude: parseFloat(params.Y.replace(',', '.'))
             });
         }
-
         return newStopPoints;
     });
 

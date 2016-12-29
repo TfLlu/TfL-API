@@ -19,7 +19,6 @@ const loadStoppoints = async () => {
 };
 
 export const load = async () => {
-
     var raw = await getRaw();
     var stations = raw.trim().split('\n');
     var newStopPoints = [];
@@ -38,9 +37,7 @@ export const load = async () => {
             latitude: parseFloat(params.Y.replace(',', '.'))
         });
     }
-
     return newStopPoints;
-
 };
 
 const cache = async () => {
