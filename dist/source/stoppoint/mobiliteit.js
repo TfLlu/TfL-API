@@ -29,26 +29,32 @@ var cron = require('node-cron');
 
 var stopPoints = [];
 
-const getRaw = () => {
-    return (0, _requestPromiseNative2.default)((0, _config2.default)('MOBILITEIT_STOPPOINTS', true));
-};
+const getRaw = (() => {
+    var _ref = _asyncToGenerator(function* () {
+        return yield (0, _requestPromiseNative2.default)((0, _config2.default)('MOBILITEIT_STOPPOINTS', true));
+    });
+
+    return function getRaw() {
+        return _ref.apply(this, arguments);
+    };
+})();
 
 cron.schedule((0, _config2.default)('MOBILITEIT_REFRESH_CRON', true), function () {
     loadStoppoints();
 });
 
 const loadStoppoints = (() => {
-    var _ref = _asyncToGenerator(function* () {
+    var _ref2 = _asyncToGenerator(function* () {
         stopPoints = yield load();
     });
 
     return function loadStoppoints() {
-        return _ref.apply(this, arguments);
+        return _ref2.apply(this, arguments);
     };
 })();
 
 const load = exports.load = (() => {
-    var _ref2 = _asyncToGenerator(function* () {
+    var _ref3 = _asyncToGenerator(function* () {
         var raw = yield getRaw();
         var rawStopPoints = raw.trim().split('\n');
         var newStopPoints = [];
@@ -71,51 +77,80 @@ const load = exports.load = (() => {
     });
 
     return function load() {
-        return _ref2.apply(this, arguments);
+        return _ref3.apply(this, arguments);
     };
 })();
 
 const cache = (() => {
-    var _ref3 = _asyncToGenerator(function* () {
+    var _ref4 = _asyncToGenerator(function* () {
         if (stopPoints.length === 0) {
             yield loadStoppoints();
         }
     });
 
     return function cache() {
-        return _ref3.apply(this, arguments);
+        return _ref4.apply(this, arguments);
     };
 })();
 
 const all = exports.all = (() => {
-    var _ref4 = _asyncToGenerator(function* () {
+    var _ref5 = _asyncToGenerator(function* () {
         yield cache();
         return stopPoints;
     });
 
     return function all() {
-        return _ref4.apply(this, arguments);
-    };
-})();
-
-const get = exports.get = (() => {
-    var _ref5 = _asyncToGenerator(function* (stopPoint) {
-        yield cache();
-        for (var i = 0; i < stopPoints.length; i++) {
-            if (stopPoints[i].id == stopPoint) {
-                return stopPoints[i];
-            }
-        }
-        return false;
-    });
-
-    return function get(_x) {
         return _ref5.apply(this, arguments);
     };
 })();
 
+const get = exports.get = (() => {
+    var _ref6 = _asyncToGenerator(function* (stopPoint) {
+        var rawData = yield (0, _requestPromiseNative2.default)((0, _config2.default)('MOBILITEIT_DEPARTURE', true) + stopPoint);
+        var departures = [];
+        var rawDepartures = JSON.parse(rawData).Departure;
+        if (rawDepartures) {
+            for (var i = 0; i < rawDepartures.length; i++) {
+                var departure = {};
+                switch (rawDepartures[i].Product.catCode) {
+                    case '2':
+                        departure.type = 'train';
+                        break;
+                    case '5':
+                        departure.type = 'bus';
+                        break;
+                    default:
+                        departure.type = 'unknown';
+                        break;
+                }
+                departure.line = rawDepartures[i].Product.line.trim();
+                departure.number = parseInt(rawDepartures[i].Product.num.trim(), 10);
+
+                var time = Math.round(Date.parse(rawDepartures[i].date + ' ' + rawDepartures[i].time) / 1000);
+                if (rawDepartures[i].rtDate) {
+                    var realTime = Math.round(Date.parse(rawDepartures[i].rtDate + ' ' + rawDepartures[i].rtTime) / 1000);
+                    departure.departure = realTime;
+                    departure.delay = realTime - time;
+                    departure.live = true;
+                } else {
+                    departure.departure = time;
+                    departure.delay = 0;
+                    departure.live = false;
+                }
+                departure.destination = rawDepartures[i].direction;
+                departures.push(departure);
+            }
+        }
+        return departures;
+    });
+
+    return function get(_x) {
+        return _ref6.apply(this, arguments);
+    };
+})();
+
 const around = exports.around = (() => {
-    var _ref6 = _asyncToGenerator(function* (lon, lat, radius) {
+    var _ref7 = _asyncToGenerator(function* (lon, lat, radius) {
         yield cache();
         var dist = 0;
         var stopPointsAround = [];
@@ -133,12 +168,12 @@ const around = exports.around = (() => {
     });
 
     return function around(_x2, _x3, _x4) {
-        return _ref6.apply(this, arguments);
+        return _ref7.apply(this, arguments);
     };
 })();
 
 const box = exports.box = (() => {
-    var _ref7 = _asyncToGenerator(function* (swlon, swlat, nelon, nelat) {
+    var _ref8 = _asyncToGenerator(function* (swlon, swlat, nelon, nelat) {
         yield cache();
         return stopPoints.filter(function (stopPoint) {
             return (0, _inbox2.default)(swlon, swlat, nelon, nelat, stopPoint.longitude, stopPoint.latitude);
@@ -146,12 +181,12 @@ const box = exports.box = (() => {
     });
 
     return function box(_x5, _x6, _x7, _x8) {
-        return _ref7.apply(this, arguments);
+        return _ref8.apply(this, arguments);
     };
 })();
 
 const search = exports.search = (() => {
-    var _ref8 = _asyncToGenerator(function* (searchString) {
+    var _ref9 = _asyncToGenerator(function* (searchString) {
         yield cache();
         return stopPoints.filter(function (stopPoint) {
             return stopPoint.name.toLowerCase().indexOf(searchString) >= 0;
@@ -159,6 +194,6 @@ const search = exports.search = (() => {
     });
 
     return function search(_x9) {
-        return _ref8.apply(this, arguments);
+        return _ref9.apply(this, arguments);
     };
 })();
