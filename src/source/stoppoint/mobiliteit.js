@@ -15,7 +15,6 @@ cron.schedule(config('MOBILITEIT_REFRESH_CRON', true), function(){
 });
 
 const loadStoppoints = async () => {
-    console.log('loading mobiliteit');
     stopPoints = await load();
 };
 
