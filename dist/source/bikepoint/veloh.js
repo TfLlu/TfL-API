@@ -77,8 +77,8 @@ const compileStation = exports.compileStation = bikePoint => {
         open: bikePoint.status == 'OPEN',
         name: bikePoint.name,
         position: {
-            longitude: parseFloat(bikePoint.position.lat),
-            latitude: parseFloat(bikePoint.position.lng)
+            longitude: parseFloat(bikePoint.position.lng),
+            latitude: parseFloat(bikePoint.position.lat)
         },
         city: null,
         address: bikePoint.address,

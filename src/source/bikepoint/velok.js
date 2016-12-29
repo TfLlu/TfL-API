@@ -56,8 +56,8 @@ export const compileStation = bikePoint => {
         open:               bikePoint.active == 1,
         name:               bikePoint.nom,
         position: {
-            longitude:      parseFloat(bikePoint.latitude),
-            latitude:       parseFloat(bikePoint.longitude)
+            longitude:      parseFloat(bikePoint.longitude),
+            latitude:       parseFloat(bikePoint.latitude)
         },
         city:               bikePoint.nomlocalite,
         address:            bikePoint.lieu,
