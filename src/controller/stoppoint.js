@@ -4,8 +4,10 @@ export const index = async ctx => {
     ctx.body = await stoppoint.all();
 };
 
-export const show = async ctx => {
-    ctx.body = await stoppoint.get(ctx.params.stopPoint);
+export const get = async ctx => {
+    ctx.body = await stoppoint.get(
+        parseInt(ctx.params.stopPoint)
+    );
 };
 
 export const around = async ctx => {

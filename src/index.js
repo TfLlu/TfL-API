@@ -12,7 +12,7 @@ router.get('/BikePoint',                                 controller.bikepoint.in
 router.get('/BikePoint/:bikePoint',                      controller.bikepoint.show);
 router.get('/Occupancy/CarPark',                         controller.carpark.index);
 router.get('/StopPoint',                                 controller.stoppoint.index);
-router.get('/StopPoint/:stopPoint',                      controller.stoppoint.show);
+router.get('/StopPoint/:stopPoint',                      controller.stoppoint.get);
 router.get('/StopPoint/around/:lon/:lat/:radius',        controller.stoppoint.around);
 router.get('/StopPoint/box/:swlon/:swlat/:nelon/:nelat', controller.stoppoint.box);
 router.get('/StopPoint/search/:searchstring',            controller.stoppoint.search);
