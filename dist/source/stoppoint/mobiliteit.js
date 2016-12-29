@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.compileStation = exports.station = exports.points = exports.get = undefined;
+exports.get = exports.all = exports.load = undefined;
 
 var _requestPromiseNative = require('request-promise-native');
 
@@ -13,16 +13,35 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
+var cron = require('node-cron');
+
+var stopPoints = [];
+
 const getRaw = () => {
     return (0, _requestPromiseNative2.default)('http://travelplanner.mobiliteit.lu/hafas/query.exe/dot?performLocating=2&tpl=stop2csv&look_maxdist=150000&look_x=6112550&look_y=49610700&stationProxy=yes');
 };
 
-const get = exports.get = (() => {
-    var _ref = _asyncToGenerator(function* (bikePoint) {
+cron.schedule('0 15 5 * * *', function () {
+    loadStoppoints();
+});
 
-        var raw = yield getRaw(bikePoint);
+const loadStoppoints = (() => {
+    var _ref = _asyncToGenerator(function* () {
+        console.log('loading mobiliteit');
+        stopPoints = yield load();
+    });
+
+    return function loadStoppoints() {
+        return _ref.apply(this, arguments);
+    };
+})();
+
+const load = exports.load = (() => {
+    var _ref2 = _asyncToGenerator(function* () {
+
+        var raw = yield getRaw();
         var stations = raw.trim().split('\n');
-        var result = [];
+        var newStopPoints = [];
 
         for (var i = 0; i < stations.length; i++) {
             var paramParts = stations[i].split('@');
@@ -31,7 +50,7 @@ const get = exports.get = (() => {
                 var keyVal = paramParts[j].split('=', 2);
                 params[keyVal[0]] = keyVal[1];
             }
-            result.push({
+            newStopPoints.push({
                 id: parseInt(params.L, 10),
                 name: params.O,
                 longitude: parseFloat(params.X.replace(',', '.')),
@@ -39,36 +58,49 @@ const get = exports.get = (() => {
             });
         }
 
-        return result;
+        return newStopPoints;
     });
 
-    return function get(_x) {
-        return _ref.apply(this, arguments);
-    };
-})();
-
-const points = exports.points = (() => {
-    var _ref2 = _asyncToGenerator(function* () {
-        var stations = yield get();
-        return stations.map(compileStation);
-    });
-
-    return function points() {
+    return function load() {
         return _ref2.apply(this, arguments);
     };
 })();
 
-const station = exports.station = (() => {
-    var _ref3 = _asyncToGenerator(function* (bikePoint) {
-        var station = yield get(bikePoint);
-        return compileStation(station);
+const cache = (() => {
+    var _ref3 = _asyncToGenerator(function* () {
+        if (stopPoints.length === 0) {
+            yield loadStoppoints();
+        }
     });
 
-    return function station(_x2) {
+    return function cache() {
         return _ref3.apply(this, arguments);
     };
 })();
 
-const compileStation = exports.compileStation = station => {
-    return station;
-};
+const all = exports.all = (() => {
+    var _ref4 = _asyncToGenerator(function* () {
+        yield cache();
+        return stopPoints;
+    });
+
+    return function all() {
+        return _ref4.apply(this, arguments);
+    };
+})();
+
+const get = exports.get = (() => {
+    var _ref5 = _asyncToGenerator(function* (stopPoint) {
+        yield cache();
+        for (var i = 0; i < stopPoints.length; i++) {
+            if (stopPoints[i].id == stopPoint) {
+                return stopPoints[i];
+            }
+        }
+        return false;
+    });
+
+    return function get(_x) {
+        return _ref5.apply(this, arguments);
+    };
+})();

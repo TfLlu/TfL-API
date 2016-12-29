@@ -15,7 +15,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 const index = exports.index = (() => {
     var _ref = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield stoppoint.points();
+        ctx.body = yield stoppoint.all();
     });
 
     return function index(_x) {
@@ -25,7 +25,10 @@ const index = exports.index = (() => {
 
 const show = exports.show = (() => {
     var _ref2 = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield stoppoint.point(ctx.params.stopPoint);
+        var result = yield stoppoint.get(ctx.params.stopPoint);
+        if (result) {
+            ctx.body = result;
+        }
     });
 
     return function show(_x2) {

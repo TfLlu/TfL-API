@@ -1,9 +1,12 @@
 import * as stoppoint from '../service/stoppoint';
 
 export const index = async ctx => {
-    ctx.body = await stoppoint.points();
+    ctx.body = await stoppoint.all();
 };
 
 export const show = async ctx => {
-    ctx.body = await stoppoint.point(ctx.params.stopPoint);
+    var result = await stoppoint.get(ctx.params.stopPoint);
+    if (result) {
+        ctx.body = result;
+    }
 };
