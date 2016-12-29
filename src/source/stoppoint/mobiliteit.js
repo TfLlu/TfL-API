@@ -1,10 +1,14 @@
 import request  from 'request-promise-native';
+import fuzzy    from 'fuzzy';
 import config   from '../../config';
 import distance from '../../helper/distance';
 import inbox    from '../../helper/inbox';
 var cron = require('node-cron');
 
 var stopPoints = [];
+var fuzzyOptions = {
+    extract: function(obj) { return obj.name; }
+};
 
 const getRaw = async () => {
     return await request(config('MOBILITEIT_STOPPOINTS', true));
@@ -125,7 +129,7 @@ export const box = async (swlon, swlat, nelon, nelat) => {
 
 export const search = async searchString => {
     await cache();
-    return stopPoints.filter(function(stopPoint) {
-        return stopPoint.name.toLowerCase().indexOf(searchString) >= 0;
-    });
+
+    var results = fuzzy.filter(searchString, stopPoints, fuzzyOptions);
+    return results.map(function(res) { return res.original; });
 };
