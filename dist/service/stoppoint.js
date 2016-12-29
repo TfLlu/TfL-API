@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.box = exports.around = exports.get = exports.all = undefined;
+exports.search = exports.box = exports.around = exports.get = exports.all = undefined;
 
 var _mobiliteit = require('../source/stoppoint/mobiliteit');
 
@@ -50,5 +50,15 @@ const box = exports.box = (() => {
 
     return function box(_x5, _x6, _x7, _x8) {
         return _ref4.apply(this, arguments);
+    };
+})();
+
+const search = exports.search = (() => {
+    var _ref5 = _asyncToGenerator(function* (searchString) {
+        return yield mobiliteit.search(searchString);
+    });
+
+    return function search(_x9) {
+        return _ref5.apply(this, arguments);
     };
 })();

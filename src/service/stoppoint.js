@@ -15,3 +15,7 @@ export const around = async (lon, lat, radius) => {
 export const box = async (swlon, swlat, nelon, nelat) => {
     return await mobiliteit.box(swlon, swlat, nelon, nelat);
 };
+
+export const search = async searchString => {
+    return await mobiliteit.search(searchString);
+};

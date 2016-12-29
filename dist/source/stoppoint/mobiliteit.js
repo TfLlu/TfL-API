@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.box = exports.around = exports.get = exports.all = exports.load = undefined;
+exports.search = exports.box = exports.around = exports.get = exports.all = exports.load = undefined;
 
 var _requestPromiseNative = require('request-promise-native');
 
@@ -149,5 +149,18 @@ const box = exports.box = (() => {
 
     return function box(_x5, _x6, _x7, _x8) {
         return _ref7.apply(this, arguments);
+    };
+})();
+
+const search = exports.search = (() => {
+    var _ref8 = _asyncToGenerator(function* (searchString) {
+        yield cache();
+        return stopPoints.filter(function (stopPoint) {
+            return stopPoint.name.toLowerCase().indexOf(searchString) >= 0;
+        });
+    });
+
+    return function search(_x9) {
+        return _ref8.apply(this, arguments);
     };
 })();

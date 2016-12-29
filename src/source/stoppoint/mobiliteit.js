@@ -95,3 +95,10 @@ export const box = async (swlon, swlat, nelon, nelat) => {
         return whybox;
     });
 };
+
+export const search = async searchString => {
+    await cache();
+    return stopPoints.filter(function(stopPoint) {
+        return stopPoint.name.toLowerCase().indexOf(searchString) >= 0;
+    });
+};
