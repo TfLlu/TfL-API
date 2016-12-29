@@ -1,6 +1,11 @@
 import * as velok from '../source/bikepoint/velok';
 import * as veloh from '../source/bikepoint/veloh';
 
+export const compileStation = function(provider, bikePoint) {
+    bikePoint.id = provider + ':' + bikePoint.id;
+    return bikePoint;
+};
+
 export const all = () => {
 
     const sources = {
@@ -40,9 +45,4 @@ export const get = async bikePoint => {
         break;
     }
     return compileStation(bikePointSplit[0], bikePoint);
-};
-
-export const compileStation = function(provider, bikePoint) {
-    bikePoint.id = provider + ':' + bikePoint.id;
-    return bikePoint;
 };
