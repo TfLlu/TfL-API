@@ -9,6 +9,10 @@ var _requestPromiseNative = require('request-promise-native');
 
 var _requestPromiseNative2 = _interopRequireDefault(_requestPromiseNative);
 
+var _config = require('../../config');
+
+var _config2 = _interopRequireDefault(_config);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
@@ -18,7 +22,7 @@ var cron = require('node-cron');
 var stopPoints = [];
 
 const getRaw = () => {
-    return (0, _requestPromiseNative2.default)('http://travelplanner.mobiliteit.lu/hafas/query.exe/dot?performLocating=2&tpl=stop2csv&look_maxdist=150000&look_x=6112550&look_y=49610700&stationProxy=yes');
+    return (0, _requestPromiseNative2.default)((0, _config2.default)('MOBILITEIT_STOPPOINTS', true));
 };
 
 cron.schedule('0 15 5 * * *', function () {

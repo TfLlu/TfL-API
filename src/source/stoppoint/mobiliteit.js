@@ -1,10 +1,11 @@
 import request from 'request-promise-native';
+import config  from '../../config';
 var cron = require('node-cron');
 
 var stopPoints = [];
 
 const getRaw = () => {
-    return request('http://travelplanner.mobiliteit.lu/hafas/query.exe/dot?performLocating=2&tpl=stop2csv&look_maxdist=150000&look_x=6112550&look_y=49610700&stationProxy=yes');
+    return request(config('MOBILITEIT_STOPPOINTS', true));
 };
 
 cron.schedule('0 15 5 * * *', function(){
