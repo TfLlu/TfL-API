@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.compileStation = exports.station = exports.stations = exports.get = undefined;
+exports.compileStation = exports.get = exports.all = exports.loadBikePoints = undefined;
 
 var _requestPromiseNative = require('request-promise-native');
 
@@ -19,55 +19,53 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 const getRaw = bikePoint => {
     if (typeof bikePoint === 'undefined') return (0, _requestPromiseNative2.default)('https://api.jcdecaux.com/vls/v1/stations?contract=Luxembourg&apiKey=' + (0, _config2.default)('API_KEY_JCD', true));
-
     return (0, _requestPromiseNative2.default)('https://api.jcdecaux.com/vls/v1/stations/' + bikePoint + '?contract=Luxembourg&apiKey=' + (0, _config2.default)('API_KEY_JCD', true));
 };
 
-const get = exports.get = (() => {
+const loadBikePoints = exports.loadBikePoints = (() => {
     var _ref = _asyncToGenerator(function* (bikePoint) {
-        var raw = yield getRaw(bikePoint);
-        return JSON.parse(raw);
+        return JSON.parse((yield getRaw(bikePoint)));
     });
 
-    return function get(_x) {
+    return function loadBikePoints(_x) {
         return _ref.apply(this, arguments);
     };
 })();
 
-const stations = exports.stations = (() => {
+const all = exports.all = (() => {
     var _ref2 = _asyncToGenerator(function* () {
-        var stations = yield get();
-        return stations.map(compileStation);
+        var bikePoints = yield loadBikePoints();
+        return bikePoints.map(compileStation);
     });
 
-    return function stations() {
+    return function all() {
         return _ref2.apply(this, arguments);
     };
 })();
 
-const station = exports.station = (() => {
-    var _ref3 = _asyncToGenerator(function* (bikePoint) {
-        var station = yield get(bikePoint);
-        return compileStation(station);
+const get = exports.get = (() => {
+    var _ref3 = _asyncToGenerator(function* (bikePointId) {
+        var bikePoint = yield loadBikePoints(bikePointId);
+        return compileStation(bikePoint);
     });
 
-    return function station(_x2) {
+    return function get(_x2) {
         return _ref3.apply(this, arguments);
     };
 })();
 
-const compileStation = exports.compileStation = station => {
+const compileStation = exports.compileStation = bikePoint => {
 
     var dock_status = [];
 
-    for (var i = 1; i <= station.available_bikes; i++) {
+    for (var i = 1; i <= bikePoint.available_bikes; i++) {
         dock_status.push({
             status: 'occupied',
             bikeType: 'manual'
         });
     }
 
-    for (i = 1; i <= station.available_bike_stands; i++) {
+    for (i = 1; i <= bikePoint.available_bike_stands; i++) {
         dock_status.push({
             status: 'free',
             bikeType: null
@@ -75,21 +73,21 @@ const compileStation = exports.compileStation = station => {
     }
 
     return {
-        id: station.number,
-        open: station.status == 'OPEN',
-        name: station.name,
+        id: bikePoint.number,
+        open: bikePoint.status == 'OPEN',
+        name: bikePoint.name,
         position: {
-            longitude: parseFloat(station.position.lat),
-            latitude: parseFloat(station.position.lng)
+            longitude: parseFloat(bikePoint.position.lat),
+            latitude: parseFloat(bikePoint.position.lng)
         },
         city: null,
-        address: station.address,
+        address: bikePoint.address,
         photo: null,
-        docks: parseInt(station.bike_stands),
-        available_bikes: parseInt(station.available_bikes),
+        docks: parseInt(bikePoint.bike_stands),
+        available_bikes: parseInt(bikePoint.available_bikes),
         available_ebikes: null,
-        available_docks: parseInt(station.available_bike_stands),
-        last_update: station.last_update,
+        available_docks: parseInt(bikePoint.available_bike_stands),
+        last_update: bikePoint.last_update,
         dock_status: dock_status
     };
 };

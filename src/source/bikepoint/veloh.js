@@ -4,37 +4,33 @@ import config  from '../../config';
 const getRaw = bikePoint => {
     if (typeof bikePoint === 'undefined')
         return request('https://api.jcdecaux.com/vls/v1/stations?contract=Luxembourg&apiKey=' + config('API_KEY_JCD', true));
-
     return request('https://api.jcdecaux.com/vls/v1/stations/' + bikePoint + '?contract=Luxembourg&apiKey=' + config('API_KEY_JCD', true));
 };
 
-export const get = async bikePoint => {
-    var raw = await getRaw(bikePoint);
-    return JSON.parse(raw);
+export const loadBikePoints = async bikePoint => JSON.parse(await getRaw(bikePoint));
+
+export const all = async () => {
+    var bikePoints = await loadBikePoints();
+    return bikePoints.map(compileStation);
 };
 
-export const stations = async () => {
-    var stations = await get();
-    return stations.map(compileStation);
+export const get = async bikePointId => {
+    var bikePoint = await loadBikePoints(bikePointId);
+    return compileStation(bikePoint);
 };
 
-export const station = async bikePoint => {
-    var station = await get(bikePoint);
-    return compileStation(station);
-};
-
-export const compileStation = station => {
+export const compileStation = bikePoint => {
 
     var dock_status = [];
 
-    for (var i = 1; i <= station.available_bikes; i++) {
+    for (var i = 1; i <= bikePoint.available_bikes; i++) {
         dock_status.push({
             status:   'occupied',
             bikeType: 'manual'
         });
     }
 
-    for (i = 1; i <= station.available_bike_stands; i++) {
+    for (i = 1; i <= bikePoint.available_bike_stands; i++) {
         dock_status.push({
             status:   'free',
             bikeType: null
@@ -42,21 +38,21 @@ export const compileStation = station => {
     }
 
     return {
-        id: station.number,
-        open: station.status == 'OPEN',
-        name: station.name,
+        id: bikePoint.number,
+        open: bikePoint.status == 'OPEN',
+        name: bikePoint.name,
         position: {
-            longitude:      parseFloat(station.position.lat),
-            latitude:       parseFloat(station.position.lng)
+            longitude:      parseFloat(bikePoint.position.lat),
+            latitude:       parseFloat(bikePoint.position.lng)
         },
         city: null,
-        address: station.address,
+        address: bikePoint.address,
         photo: null,
-        docks: parseInt(station.bike_stands),
-        available_bikes: parseInt(station.available_bikes),
+        docks: parseInt(bikePoint.bike_stands),
+        available_bikes: parseInt(bikePoint.available_bikes),
         available_ebikes: null,
-        available_docks: parseInt(station.available_bike_stands),
-        last_update: station.last_update,
+        available_docks: parseInt(bikePoint.available_bike_stands),
+        last_update: bikePoint.last_update,
         dock_status: dock_status
     };
 };

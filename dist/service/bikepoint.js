@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.compileStation = exports.station = exports.stations = undefined;
+exports.compileStation = exports.get = exports.all = undefined;
 
 var _velok = require('../source/bikepoint/velok');
 
@@ -17,11 +17,11 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-const stations = exports.stations = () => {
+const all = exports.all = () => {
 
     const sources = {
-        'velok': velok.stations(),
-        'veloh': veloh.stations()
+        'velok': velok.all(),
+        'veloh': veloh.all()
     };
 
     var providers = Object.keys(sources);
@@ -40,28 +40,26 @@ const stations = exports.stations = () => {
     });
 };
 
-const station = exports.station = (() => {
+const get = exports.get = (() => {
     var _ref = _asyncToGenerator(function* (bikePoint) {
         var bikePointSplit = bikePoint.split(':');
         switch (bikePointSplit[0]) {
             case 'veloh':
-                bikePoint = yield veloh.station(bikePointSplit[1]);
+                bikePoint = yield veloh.get(bikePointSplit[1]);
                 break;
             case 'velok':
-                bikePoint = yield velok.station(bikePointSplit[1]);
+                bikePoint = yield velok.get(bikePointSplit[1]);
                 break;
         }
         return compileStation(bikePointSplit[0], bikePoint);
     });
 
-    return function station(_x) {
+    return function get(_x) {
         return _ref.apply(this, arguments);
     };
 })();
 
-const compileStation = exports.compileStation = function (provider, station) {
-
-    station.id = provider + ':' + station.id;
-
-    return station;
+const compileStation = exports.compileStation = function (provider, bikePoint) {
+    bikePoint.id = provider + ':' + bikePoint.id;
+    return bikePoint;
 };

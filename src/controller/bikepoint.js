@@ -1,9 +1,9 @@
 import * as bikepoint from '../service/bikepoint';
 
 export const index = async ctx => {
-    ctx.body = await bikepoint.stations();
+    ctx.body = await bikepoint.all();
 };
 
-export const show = async ctx => {
-    ctx.body = await bikepoint.station(ctx.params.bikePoint);
+export const get = async ctx => {
+    ctx.body = await bikepoint.get(ctx.params.bikePoint);
 };

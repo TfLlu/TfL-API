@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.compileStation = exports.station = exports.stations = exports.get = undefined;
+exports.compileStation = exports.get = exports.all = exports.loadBikePoints = undefined;
 
 var _requestPromiseNative = require('request-promise-native');
 
@@ -19,55 +19,50 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 const getRaw = () => (0, _requestPromiseNative2.default)('https://webservice.velok.lu/stationattache.aspx');
 
-const get = exports.get = (() => {
+const loadBikePoints = exports.loadBikePoints = (() => {
     var _ref = _asyncToGenerator(function* () {
         var raw = yield getRaw();
         var data = yield (0, _xmlParser2.default)(raw);
-
         return data['velok']['station'];
     });
 
-    return function get() {
+    return function loadBikePoints() {
         return _ref.apply(this, arguments);
     };
 })();
 
-const stations = exports.stations = (() => {
+const all = exports.all = (() => {
     var _ref2 = _asyncToGenerator(function* () {
-        var stations = yield get();
-        return stations.map(compileStation);
+        var bikePoints = yield loadBikePoints();
+        return bikePoints.map(compileStation);
     });
 
-    return function stations() {
+    return function all() {
         return _ref2.apply(this, arguments);
     };
 })();
 
-const station = exports.station = (() => {
-    var _ref3 = _asyncToGenerator(function* (_station) {
-        var stations = yield get();
-        stations = stations.map(compileStation);
-        for (var i = 0; i < stations.length; i++) {
-            if (stations[i].id == _station) {
-                return stations[i];
+const get = exports.get = (() => {
+    var _ref3 = _asyncToGenerator(function* (station) {
+        var bikePoints = yield loadBikePoints();
+        bikePoints = bikePoints.map(compileStation);
+        for (var i = 0; i < bikePoints.length; i++) {
+            if (bikePoints[i].id == station) {
+                return bikePoints[i];
             }
         }
     });
 
-    return function station(_x) {
+    return function get(_x) {
         return _ref3.apply(this, arguments);
     };
 })();
 
-const compileStation = exports.compileStation = station => {
-
+const compileStation = exports.compileStation = bikePoint => {
     var dock_status = [];
     var attache, status, bikeType;
-
-    for (var i = 1; i <= station.attaches; i++) {
-
-        attache = parseInt(station['attache' + i]);
-
+    for (var i = 1; i <= bikePoint.attaches; i++) {
+        attache = parseInt(bikePoint['attache' + i]);
         switch (attache) {
             case 0:
                 status = 'free';
@@ -84,7 +79,6 @@ const compileStation = exports.compileStation = station => {
                 bikeType = 'electric';
                 break;
         }
-
         dock_status.push({
             status: status,
             bikeType: bikeType
@@ -92,20 +86,20 @@ const compileStation = exports.compileStation = station => {
     }
 
     return {
-        id: parseInt(station.nstation),
-        open: station.active == 1,
-        name: station.nom,
+        id: parseInt(bikePoint.nstation),
+        open: bikePoint.active == 1,
+        name: bikePoint.nom,
         position: {
-            longitude: parseFloat(station.latitude),
-            latitude: parseFloat(station.longitude)
+            longitude: parseFloat(bikePoint.latitude),
+            latitude: parseFloat(bikePoint.longitude)
         },
-        city: station.nomlocalite,
-        address: station.lieu,
-        photo: station.urlphoto,
-        docks: parseInt(station.attaches),
-        available_bikes: parseInt(station.bikes),
-        available_ebikes: parseInt(station.ebikes),
-        available_docks: parseInt(station.libres),
+        city: bikePoint.nomlocalite,
+        address: bikePoint.lieu,
+        photo: bikePoint.urlphoto,
+        docks: parseInt(bikePoint.attaches),
+        available_bikes: parseInt(bikePoint.bikes),
+        available_ebikes: parseInt(bikePoint.ebikes),
+        available_docks: parseInt(bikePoint.libres),
         last_update: null,
         dock_status: dock_status
 

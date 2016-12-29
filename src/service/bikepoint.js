@@ -1,11 +1,11 @@
 import * as velok from '../source/bikepoint/velok';
 import * as veloh from '../source/bikepoint/veloh';
 
-export const stations = () => {
+export const all = () => {
 
     const sources = {
-        'velok': velok.stations(),
-        'veloh': veloh.stations()
+        'velok': velok.all(),
+        'veloh': veloh.all()
     };
 
     var providers = Object.keys(sources);
@@ -29,22 +29,20 @@ export const stations = () => {
 
 };
 
-export const station = async bikePoint => {
+export const get = async bikePoint => {
     var bikePointSplit = bikePoint.split(':');
     switch (bikePointSplit[0]){
     case 'veloh':
-        bikePoint = await veloh.station(bikePointSplit[1]);
+        bikePoint = await veloh.get(bikePointSplit[1]);
         break;
     case 'velok':
-        bikePoint = await velok.station(bikePointSplit[1]);
+        bikePoint = await velok.get(bikePointSplit[1]);
         break;
     }
     return compileStation(bikePointSplit[0], bikePoint);
 };
 
-export const compileStation = function(provider, station) {
-
-    station.id = provider + ':' + station.id;
-
-    return station;
+export const compileStation = function(provider, bikePoint) {
+    bikePoint.id = provider + ':' + bikePoint.id;
+    return bikePoint;
 };
