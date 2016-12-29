@@ -30,8 +30,16 @@ export const stations = () => {
 };
 
 export const station = async bikePoint => {
-    bikePoint = bikePoint.split(':');
-    return await veloh.station(bikePoint[1]);
+    var bikePointSplit = bikePoint.split(':');
+    switch (bikePointSplit[0]){
+    case 'veloh':
+        bikePoint = await veloh.station(bikePointSplit[1]);
+        break;
+    case 'velok':
+        bikePoint = await velok.station(bikePointSplit[1]);
+        break;
+    }
+    return compileStation(bikePointSplit[0], bikePoint);
 };
 
 export const compileStation = function(provider, station) {

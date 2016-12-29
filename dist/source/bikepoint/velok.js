@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.compileStation = exports.stations = exports.get = undefined;
+exports.compileStation = exports.station = exports.stations = exports.get = undefined;
 
 var _requestPromiseNative = require('request-promise-native');
 
@@ -40,6 +40,22 @@ const stations = exports.stations = (() => {
 
     return function stations() {
         return _ref2.apply(this, arguments);
+    };
+})();
+
+const station = exports.station = (() => {
+    var _ref3 = _asyncToGenerator(function* (_station) {
+        var stations = yield get();
+        stations = stations.map(compileStation);
+        for (var i = 0; i < stations.length; i++) {
+            if (stations[i].id == _station) {
+                return stations[i];
+            }
+        }
+    });
+
+    return function station(_x) {
+        return _ref3.apply(this, arguments);
     };
 })();
 

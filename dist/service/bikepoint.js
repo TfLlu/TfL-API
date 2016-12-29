@@ -42,8 +42,16 @@ const stations = exports.stations = () => {
 
 const station = exports.station = (() => {
     var _ref = _asyncToGenerator(function* (bikePoint) {
-        bikePoint = bikePoint.split(':');
-        return yield veloh.station(bikePoint[1]);
+        var bikePointSplit = bikePoint.split(':');
+        switch (bikePointSplit[0]) {
+            case 'veloh':
+                bikePoint = yield veloh.station(bikePointSplit[1]);
+                break;
+            case 'velok':
+                bikePoint = yield velok.station(bikePointSplit[1]);
+                break;
+        }
+        return compileStation(bikePointSplit[0], bikePoint);
     });
 
     return function station(_x) {

@@ -15,6 +15,16 @@ export const stations = async () => {
     return stations.map(compileStation);
 };
 
+export const station = async station => {
+    var stations = await get();
+    stations = stations.map(compileStation);
+    for (var i = 0; i < stations.length; i++) {
+        if (stations[i].id == station) {
+            return stations[i];
+        }
+    }
+};
+
 export const compileStation = station => {
 
     var dock_status = [];
