@@ -1,43 +1,104 @@
-import request from 'request-promise-native';
+import request  from 'request-promise-native';
+import config   from '../../config';
+import distance from '../../helper/distance';
+import inbox    from '../../helper/inbox';
+var cron = require('node-cron');
+
+var stopPoints = [];
 
 const getRaw = () => {
-    return request('http://travelplanner.mobiliteit.lu/hafas/query.exe/dot?performLocating=2&tpl=stop2csv&look_maxdist=150000&look_x=6112550&look_y=49610700&stationProxy=yes');
+    return request(config('MOBILITEIT_STOPPOINTS', true));
 };
 
-export const get = async bikePoint => {
+cron.schedule(config('MOBILITEIT_REFRESH_CRON', true), function(){
+    loadStoppoints();
+});
 
-    var raw = await getRaw(bikePoint);
-    var stations = raw.trim().split('\n');
-    var result = [];
+const loadStoppoints = async () => {
+    stopPoints = await load();
+};
 
-    for (var i = 0; i < stations.length; i++) {
-        var paramParts = stations[i].split('@');
+export const load = async () => {
+    var raw = await getRaw();
+    var rawStopPoints = raw.trim().split('\n');
+    var newStopPoints = [];
+
+    for (var i = 0; i < rawStopPoints.length; i++) {
+        var paramParts = rawStopPoints[i].split('@');
         var params = {};
         for (var j = 0; j < paramParts.length; j++) {
             var keyVal = paramParts[j].split('=', 2);
             params[keyVal[0]] = keyVal[1];
         }
-        result.push({
+        newStopPoints.push({
             id: parseInt(params.L, 10),
             name: params.O,
             longitude: parseFloat(params.X.replace(',', '.')),
             latitude: parseFloat(params.Y.replace(',', '.'))
         });
     }
-
-    return result;
+    return newStopPoints;
 };
 
-export const points = async () => {
-    var stations = await get();
-    return stations.map(compileStation);
+const cache = async () => {
+    if (stopPoints.length === 0) {
+        await loadStoppoints();
+    }
 };
 
-export const station = async bikePoint => {
-    var station = await get(bikePoint);
-    return compileStation(station);
+export const all = async () => {
+    await cache();
+    return stopPoints;
 };
 
-export const compileStation = station => {
-    return station;
+export const get = async stopPoint => {
+    await cache();
+    for (var i = 0; i < stopPoints.length; i++) {
+        if (stopPoints[i].id == stopPoint) {
+            return stopPoints[i];
+        }
+    }
+    return false;
+};
+
+export const around = async (lon, lat, radius) => {
+    await cache();
+    var dist = 0;
+    var stopPointsAround = [];
+
+    for (var i = 0; i < stopPoints.length; i++) {
+        dist = distance(
+            parseFloat(lon),
+            parseFloat(lat),
+            stopPoints[i].longitude,
+            stopPoints[i].latitude
+        );
+
+        if (dist <= radius) {
+            var temp = stopPoints[i];
+            temp.distance = parseFloat(dist.toFixed(2));
+            stopPointsAround.push(temp);
+        }
+    }
+    return stopPointsAround;
+};
+
+export const box = async (swlon, swlat, nelon, nelat) => {
+    await cache();
+    var whybox = false;
+    return stopPoints.filter(function(stopPoint) {
+        whybox = inbox(
+            swlon, swlat, nelon, nelat,
+            stopPoint.longitude,
+            stopPoint.latitude
+        );
+        return whybox;
+    });
+};
+
+export const search = async searchString => {
+    await cache();
+    return stopPoints.filter(function(stopPoint) {
+        return stopPoint.name.toLowerCase().indexOf(searchString) >= 0;
+    });
 };
