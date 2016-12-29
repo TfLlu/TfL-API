@@ -8,7 +8,7 @@ const getRaw = () => {
     return request(config('MOBILITEIT_STOPPOINTS', true));
 };
 
-cron.schedule('0 15 5 * * *', function(){
+cron.schedule(config('MOBILITEIT_REFRESH_CRON', true), function(){
     loadStoppoints();
 });
 

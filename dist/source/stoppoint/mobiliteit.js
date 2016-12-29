@@ -25,7 +25,7 @@ const getRaw = () => {
     return (0, _requestPromiseNative2.default)((0, _config2.default)('MOBILITEIT_STOPPOINTS', true));
 };
 
-cron.schedule('0 15 5 * * *', function () {
+cron.schedule((0, _config2.default)('MOBILITEIT_REFRESH_CRON', true), function () {
     loadStoppoints();
 });
 
