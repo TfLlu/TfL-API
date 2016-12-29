@@ -50,11 +50,11 @@ const loadStoppoints = (() => {
 const load = exports.load = (() => {
     var _ref2 = _asyncToGenerator(function* () {
         var raw = yield getRaw();
-        var stations = raw.trim().split('\n');
+        var rawStopPoints = raw.trim().split('\n');
         var newStopPoints = [];
 
-        for (var i = 0; i < stations.length; i++) {
-            var paramParts = stations[i].split('@');
+        for (var i = 0; i < rawStopPoints.length; i++) {
+            var paramParts = rawStopPoints[i].split('@');
             var params = {};
             for (var j = 0; j < paramParts.length; j++) {
                 var keyVal = paramParts[j].split('=', 2);
