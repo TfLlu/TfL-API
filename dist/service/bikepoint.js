@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.get = exports.all = exports.compileStation = undefined;
+exports.around = exports.get = exports.all = exports.compileStation = undefined;
 
 var _velok = require('../source/bikepoint/velok');
 
@@ -12,6 +12,12 @@ var velok = _interopRequireWildcard(_velok);
 var _veloh = require('../source/bikepoint/veloh');
 
 var veloh = _interopRequireWildcard(_veloh);
+
+var _distance = require('../helper/distance');
+
+var _distance2 = _interopRequireDefault(_distance);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -61,5 +67,29 @@ const get = exports.get = (() => {
 
     return function get(_x) {
         return _ref.apply(this, arguments);
+    };
+})();
+
+const around = exports.around = (() => {
+    var _ref2 = _asyncToGenerator(function* (lon, lat, radius) {
+        var bikePoints = yield all();
+
+        var dist = 0;
+        var bikePointsAround = [];
+
+        for (var i = 0; i < bikePoints.length; i++) {
+            dist = (0, _distance2.default)(parseFloat(lon), parseFloat(lat), bikePoints[i].position.longitude, bikePoints[i].position.latitude);
+
+            if (dist <= radius) {
+                var temp = bikePoints[i];
+                temp.distance = parseFloat(dist.toFixed(2));
+                bikePointsAround.push(temp);
+            }
+        }
+        return bikePointsAround;
+    });
+
+    return function around(_x2, _x3, _x4) {
+        return _ref2.apply(this, arguments);
     };
 })();

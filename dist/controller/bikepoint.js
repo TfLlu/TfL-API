@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.get = exports.index = undefined;
+exports.around = exports.get = exports.index = undefined;
 
 var _bikepoint = require('../service/bikepoint');
 
@@ -30,5 +30,15 @@ const get = exports.get = (() => {
 
     return function get(_x2) {
         return _ref2.apply(this, arguments);
+    };
+})();
+
+const around = exports.around = (() => {
+    var _ref3 = _asyncToGenerator(function* (ctx) {
+        ctx.body = yield bikepoint.around(parseFloat(ctx.params.lon), parseFloat(ctx.params.lat), ctx.params.radius);
+    });
+
+    return function around(_x3) {
+        return _ref3.apply(this, arguments);
     };
 })();

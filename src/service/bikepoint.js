@@ -1,5 +1,6 @@
 import * as velok from '../source/bikepoint/velok';
 import * as veloh from '../source/bikepoint/veloh';
+import distance   from '../helper/distance';
 
 export const compileStation = function(provider, bikePoint) {
     bikePoint.id = provider + ':' + bikePoint.id;
@@ -45,4 +46,27 @@ export const get = async bikePoint => {
         break;
     }
     return compileStation(bikePointSplit[0], bikePoint);
+};
+
+export const around = async (lon, lat, radius) => {
+    var bikePoints = await all();
+
+    var dist = 0;
+    var bikePointsAround = [];
+
+    for (var i = 0; i < bikePoints.length; i++) {
+        dist = distance(
+            parseFloat(lon),
+            parseFloat(lat),
+            bikePoints[i].position.longitude,
+            bikePoints[i].position.latitude
+        );
+
+        if (dist <= radius) {
+            var temp = bikePoints[i];
+            temp.distance = parseFloat(dist.toFixed(2));
+            bikePointsAround.push(temp);
+        }
+    }
+    return bikePointsAround;
 };
