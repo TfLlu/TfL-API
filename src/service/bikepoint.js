@@ -1,11 +1,23 @@
 import * as velok from '../source/bikepoint/velok';
 import * as veloh from '../source/bikepoint/veloh';
+import fuzzy      from 'fuzzy';
+import distance   from '../helper/distance';
+import inbox      from '../helper/inbox';
 
-export const stations = () => {
+var fuzzyOptions = {
+    extract: function(obj) { return obj.name + obj.address + obj.city; }
+};
+
+export const compileStation = function(provider, bikePoint) {
+    bikePoint.id = provider + ':' + bikePoint.id;
+    return bikePoint;
+};
+
+export const all = () => {
 
     const sources = {
-        'velok': velok.stations(),
-        'veloh': veloh.stations()
+        'velok': velok.all(),
+        'veloh': veloh.all()
     };
 
     var providers = Object.keys(sources);
@@ -29,14 +41,56 @@ export const stations = () => {
 
 };
 
-export const station = async bikePoint => {
-    bikePoint = bikePoint.split(':');
-    return await veloh.station(bikePoint[1]);
+export const get = async bikePoint => {
+    var bikePointSplit = bikePoint.split(':');
+    switch (bikePointSplit[0]){
+    case 'veloh':
+        bikePoint = await veloh.get(bikePointSplit[1]);
+        break;
+    case 'velok':
+        bikePoint = await velok.get(bikePointSplit[1]);
+        break;
+    }
+    return compileStation(bikePointSplit[0], bikePoint);
 };
 
-export const compileStation = function(provider, station) {
+export const around = async (lon, lat, radius) => {
+    var bikePoints = await all();
 
-    station.id = provider + ':' + station.id;
+    var dist = 0;
+    var bikePointsAround = [];
 
-    return station;
+    for (var i = 0; i < bikePoints.length; i++) {
+        dist = distance(
+            parseFloat(lon),
+            parseFloat(lat),
+            bikePoints[i].position.longitude,
+            bikePoints[i].position.latitude
+        );
+
+        if (dist <= radius) {
+            var temp = bikePoints[i];
+            temp.distance = parseFloat(dist.toFixed(2));
+            bikePointsAround.push(temp);
+        }
+    }
+    return bikePointsAround;
+};
+
+export const box = async (swlon, swlat, nelon, nelat) => {
+    var bikePoints = await all();
+    return bikePoints.filter(function(bikePoint) {
+        return inbox(
+            swlon, swlat, nelon, nelat,
+            bikePoint.position.longitude,
+            bikePoint.position.latitude
+        );
+    });
+};
+
+export const search = async searchString => {
+    var bikePoints = await all();
+
+    var results = fuzzy.filter(searchString, bikePoints, fuzzyOptions);
+    return results.map(function(res) { return res.original; });
 };
