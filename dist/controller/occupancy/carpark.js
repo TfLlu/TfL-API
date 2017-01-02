@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.show = exports.index = undefined;
+exports.get = exports.index = undefined;
 
 var _carpark = require('../../service/occupancy/carpark');
 
@@ -15,7 +15,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 const index = exports.index = (() => {
     var _ref = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield carpark.items();
+        ctx.body = yield carpark.all();
     });
 
     return function index(_x) {
@@ -23,12 +23,12 @@ const index = exports.index = (() => {
     };
 })();
 
-const show = exports.show = (() => {
+const get = exports.get = (() => {
     var _ref2 = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield carpark.item(ctx.params.item);
+        ctx.body = yield carpark.get(ctx.params.carPark);
     });
 
-    return function show(_x2) {
+    return function get(_x2) {
         return _ref2.apply(this, arguments);
     };
 })();

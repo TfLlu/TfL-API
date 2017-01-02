@@ -3,16 +3,26 @@ import xmlParser from '../../../helper/xmlParser';
 
 const getRaw = () => request('http://service.vdl.lu/rss/circulation_guidageparking.php');
 
-export const get = async () => {
+export const loadCarParks = async () => {
     var raw = await getRaw();
     var data = await xmlParser(raw);
 
     return data['rss']['channel']['item'];
 };
 
-export const items = async () => {
-    var items = await get();
-    return items.map(compileParking);
+export const all = async () => {
+    var carParks = await loadCarParks();
+    return carParks.map(compileParking);
+};
+
+export const get = async carPark => {
+    var carParks = await loadCarParks();
+    carParks = carParks.map(compileParking);
+    for (var i = 0; i < carParks.length; i++) {
+        if (carParks[i].id == carPark) {
+            return carParks[i];
+        }
+    }
 };
 
 export const compileParking = parking => {
