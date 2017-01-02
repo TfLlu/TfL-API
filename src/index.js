@@ -14,6 +14,7 @@ router.get('/BikePoint/around/:lon/:lat/:radius',        controller.bikepoint.ar
 router.get('/BikePoint/box/:swlon/:swlat/:nelon/:nelat', controller.bikepoint.box);
 router.get('/BikePoint/search/:searchstring',            controller.bikepoint.search);
 router.get('/Occupancy/CarPark',                         controller.carpark.index);
+router.get('/Occupancy/CarPark/:carPark',                controller.carpark.get);
 router.get('/StopPoint',                                 controller.stoppoint.index);
 router.get('/StopPoint/:stopPoint',                      controller.stoppoint.get);
 router.get('/StopPoint/around/:lon/:lat/:radius',        controller.stoppoint.around);
