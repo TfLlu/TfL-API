@@ -78,8 +78,10 @@ const load = exports.load = (() => {
             newStopPoints.push({
                 id: parseInt(params.L, 10),
                 name: params.O,
-                longitude: parseFloat(params.X.replace(',', '.')),
-                latitude: parseFloat(params.Y.replace(',', '.'))
+                position: {
+                    longitude: parseFloat(params.X.replace(',', '.')),
+                    latitude: parseFloat(params.Y.replace(',', '.'))
+                }
             });
         }
         return newStopPoints;
