@@ -1,7 +1,12 @@
 import * as velok from '../source/bikepoint/velok';
 import * as veloh from '../source/bikepoint/veloh';
+import fuzzy      from 'fuzzy';
 import distance   from '../helper/distance';
 import inbox      from '../helper/inbox';
+
+var fuzzyOptions = {
+    extract: function(obj) { return obj.name + obj.address + obj.city; }
+};
 
 export const compileStation = function(provider, bikePoint) {
     bikePoint.id = provider + ':' + bikePoint.id;
@@ -81,4 +86,11 @@ export const box = async (swlon, swlat, nelon, nelat) => {
             bikePoint.position.latitude
         );
     });
+};
+
+export const search = async searchString => {
+    var bikePoints = await all();
+
+    var results = fuzzy.filter(searchString, bikePoints, fuzzyOptions);
+    return results.map(function(res) { return res.original; });
 };

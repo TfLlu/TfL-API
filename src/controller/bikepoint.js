@@ -24,3 +24,9 @@ export const box = async ctx => {
         parseFloat(ctx.params.nelat)
     );
 };
+
+export const search = async ctx => {
+    ctx.body = await bikepoint.search(
+        ctx.params.searchstring.toLowerCase()
+    );
+};

@@ -30,6 +30,7 @@ router.get('/BikePoint', _controller2.default.bikepoint.index);
 router.get('/BikePoint/:bikePoint', _controller2.default.bikepoint.get);
 router.get('/BikePoint/around/:lon/:lat/:radius', _controller2.default.bikepoint.around);
 router.get('/BikePoint/box/:swlon/:swlat/:nelon/:nelat', _controller2.default.bikepoint.box);
+router.get('/BikePoint/search/:searchstring', _controller2.default.bikepoint.search);
 router.get('/Occupancy/CarPark', _controller2.default.carpark.index);
 router.get('/StopPoint', _controller2.default.stoppoint.index);
 router.get('/StopPoint/:stopPoint', _controller2.default.stoppoint.get);

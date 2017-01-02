@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.box = exports.around = exports.get = exports.index = undefined;
+exports.search = exports.box = exports.around = exports.get = exports.index = undefined;
 
 var _bikepoint = require('../service/bikepoint');
 
@@ -50,5 +50,15 @@ const box = exports.box = (() => {
 
     return function box(_x4) {
         return _ref4.apply(this, arguments);
+    };
+})();
+
+const search = exports.search = (() => {
+    var _ref5 = _asyncToGenerator(function* (ctx) {
+        ctx.body = yield bikepoint.search(ctx.params.searchstring.toLowerCase());
+    });
+
+    return function search(_x5) {
+        return _ref5.apply(this, arguments);
     };
 })();
