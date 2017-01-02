@@ -105,8 +105,8 @@ export const around = async (lon, lat, radius) => {
         dist = distance(
             parseFloat(lon),
             parseFloat(lat),
-            stopPoints[i].longitude,
-            stopPoints[i].latitude
+            stopPoints[i].position.longitude,
+            stopPoints[i].position.latitude
         );
 
         if (dist <= radius) {
