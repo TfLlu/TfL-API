@@ -110,7 +110,9 @@ export const around = async (lon, lat, radius) => {
         );
 
         if (dist <= radius) {
-            var temp = stopPoints[i];
+            var temp = {
+                ...stopPoints[i]
+            };
             temp.distance = parseFloat(dist.toFixed(2));
             stopPointsAround.push(temp);
         }
