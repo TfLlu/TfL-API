@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.around = exports.get = exports.all = exports.compileStation = undefined;
+exports.box = exports.around = exports.get = exports.all = exports.compileStation = undefined;
 
 var _velok = require('../source/bikepoint/velok');
 
@@ -16,6 +16,10 @@ var veloh = _interopRequireWildcard(_veloh);
 var _distance = require('../helper/distance');
 
 var _distance2 = _interopRequireDefault(_distance);
+
+var _inbox = require('../helper/inbox');
+
+var _inbox2 = _interopRequireDefault(_inbox);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -91,5 +95,18 @@ const around = exports.around = (() => {
 
     return function around(_x2, _x3, _x4) {
         return _ref2.apply(this, arguments);
+    };
+})();
+
+const box = exports.box = (() => {
+    var _ref3 = _asyncToGenerator(function* (swlon, swlat, nelon, nelat) {
+        var bikePoints = yield all();
+        return bikePoints.filter(function (bikePoint) {
+            return (0, _inbox2.default)(swlon, swlat, nelon, nelat, bikePoint.position.longitude, bikePoint.position.latitude);
+        });
+    });
+
+    return function box(_x5, _x6, _x7, _x8) {
+        return _ref3.apply(this, arguments);
     };
 })();

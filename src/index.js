@@ -11,6 +11,7 @@ router.get('/',                                          controller.home.index);
 router.get('/BikePoint',                                 controller.bikepoint.index);
 router.get('/BikePoint/:bikePoint',                      controller.bikepoint.get);
 router.get('/BikePoint/around/:lon/:lat/:radius',        controller.bikepoint.around);
+router.get('/BikePoint/box/:swlon/:swlat/:nelon/:nelat', controller.bikepoint.box);
 router.get('/Occupancy/CarPark',                         controller.carpark.index);
 router.get('/StopPoint',                                 controller.stoppoint.index);
 router.get('/StopPoint/:stopPoint',                      controller.stoppoint.get);
