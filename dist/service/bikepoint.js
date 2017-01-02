@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.compileStation = exports.station = exports.stations = undefined;
+exports.search = exports.box = exports.around = exports.get = exports.all = exports.compileStation = undefined;
 
 var _velok = require('../source/bikepoint/velok');
 
@@ -13,15 +13,40 @@ var _veloh = require('../source/bikepoint/veloh');
 
 var veloh = _interopRequireWildcard(_veloh);
 
+var _fuzzy = require('fuzzy');
+
+var _fuzzy2 = _interopRequireDefault(_fuzzy);
+
+var _distance = require('../helper/distance');
+
+var _distance2 = _interopRequireDefault(_distance);
+
+var _inbox = require('../helper/inbox');
+
+var _inbox2 = _interopRequireDefault(_inbox);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-const stations = exports.stations = () => {
+var fuzzyOptions = {
+    extract: function (obj) {
+        return obj.name + obj.address + obj.city;
+    }
+};
+
+const compileStation = exports.compileStation = function (provider, bikePoint) {
+    bikePoint.id = provider + ':' + bikePoint.id;
+    return bikePoint;
+};
+
+const all = exports.all = () => {
 
     const sources = {
-        'velok': velok.stations(),
-        'veloh': veloh.stations()
+        'velok': velok.all(),
+        'veloh': veloh.all()
     };
 
     var providers = Object.keys(sources);
@@ -40,20 +65,73 @@ const stations = exports.stations = () => {
     });
 };
 
-const station = exports.station = (() => {
+const get = exports.get = (() => {
     var _ref = _asyncToGenerator(function* (bikePoint) {
-        bikePoint = bikePoint.split(':');
-        return yield veloh.station(bikePoint[1]);
+        var bikePointSplit = bikePoint.split(':');
+        switch (bikePointSplit[0]) {
+            case 'veloh':
+                bikePoint = yield veloh.get(bikePointSplit[1]);
+                break;
+            case 'velok':
+                bikePoint = yield velok.get(bikePointSplit[1]);
+                break;
+        }
+        return compileStation(bikePointSplit[0], bikePoint);
     });
 
-    return function station(_x) {
+    return function get(_x) {
         return _ref.apply(this, arguments);
     };
 })();
 
-const compileStation = exports.compileStation = function (provider, station) {
+const around = exports.around = (() => {
+    var _ref2 = _asyncToGenerator(function* (lon, lat, radius) {
+        var bikePoints = yield all();
 
-    station.id = provider + ':' + station.id;
+        var dist = 0;
+        var bikePointsAround = [];
 
-    return station;
-};
+        for (var i = 0; i < bikePoints.length; i++) {
+            dist = (0, _distance2.default)(parseFloat(lon), parseFloat(lat), bikePoints[i].position.longitude, bikePoints[i].position.latitude);
+
+            if (dist <= radius) {
+                var temp = bikePoints[i];
+                temp.distance = parseFloat(dist.toFixed(2));
+                bikePointsAround.push(temp);
+            }
+        }
+        return bikePointsAround;
+    });
+
+    return function around(_x2, _x3, _x4) {
+        return _ref2.apply(this, arguments);
+    };
+})();
+
+const box = exports.box = (() => {
+    var _ref3 = _asyncToGenerator(function* (swlon, swlat, nelon, nelat) {
+        var bikePoints = yield all();
+        return bikePoints.filter(function (bikePoint) {
+            return (0, _inbox2.default)(swlon, swlat, nelon, nelat, bikePoint.position.longitude, bikePoint.position.latitude);
+        });
+    });
+
+    return function box(_x5, _x6, _x7, _x8) {
+        return _ref3.apply(this, arguments);
+    };
+})();
+
+const search = exports.search = (() => {
+    var _ref4 = _asyncToGenerator(function* (searchString) {
+        var bikePoints = yield all();
+
+        var results = _fuzzy2.default.filter(searchString, bikePoints, fuzzyOptions);
+        return results.map(function (res) {
+            return res.original;
+        });
+    });
+
+    return function search(_x9) {
+        return _ref4.apply(this, arguments);
+    };
+})();
