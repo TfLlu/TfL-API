@@ -167,7 +167,7 @@ const around = exports.around = (() => {
         var stopPointsAround = [];
 
         for (var i = 0; i < stopPoints.length; i++) {
-            dist = (0, _distance2.default)(parseFloat(lon), parseFloat(lat), stopPoints[i].longitude, stopPoints[i].latitude);
+            dist = (0, _distance2.default)(parseFloat(lon), parseFloat(lat), stopPoints[i].position.longitude, stopPoints[i].position.latitude);
 
             if (dist <= radius) {
                 var temp = stopPoints[i];
