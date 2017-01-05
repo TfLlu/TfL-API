@@ -189,7 +189,7 @@ const box = exports.box = (() => {
     var _ref8 = _asyncToGenerator(function* (swlon, swlat, nelon, nelat) {
         yield cache();
         return stopPoints.filter(function (stopPoint) {
-            return (0, _inbox2.default)(swlon, swlat, nelon, nelat, stopPoint.longitude, stopPoint.latitude);
+            return (0, _inbox2.default)(swlon, swlat, nelon, nelat, stopPoint.position.longitude, stopPoint.position.latitude);
         });
     });
 
