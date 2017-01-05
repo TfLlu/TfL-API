@@ -125,8 +125,8 @@ export const box = async (swlon, swlat, nelon, nelat) => {
     return stopPoints.filter(function(stopPoint) {
         return inbox(
             swlon, swlat, nelon, nelat,
-            stopPoint.longitude,
-            stopPoint.latitude
+            stopPoint.position.longitude,
+            stopPoint.position.latitude
         );
     });
 };
