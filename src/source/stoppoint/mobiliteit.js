@@ -60,7 +60,10 @@ const cache = async () => {
 
 export const all = async () => {
     await cache();
-    return stopPoints;
+    return {
+        type: 'FeatureCollection',
+        features: stopPoints
+    };
 };
 
 export const get = async stopPoint => {

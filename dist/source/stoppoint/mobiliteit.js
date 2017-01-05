@@ -110,7 +110,10 @@ const cache = (() => {
 const all = exports.all = (() => {
     var _ref5 = _asyncToGenerator(function* () {
         yield cache();
-        return stopPoints;
+        return {
+            type: 'FeatureCollection',
+            features: stopPoints
+        };
     });
 
     return function all() {
