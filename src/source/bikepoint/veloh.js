@@ -38,21 +38,27 @@ export const compileStation = bikePoint => {
     }
 
     return {
-        id: bikePoint.number,
-        open: bikePoint.status == 'OPEN',
-        name: bikePoint.name,
-        position: {
-            longitude:      parseFloat(bikePoint.position.lng),
-            latitude:       parseFloat(bikePoint.position.lat)
+        type: 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: [
+                parseFloat(bikePoint.position.lng),
+                parseFloat(bikePoint.position.lat)
+            ]
         },
-        city: null,
-        address: bikePoint.address,
-        photo: null,
-        docks: parseInt(bikePoint.bike_stands),
-        available_bikes: parseInt(bikePoint.available_bikes),
-        available_ebikes: null,
-        available_docks: parseInt(bikePoint.available_bike_stands),
-        last_update: bikePoint.last_update,
-        dock_status: dock_status
+        properties: {
+            id: bikePoint.number,
+            open: bikePoint.status == 'OPEN',
+            name: bikePoint.name,
+            city: null,
+            address: bikePoint.address,
+            photo: null,
+            docks: parseInt(bikePoint.bike_stands),
+            available_bikes: parseInt(bikePoint.available_bikes),
+            available_ebikes: null,
+            available_docks: parseInt(bikePoint.available_bike_stands),
+            last_update: bikePoint.last_update,
+            dock_status: dock_status
+        }
     };
 };
