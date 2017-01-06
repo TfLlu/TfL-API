@@ -15,6 +15,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 const plan = exports.plan = (() => {
     var _ref = _asyncToGenerator(function* (ctx) {
+        ctx.type = 'json';
         ctx.body = yield journey.plan(ctx.params.from, ctx.params.to);
     });
 
