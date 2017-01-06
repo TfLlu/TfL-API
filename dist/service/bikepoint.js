@@ -139,9 +139,13 @@ const search = exports.search = (() => {
         bikePoints = bikePoints.features;
 
         var results = _fuzzy2.default.filter(searchString, bikePoints, fuzzyOptions);
-        return results.map(function (res) {
+        results = results.map(function (res) {
             return res.original;
         });
+        return {
+            type: 'FeatureCollection',
+            features: results
+        };
     });
 
     return function search(_x9) {
