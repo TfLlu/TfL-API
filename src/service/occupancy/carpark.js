@@ -16,7 +16,10 @@ export const all = () => {
                 ...results[i].map( item => compileStation(providers[i], item))
             ];
         }
-        return items;
+        return {
+            type: 'FeatureCollection',
+            features: items
+        };
     });
 };
 
@@ -35,6 +38,6 @@ export const get = async carPark => {
 };
 
 export const compileStation = function(provider, item) {
-    item.id = provider + ':' + item.id;
+    item.properties.id = provider + ':' + item.properties.id;
     return item;
 };

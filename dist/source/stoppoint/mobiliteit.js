@@ -5,8 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.search = exports.box = exports.around = exports.departures = exports.get = exports.all = exports.load = undefined;
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _requestPromiseNative = require('request-promise-native');
 
 var _requestPromiseNative2 = _interopRequireDefault(_requestPromiseNative);
@@ -36,7 +34,7 @@ var cron = require('node-cron');
 var stopPoints = [];
 var fuzzyOptions = {
     extract: function (obj) {
-        return obj.name;
+        return obj.properties.name;
     }
 };
 
@@ -78,11 +76,14 @@ const load = exports.load = (() => {
                 params[keyVal[0]] = keyVal[1];
             }
             newStopPoints.push({
-                id: parseInt(params.L, 10),
-                name: params.O,
-                position: {
-                    longitude: parseFloat(params.X.replace(',', '.')),
-                    latitude: parseFloat(params.Y.replace(',', '.'))
+                type: 'Feature',
+                geometry: {
+                    type: 'Point',
+                    coordinates: [parseFloat(params.X.replace(',', '.')), parseFloat(params.Y.replace(',', '.'))]
+                },
+                properties: {
+                    id: parseInt(params.L, 10),
+                    name: params.O
                 }
             });
         }
@@ -109,7 +110,10 @@ const cache = (() => {
 const all = exports.all = (() => {
     var _ref5 = _asyncToGenerator(function* () {
         yield cache();
-        return stopPoints;
+        return {
+            type: 'FeatureCollection',
+            features: stopPoints
+        };
     });
 
     return function all() {
@@ -184,15 +188,25 @@ const around = exports.around = (() => {
         var stopPointsAround = [];
 
         for (var i = 0; i < stopPoints.length; i++) {
-            dist = (0, _distance2.default)(parseFloat(lon), parseFloat(lat), stopPoints[i].position.longitude, stopPoints[i].position.latitude);
+            dist = (0, _distance2.default)(parseFloat(lon), parseFloat(lat), stopPoints[i].geometry.coordinates[0], stopPoints[i].geometry.coordinates[1]);
 
             if (dist <= radius) {
-                var temp = _extends({}, stopPoints[i]);
-                temp.distance = parseFloat(dist.toFixed(2));
-                stopPointsAround.push(temp);
+                //TODO: fix this piece of code...
+                stopPointsAround.push({
+                    type: stopPoints[i].type,
+                    geometry: stopPoints[i].geometry,
+                    properties: {
+                        id: stopPoints[i].properties.id,
+                        name: stopPoints[i].properties.name,
+                        distance: parseFloat(dist.toFixed(2))
+                    }
+                });
             }
         }
-        return stopPointsAround;
+        return {
+            type: 'FeatureCollection',
+            features: stopPointsAround
+        };
     });
 
     return function around(_x3, _x4, _x5) {
@@ -203,9 +217,13 @@ const around = exports.around = (() => {
 const box = exports.box = (() => {
     var _ref9 = _asyncToGenerator(function* (swlon, swlat, nelon, nelat) {
         yield cache();
-        return stopPoints.filter(function (stopPoint) {
-            return (0, _inbox2.default)(swlon, swlat, nelon, nelat, stopPoint.position.longitude, stopPoint.position.latitude);
+        var stopPointsInBox = stopPoints.filter(function (stopPoint) {
+            return (0, _inbox2.default)(swlon, swlat, nelon, nelat, stopPoint.geometry.coordinates[0], stopPoint.geometry.coordinates[1]);
         });
+        return {
+            type: 'FeatureCollection',
+            features: stopPointsInBox
+        };
     });
 
     return function box(_x6, _x7, _x8, _x9) {
@@ -218,9 +236,14 @@ const search = exports.search = (() => {
         yield cache();
 
         var results = _fuzzy2.default.filter(searchString, stopPoints, fuzzyOptions);
-        return results.map(function (res) {
+        var stopPointMatches = results.map(function (res) {
             return res.original;
         });
+
+        return {
+            type: 'FeatureCollection',
+            features: stopPointMatches
+        };
     });
 
     return function search(_x10) {
