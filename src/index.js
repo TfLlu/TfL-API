@@ -28,3 +28,5 @@ app.use(monitor)
    .use(router.allowedMethods());
 
 app.listen(config('SERVER_PORT', true));
+
+module.exports = app;

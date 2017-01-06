@@ -44,3 +44,5 @@ router.get('/Weather', _controller2.default.weather.current);
 app.use(_monitor2.default).use(router.routes()).use(router.allowedMethods());
 
 app.listen((0, _config2.default)('SERVER_PORT', true));
+
+module.exports = app;
