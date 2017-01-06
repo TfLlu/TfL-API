@@ -18,7 +18,7 @@ export const get = async station => {
     var bikePoints = await loadBikePoints();
     bikePoints = bikePoints.map(compileStation);
     for (var i = 0; i < bikePoints.length; i++) {
-        if (bikePoints[i].id == station) {
+        if (bikePoints[i].properties.id == station) {
             return bikePoints[i];
         }
     }
@@ -52,22 +52,27 @@ export const compileStation = bikePoint => {
     }
 
     return {
-        id:                 parseInt(bikePoint.nstation),
-        open:               bikePoint.active == 1,
-        name:               bikePoint.nom,
-        position: {
-            longitude:      parseFloat(bikePoint.longitude),
-            latitude:       parseFloat(bikePoint.latitude)
+        type: 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: [
+                parseFloat(bikePoint.longitude),
+                parseFloat(bikePoint.latitude)
+            ]
         },
-        city:               bikePoint.nomlocalite,
-        address:            bikePoint.lieu,
-        photo:              bikePoint.urlphoto,
-        docks:              parseInt(bikePoint.attaches),
-        available_bikes:    parseInt(bikePoint.bikes),
-        available_ebikes:   parseInt(bikePoint.ebikes),
-        available_docks:    parseInt(bikePoint.libres),
-        last_update:        null,
-        dock_status:        dock_status
-
+        properties: {
+            id:                 parseInt(bikePoint.nstation),
+            open:               bikePoint.active == 1,
+            name:               bikePoint.nom,
+            city:               bikePoint.nomlocalite,
+            address:            bikePoint.lieu,
+            photo:              bikePoint.urlphoto,
+            docks:              parseInt(bikePoint.attaches),
+            available_bikes:    parseInt(bikePoint.bikes),
+            available_ebikes:   parseInt(bikePoint.ebikes),
+            available_docks:    parseInt(bikePoint.libres),
+            last_update:        null,
+            dock_status:        dock_status
+        }
     };
 };

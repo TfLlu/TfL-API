@@ -25,7 +25,10 @@ const all = exports.all = () => {
         for (let i = 0; i < results.length; i++) {
             items = [...items, ...results[i].map(item => compileStation(providers[i], item))];
         }
-        return items;
+        return {
+            type: 'FeatureCollection',
+            features: items
+        };
     });
 };
 
@@ -50,6 +53,6 @@ const get = exports.get = (() => {
 })();
 
 const compileStation = exports.compileStation = function (provider, item) {
-    item.id = provider + ':' + item.id;
+    item.properties.id = provider + ':' + item.properties.id;
     return item;
 };
