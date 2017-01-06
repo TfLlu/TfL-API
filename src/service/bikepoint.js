@@ -106,5 +106,9 @@ export const search = async searchString => {
     bikePoints = bikePoints.features;
 
     var results = fuzzy.filter(searchString, bikePoints, fuzzyOptions);
-    return results.map(function(res) { return res.original; });
+    results = results.map(function(res) { return res.original; });
+    return {
+        type: 'FeatureCollection',
+        features: results
+    };
 };
