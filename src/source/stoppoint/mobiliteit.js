@@ -67,6 +67,15 @@ export const all = async () => {
 };
 
 export const get = async stopPoint => {
+    await cache();
+    for (var i = 0; i < stopPoints.length; i++) {
+        if (stopPoints[i].properties.id == stopPoint) {
+            return stopPoints[i];
+        }
+    }
+};
+
+export const departures = async stopPoint => {
     var rawData = await request(config('MOBILITEIT_DEPARTURE', true) + stopPoint);
     var departures = [];
     var rawDepartures = JSON.parse(rawData).Departure;

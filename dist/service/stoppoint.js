@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.search = exports.box = exports.around = exports.get = exports.all = undefined;
+exports.search = exports.box = exports.around = exports.departures = exports.get = exports.all = undefined;
 
 var _mobiliteit = require('../source/stoppoint/mobiliteit');
 
@@ -33,32 +33,42 @@ const get = exports.get = (() => {
     };
 })();
 
-const around = exports.around = (() => {
-    var _ref3 = _asyncToGenerator(function* (lon, lat, radius) {
-        return yield mobiliteit.around(lon, lat, radius);
+const departures = exports.departures = (() => {
+    var _ref3 = _asyncToGenerator(function* (stopPoint) {
+        return yield mobiliteit.departures(stopPoint);
     });
 
-    return function around(_x2, _x3, _x4) {
+    return function departures(_x2) {
         return _ref3.apply(this, arguments);
     };
 })();
 
-const box = exports.box = (() => {
-    var _ref4 = _asyncToGenerator(function* (swlon, swlat, nelon, nelat) {
-        return yield mobiliteit.box(swlon, swlat, nelon, nelat);
+const around = exports.around = (() => {
+    var _ref4 = _asyncToGenerator(function* (lon, lat, radius) {
+        return yield mobiliteit.around(lon, lat, radius);
     });
 
-    return function box(_x5, _x6, _x7, _x8) {
+    return function around(_x3, _x4, _x5) {
         return _ref4.apply(this, arguments);
     };
 })();
 
+const box = exports.box = (() => {
+    var _ref5 = _asyncToGenerator(function* (swlon, swlat, nelon, nelat) {
+        return yield mobiliteit.box(swlon, swlat, nelon, nelat);
+    });
+
+    return function box(_x6, _x7, _x8, _x9) {
+        return _ref5.apply(this, arguments);
+    };
+})();
+
 const search = exports.search = (() => {
-    var _ref5 = _asyncToGenerator(function* (searchString) {
+    var _ref6 = _asyncToGenerator(function* (searchString) {
         return yield mobiliteit.search(searchString);
     });
 
-    return function search(_x9) {
-        return _ref5.apply(this, arguments);
+    return function search(_x10) {
+        return _ref6.apply(this, arguments);
     };
 })();
