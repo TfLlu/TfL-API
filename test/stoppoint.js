@@ -14,6 +14,7 @@ describe('StopPoints', () => {
                 .get('/StopPoint')
                 .end((err, res) => {
                     res.should.have.status(200);
+                    res.should.be.json;
                     res.body.should.be.a('object');
                     geojsonValidation.isFeatureCollection(res.body).should.be.equal(true);
                     var props = res.body.features[0].properties;
@@ -30,6 +31,7 @@ describe('StopPoints', () => {
                 .get('/StopPoint/200901011')
                 .end((err, res) => {
                     res.should.have.status(200);
+                    res.should.be.json;
                     res.body.should.be.a('object');
                     geojsonValidation.isFeature(res.body).should.be.equal(true);
                     res.body.properties.id.should.be.equal(200901011);
@@ -45,6 +47,7 @@ describe('StopPoints', () => {
                 .get('/StopPoint/Departures/200901011')
                 .end((err, res) => {
                     res.should.have.status(200);
+                    res.should.be.json;
                     res.body.should.be.a('array');
                     res.body.length.should.be.within(1,25);
                     var departure = res.body[0];
@@ -65,6 +68,7 @@ describe('StopPoints', () => {
                 .get('/StopPoint/around/6.133646/49.60067/100')
                 .end((err, res) => {
                     res.should.have.status(200);
+                    res.should.be.json;
                     res.body.should.be.a('object');
                     geojsonValidation.isFeatureCollection(res.body).should.be.equal(true);
                     res.body.features.length.should.be.within(2,10);
@@ -82,6 +86,7 @@ describe('StopPoints', () => {
                 .get('/StopPoint/box/6.133052/49.60067/6.133646/49.600814')
                 .end((err, res) => {
                     res.should.have.status(200);
+                    res.should.be.json;
                     res.body.should.be.a('object');
                     geojsonValidation.isFeatureCollection(res.body).should.be.equal(true);
                     res.body.features.length.should.be.equal(2);
@@ -99,6 +104,7 @@ describe('StopPoints', () => {
                 .get('/StopPoint/search/Schoenach')
                 .end((err, res) => {
                     res.should.have.status(200);
+                    res.should.be.json;
                     res.body.should.be.a('object');
                     geojsonValidation.isFeatureCollection(res.body).should.be.equal(true);
                     res.body.features.length.should.be.equal(1,5);
