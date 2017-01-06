@@ -125,7 +125,7 @@ const get = exports.get = (() => {
     var _ref6 = _asyncToGenerator(function* (stopPoint) {
         yield cache();
         for (var i = 0; i < stopPoints.length; i++) {
-            if (stopPoints[i].id == stopPoint) {
+            if (stopPoints[i].properties.id == stopPoint) {
                 return stopPoints[i];
             }
         }

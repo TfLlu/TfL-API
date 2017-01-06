@@ -69,7 +69,7 @@ export const all = async () => {
 export const get = async stopPoint => {
     await cache();
     for (var i = 0; i < stopPoints.length; i++) {
-        if (stopPoints[i].id == stopPoint) {
+        if (stopPoints[i].properties.id == stopPoint) {
             return stopPoints[i];
         }
     }
