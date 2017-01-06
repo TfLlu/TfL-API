@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "nodejs dist/index.js",
-    "test": "mocha --timeout 10000"
+    "test": "PORT=12345 mocha --timeout 10000"
   },
   "repository": {
     "type": "git",
