@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.search = exports.box = exports.around = exports.get = exports.all = exports.load = undefined;
+exports.search = exports.box = exports.around = exports.departures = exports.get = exports.all = exports.load = undefined;
 
 var _requestPromiseNative = require('request-promise-native');
 
@@ -34,7 +34,7 @@ var cron = require('node-cron');
 var stopPoints = [];
 var fuzzyOptions = {
     extract: function (obj) {
-        return obj.name;
+        return obj.properties.name;
     }
 };
 
@@ -76,10 +76,15 @@ const load = exports.load = (() => {
                 params[keyVal[0]] = keyVal[1];
             }
             newStopPoints.push({
-                id: parseInt(params.L, 10),
-                name: params.O,
-                longitude: parseFloat(params.X.replace(',', '.')),
-                latitude: parseFloat(params.Y.replace(',', '.'))
+                type: 'Feature',
+                geometry: {
+                    type: 'Point',
+                    coordinates: [parseFloat(params.X.replace(',', '.')), parseFloat(params.Y.replace(',', '.'))]
+                },
+                properties: {
+                    id: parseInt(params.L, 10),
+                    name: params.O
+                }
             });
         }
         return newStopPoints;
@@ -105,7 +110,10 @@ const cache = (() => {
 const all = exports.all = (() => {
     var _ref5 = _asyncToGenerator(function* () {
         yield cache();
-        return stopPoints;
+        return {
+            type: 'FeatureCollection',
+            features: stopPoints
+        };
     });
 
     return function all() {
@@ -115,6 +123,21 @@ const all = exports.all = (() => {
 
 const get = exports.get = (() => {
     var _ref6 = _asyncToGenerator(function* (stopPoint) {
+        yield cache();
+        for (var i = 0; i < stopPoints.length; i++) {
+            if (stopPoints[i].properties.id == stopPoint) {
+                return stopPoints[i];
+            }
+        }
+    });
+
+    return function get(_x) {
+        return _ref6.apply(this, arguments);
+    };
+})();
+
+const departures = exports.departures = (() => {
+    var _ref7 = _asyncToGenerator(function* (stopPoint) {
         var rawData = yield (0, _requestPromiseNative2.default)((0, _config2.default)('MOBILITEIT_DEPARTURE', true) + stopPoint);
         var departures = [];
         var rawDepartures = JSON.parse(rawData).Departure;
@@ -153,58 +176,77 @@ const get = exports.get = (() => {
         return departures;
     });
 
-    return function get(_x) {
-        return _ref6.apply(this, arguments);
+    return function departures(_x2) {
+        return _ref7.apply(this, arguments);
     };
 })();
 
 const around = exports.around = (() => {
-    var _ref7 = _asyncToGenerator(function* (lon, lat, radius) {
+    var _ref8 = _asyncToGenerator(function* (lon, lat, radius) {
         yield cache();
         var dist = 0;
         var stopPointsAround = [];
 
         for (var i = 0; i < stopPoints.length; i++) {
-            dist = (0, _distance2.default)(parseFloat(lon), parseFloat(lat), stopPoints[i].longitude, stopPoints[i].latitude);
+            dist = (0, _distance2.default)(parseFloat(lon), parseFloat(lat), stopPoints[i].geometry.coordinates[0], stopPoints[i].geometry.coordinates[1]);
 
             if (dist <= radius) {
-                var temp = stopPoints[i];
-                temp.distance = parseFloat(dist.toFixed(2));
-                stopPointsAround.push(temp);
+                //TODO: fix this piece of code...
+                stopPointsAround.push({
+                    type: stopPoints[i].type,
+                    geometry: stopPoints[i].geometry,
+                    properties: {
+                        id: stopPoints[i].properties.id,
+                        name: stopPoints[i].properties.name,
+                        distance: parseFloat(dist.toFixed(2))
+                    }
+                });
             }
         }
-        return stopPointsAround;
+        return {
+            type: 'FeatureCollection',
+            features: stopPointsAround
+        };
     });
 
-    return function around(_x2, _x3, _x4) {
-        return _ref7.apply(this, arguments);
-    };
-})();
-
-const box = exports.box = (() => {
-    var _ref8 = _asyncToGenerator(function* (swlon, swlat, nelon, nelat) {
-        yield cache();
-        return stopPoints.filter(function (stopPoint) {
-            return (0, _inbox2.default)(swlon, swlat, nelon, nelat, stopPoint.longitude, stopPoint.latitude);
-        });
-    });
-
-    return function box(_x5, _x6, _x7, _x8) {
+    return function around(_x3, _x4, _x5) {
         return _ref8.apply(this, arguments);
     };
 })();
 
+const box = exports.box = (() => {
+    var _ref9 = _asyncToGenerator(function* (swlon, swlat, nelon, nelat) {
+        yield cache();
+        var stopPointsInBox = stopPoints.filter(function (stopPoint) {
+            return (0, _inbox2.default)(swlon, swlat, nelon, nelat, stopPoint.geometry.coordinates[0], stopPoint.geometry.coordinates[1]);
+        });
+        return {
+            type: 'FeatureCollection',
+            features: stopPointsInBox
+        };
+    });
+
+    return function box(_x6, _x7, _x8, _x9) {
+        return _ref9.apply(this, arguments);
+    };
+})();
+
 const search = exports.search = (() => {
-    var _ref9 = _asyncToGenerator(function* (searchString) {
+    var _ref10 = _asyncToGenerator(function* (searchString) {
         yield cache();
 
         var results = _fuzzy2.default.filter(searchString, stopPoints, fuzzyOptions);
-        return results.map(function (res) {
+        var stopPointMatches = results.map(function (res) {
             return res.original;
         });
+
+        return {
+            type: 'FeatureCollection',
+            features: stopPointMatches
+        };
     });
 
-    return function search(_x9) {
-        return _ref9.apply(this, arguments);
+    return function search(_x10) {
+        return _ref10.apply(this, arguments);
     };
 })();

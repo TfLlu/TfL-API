@@ -1,40 +1,43 @@
 import * as vdl from '../../source/occupancy/carpark/vdl';
 
-export const items = () => {
-
+export const all = () => {
     const sources = {
-        'vdl': vdl.items()
+        'vdl': vdl.all()
     };
-
     var providers = Object.keys(sources);
-
     return Promise.all(
         //TODO: replace when Issue #2 is closed
         Object.keys(sources).map(key => sources[key])
     ).then( results => {
-
         var items = [];
-
         for (let i=0; i < results.length; i++) {
             items = [
                 ...items,
                 ...results[i].map( item => compileStation(providers[i], item))
             ];
         }
-
-        return items;
+        return {
+            type: 'FeatureCollection',
+            features: items
+        };
     });
-
 };
 
-export const item = async item => {
-    item = item.split(':');
-    return await vdl.item(item[1]);
+export const get = async carPark => {
+    var carParkSplit = carPark.split(':');
+    var provider = carParkSplit[0];
+    switch (provider){
+    case 'vdl':
+        carPark = await vdl.get(carParkSplit[1]);
+        break;
+    default:
+        //TODO: implement not found
+        return false;
+    }
+    return compileStation(provider, carPark);
 };
 
 export const compileStation = function(provider, item) {
-
-    item.id = provider + ':' + item.id;
-
+    item.properties.id = provider + ':' + item.properties.id;
     return item;
 };

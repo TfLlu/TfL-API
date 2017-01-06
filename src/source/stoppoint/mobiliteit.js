@@ -7,7 +7,7 @@ var cron = require('node-cron');
 
 var stopPoints = [];
 var fuzzyOptions = {
-    extract: function(obj) { return obj.name; }
+    extract: function(obj) { return obj.properties.name; }
 };
 
 const getRaw = async () => {
@@ -35,10 +35,18 @@ export const load = async () => {
             params[keyVal[0]] = keyVal[1];
         }
         newStopPoints.push({
-            id: parseInt(params.L, 10),
-            name: params.O,
-            longitude: parseFloat(params.X.replace(',', '.')),
-            latitude: parseFloat(params.Y.replace(',', '.'))
+            type: 'Feature',
+            geometry: {
+                type: 'Point',
+                coordinates: [
+                    parseFloat(params.X.replace(',', '.')),
+                    parseFloat(params.Y.replace(',', '.'))
+                ]
+            },
+            properties: {
+                id: parseInt(params.L, 10),
+                name: params.O
+            }
         });
     }
     return newStopPoints;
@@ -52,10 +60,22 @@ const cache = async () => {
 
 export const all = async () => {
     await cache();
-    return stopPoints;
+    return {
+        type: 'FeatureCollection',
+        features: stopPoints
+    };
 };
 
 export const get = async stopPoint => {
+    await cache();
+    for (var i = 0; i < stopPoints.length; i++) {
+        if (stopPoints[i].properties.id == stopPoint) {
+            return stopPoints[i];
+        }
+    }
+};
+
+export const departures = async stopPoint => {
     var rawData = await request(config('MOBILITEIT_DEPARTURE', true) + stopPoint);
     var departures = [];
     var rawDepartures = JSON.parse(rawData).Departure;
@@ -103,33 +123,53 @@ export const around = async (lon, lat, radius) => {
         dist = distance(
             parseFloat(lon),
             parseFloat(lat),
-            stopPoints[i].longitude,
-            stopPoints[i].latitude
+            stopPoints[i].geometry.coordinates[0],
+            stopPoints[i].geometry.coordinates[1],
         );
 
         if (dist <= radius) {
-            var temp = stopPoints[i];
-            temp.distance = parseFloat(dist.toFixed(2));
-            stopPointsAround.push(temp);
+            //TODO: fix this piece of code...
+            stopPointsAround.push({
+                type: stopPoints[i].type,
+                geometry: stopPoints[i].geometry,
+                properties: {
+                    id: stopPoints[i].properties.id,
+                    name: stopPoints[i].properties.name,
+                    distance: parseFloat(dist.toFixed(2))
+                }
+            });
         }
     }
-    return stopPointsAround;
+    return {
+        type: 'FeatureCollection',
+        features: stopPointsAround
+    };
 };
 
 export const box = async (swlon, swlat, nelon, nelat) => {
     await cache();
-    return stopPoints.filter(function(stopPoint) {
+    var stopPointsInBox = stopPoints.filter(function(stopPoint) {
         return inbox(
             swlon, swlat, nelon, nelat,
-            stopPoint.longitude,
-            stopPoint.latitude
+            stopPoint.geometry.coordinates[0],
+            stopPoint.geometry.coordinates[1],
         );
     });
+    return {
+        type: 'FeatureCollection',
+        features: stopPointsInBox
+    };
 };
 
 export const search = async searchString => {
     await cache();
 
     var results = fuzzy.filter(searchString, stopPoints, fuzzyOptions);
-    return results.map(function(res) { return res.original; });
+    var stopPointMatches = results.map(function(res) { return res.original; });
+
+    return {
+        type: 'FeatureCollection',
+        features: stopPointMatches
+    };
+
 };

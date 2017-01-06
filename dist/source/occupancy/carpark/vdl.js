@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.compileParking = exports.items = exports.get = undefined;
+exports.compileParking = exports.get = exports.all = exports.loadCarParks = undefined;
 
 var _requestPromiseNative = require('request-promise-native');
 
@@ -19,7 +19,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 const getRaw = () => (0, _requestPromiseNative2.default)('http://service.vdl.lu/rss/circulation_guidageparking.php');
 
-const get = exports.get = (() => {
+const loadCarParks = exports.loadCarParks = (() => {
     var _ref = _asyncToGenerator(function* () {
         var raw = yield getRaw();
         var data = yield (0, _xmlParser2.default)(raw);
@@ -27,19 +27,35 @@ const get = exports.get = (() => {
         return data['rss']['channel']['item'];
     });
 
-    return function get() {
+    return function loadCarParks() {
         return _ref.apply(this, arguments);
     };
 })();
 
-const items = exports.items = (() => {
+const all = exports.all = (() => {
     var _ref2 = _asyncToGenerator(function* () {
-        var items = yield get();
-        return items.map(compileParking);
+        var carParks = yield loadCarParks();
+        return carParks.map(compileParking);
     });
 
-    return function items() {
+    return function all() {
         return _ref2.apply(this, arguments);
+    };
+})();
+
+const get = exports.get = (() => {
+    var _ref3 = _asyncToGenerator(function* (carPark) {
+        var carParks = yield loadCarParks();
+        carParks = carParks.map(compileParking);
+        for (var i = 0; i < carParks.length; i++) {
+            if (carParks[i].properties.id == carPark) {
+                return carParks[i];
+            }
+        }
+    });
+
+    return function get(_x) {
+        return _ref3.apply(this, arguments);
     };
 })();
 
@@ -66,40 +82,47 @@ const compileParking = exports.compileParking = parking => {
     }
 
     return {
-        id: id,
-        name: parking.title,
-        open: parseInt(parking['vdlxml:ouvert']) == 1,
-        elevator: parseInt(parking['vdlxml:divers']['vdlxml:diversAscenseur']) == 1,
-        trend: trend,
-        link: parking.guid,
-        address: {
-            latitude: parseFloat(parking['vdlxml:localisation']['vdlxml:localisationLatitude']),
-            longitude: parseFloat(parking['vdlxml:localisation']['vdlxml:localisationLongitude']),
-            entry: parking['vdlxml:localisation']['vdlxml:localisationEntree'],
-            exit: parking['vdlxml:localisation']['vdlxml:localisationSortie']
+        type: 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: [parseFloat(parking['vdlxml:localisation']['vdlxml:localisationLongitude']), parseFloat(parking['vdlxml:localisation']['vdlxml:localisationLatitude'])]
         },
-        phone: parseInt(parking['vdlxml:divers']['vdlxml:diversTelephone'].replace(/ /g, '')),
-        lots: parseInt(parking['vdlxml:total']),
-        available_lots: parseInt(parking['vdlxml:actuel']),
-        reserved_for_disabled: parseInt(parking['vdlxml:nominal']['vdlxml:nominalHandicapes']),
-        reserved_for_women: parseInt(parking['vdlxml:nominal']['vdlxml:nominalFemmes']),
-        motorbike_lots: parseInt(parking['vdlxml:nominal']['vdlxml:nominalMotos']),
-        bus_lots: parseInt(parking['vdlxml:nominal']['vdlxml:nominalAutocars']),
-        bicycle_docks: parseInt(parking['vdlxml:nominal']['vdlxml:nominalVelos']),
-        payment_methods: {
-            cash: parseInt(parking['vdlxml:paiement']['vdlxml:paiementEspeces']) == 1,
-            vpay: parseInt(parking['vdlxml:paiement']['vdlxml:paiementMaestro']) == 1,
-            visa: parseInt(parking['vdlxml:paiement']['vdlxml:paiementVisa']) == 1,
-            mastercard: parseInt(parking['vdlxml:paiement']['vdlxml:paiementMastercard']) == 1,
-            eurocard: parseInt(parking['vdlxml:paiement']['vdlxml:paiementEurocard']) == 1,
-            amex: parseInt(parking['vdlxml:paiement']['vdlxml:paiementAmex']) == 1,
-            call2park: parseInt(parking['vdlxml:paiement']['vdlxml:paiementCall2park']) == 1
-        },
-        restrictions: {
-            allowed_gpl: parseInt(parking['vdlxml:restrictions']['vdlxml:restrictionsNoGpl']) == 1,
-            allowed_trailor: parseInt(parking['vdlxml:restrictions']['vdlxml:restrictionsNoRemorque']) == 1,
-            allowed_truck: parseInt(parking['vdlxml:restrictions']['vdlxml:restrictionsNo3t5']) == 1,
-            max_height: parseFloat(parking['vdlxml:restrictions']['vdlxml:restrictionsMaxHauteur'])
+        properties: {
+            id: id,
+            name: parking.title,
+            total: parseInt(parking['vdlxml:total']),
+            free: parseInt(parking['vdlxml:actuel']),
+            trend: trend,
+            meta: {
+                open: parseInt(parking['vdlxml:ouvert']) == 1,
+                elevator: parseInt(parking['vdlxml:divers']['vdlxml:diversAscenseur']) == 1,
+                link: parking.guid,
+                address: {
+                    street: parking['vdlxml:localisation']['vdlxml:localisationEntree'],
+                    exit: parking['vdlxml:localisation']['vdlxml:localisationSortie']
+                },
+                phone: parseInt(parking['vdlxml:divers']['vdlxml:diversTelephone'].replace(/ /g, '')),
+                reserved_for_disabled: parseInt(parking['vdlxml:nominal']['vdlxml:nominalHandicapes']),
+                reserved_for_women: parseInt(parking['vdlxml:nominal']['vdlxml:nominalFemmes']),
+                motorbike_lots: parseInt(parking['vdlxml:nominal']['vdlxml:nominalMotos']),
+                bus_lots: parseInt(parking['vdlxml:nominal']['vdlxml:nominalAutocars']),
+                bicycle_docks: parseInt(parking['vdlxml:nominal']['vdlxml:nominalVelos']),
+                payment_methods: {
+                    cash: parseInt(parking['vdlxml:paiement']['vdlxml:paiementEspeces']) == 1,
+                    vpay: parseInt(parking['vdlxml:paiement']['vdlxml:paiementMaestro']) == 1,
+                    visa: parseInt(parking['vdlxml:paiement']['vdlxml:paiementVisa']) == 1,
+                    mastercard: parseInt(parking['vdlxml:paiement']['vdlxml:paiementMastercard']) == 1,
+                    eurocard: parseInt(parking['vdlxml:paiement']['vdlxml:paiementEurocard']) == 1,
+                    amex: parseInt(parking['vdlxml:paiement']['vdlxml:paiementAmex']) == 1,
+                    call2park: parseInt(parking['vdlxml:paiement']['vdlxml:paiementCall2park']) == 1
+                },
+                restrictions: {
+                    allowed_gpl: parseInt(parking['vdlxml:restrictions']['vdlxml:restrictionsNoGpl']) == 1,
+                    allowed_trailor: parseInt(parking['vdlxml:restrictions']['vdlxml:restrictionsNoRemorque']) == 1,
+                    allowed_truck: parseInt(parking['vdlxml:restrictions']['vdlxml:restrictionsNo3t5']) == 1,
+                    max_height: parseFloat(parking['vdlxml:restrictions']['vdlxml:restrictionsMaxHauteur'])
+                }
+            }
         }
     };
 };

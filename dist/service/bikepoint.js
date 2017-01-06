@@ -33,12 +33,12 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 var fuzzyOptions = {
     extract: function (obj) {
-        return obj.name + obj.address + obj.city;
+        return obj.properties.name + obj.properties.address + obj.properties.city;
     }
 };
 
 const compileStation = exports.compileStation = function (provider, bikePoint) {
-    bikePoint.id = provider + ':' + bikePoint.id;
+    bikePoint.properties.id = provider + ':' + bikePoint.properties.id;
     return bikePoint;
 };
 
@@ -61,7 +61,10 @@ const all = exports.all = () => {
             stations = [...stations, ...results[i].map(station => compileStation(providers[i], station))];
         }
 
-        return stations;
+        return {
+            type: 'FeatureCollection',
+            features: stations
+        };
     });
 };
 
@@ -87,20 +90,24 @@ const get = exports.get = (() => {
 const around = exports.around = (() => {
     var _ref2 = _asyncToGenerator(function* (lon, lat, radius) {
         var bikePoints = yield all();
+        bikePoints = bikePoints.features;
 
         var dist = 0;
         var bikePointsAround = [];
 
         for (var i = 0; i < bikePoints.length; i++) {
-            dist = (0, _distance2.default)(parseFloat(lon), parseFloat(lat), bikePoints[i].position.longitude, bikePoints[i].position.latitude);
+            var bikePoint = bikePoints[i];
+            dist = (0, _distance2.default)(parseFloat(lon), parseFloat(lat), bikePoint.geometry.coordinates[0], bikePoint.geometry.coordinates[1]);
 
             if (dist <= radius) {
-                var temp = bikePoints[i];
-                temp.distance = parseFloat(dist.toFixed(2));
-                bikePointsAround.push(temp);
+                bikePoint.properties.distance = parseFloat(dist.toFixed(2));
+                bikePointsAround.push(bikePoint);
             }
         }
-        return bikePointsAround;
+        return {
+            type: 'FeatureCollection',
+            features: bikePointsAround
+        };
     });
 
     return function around(_x2, _x3, _x4) {
@@ -111,9 +118,14 @@ const around = exports.around = (() => {
 const box = exports.box = (() => {
     var _ref3 = _asyncToGenerator(function* (swlon, swlat, nelon, nelat) {
         var bikePoints = yield all();
-        return bikePoints.filter(function (bikePoint) {
-            return (0, _inbox2.default)(swlon, swlat, nelon, nelat, bikePoint.position.longitude, bikePoint.position.latitude);
+        bikePoints = bikePoints.features;
+        var bikePointsInBox = bikePoints.filter(function (bikePoint) {
+            return (0, _inbox2.default)(swlon, swlat, nelon, nelat, bikePoint.geometry.coordinates[0], bikePoint.geometry.coordinates[1]);
         });
+        return {
+            type: 'FeatureCollection',
+            features: bikePointsInBox
+        };
     });
 
     return function box(_x5, _x6, _x7, _x8) {
@@ -124,6 +136,7 @@ const box = exports.box = (() => {
 const search = exports.search = (() => {
     var _ref4 = _asyncToGenerator(function* (searchString) {
         var bikePoints = yield all();
+        bikePoints = bikePoints.features;
 
         var results = _fuzzy2.default.filter(searchString, bikePoints, fuzzyOptions);
         return results.map(function (res) {
