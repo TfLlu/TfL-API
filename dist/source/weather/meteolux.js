@@ -54,25 +54,25 @@ const compileSituation = exports.compileSituation = situation => {
     var windDirection = '';
 
     switch (situation.wind_direction_text.toUpperCase()) {
-        case 'N':
+        case 'NORD':
             windDirection = 360;
             break;
         case 'NE':
             windDirection = 45;
             break;
-        case 'E':
+        case 'EST':
             windDirection = 90;
             break;
         case 'SE':
             windDirection = 135;
             break;
-        case 'S':
+        case 'SUD':
             windDirection = 180;
             break;
         case 'SO':
             windDirection = 225;
             break;
-        case 'O':
+        case 'OUEST':
             windDirection = 270;
             break;
         case 'NO':
