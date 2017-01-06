@@ -28,4 +28,6 @@ app.use(monitor)
    .use(router.routes())
    .use(router.allowedMethods());
 
-app.listen(config('SERVER_PORT', true));
+app.listen(process.env.PORT||config('SERVER_PORT', true));
+
+module.exports = app;
