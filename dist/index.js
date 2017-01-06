@@ -35,6 +35,7 @@ router.get('/Occupancy/CarPark', _controller2.default.carpark.index);
 router.get('/Occupancy/CarPark/:carPark', _controller2.default.carpark.get);
 router.get('/StopPoint', _controller2.default.stoppoint.index);
 router.get('/StopPoint/:stopPoint', _controller2.default.stoppoint.get);
+router.get('/StopPoint/Departures/:stopPoint', _controller2.default.stoppoint.departures);
 router.get('/StopPoint/around/:lon/:lat/:radius', _controller2.default.stoppoint.around);
 router.get('/StopPoint/box/:swlon/:swlat/:nelon/:nelat', _controller2.default.stoppoint.box);
 router.get('/StopPoint/search/:searchstring', _controller2.default.stoppoint.search);
