@@ -27,4 +27,23 @@ describe('StopPoints', () => {
                 });
         });
     });
+    describe('GET /Occupancy/CarPark/vdl:22', () => {
+        it('should get carpark 22 from vdl as geojson', (done) => {
+            chai.request(server)
+                .get('/Occupancy/CarPark/vdl:22')
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    geojsonValidation.isFeature(res.body).should.be.equal(true);
+                    var props = res.body.properties;
+                    props.id.should.be.equal('vdl:22');
+                    props.name.should.be.equal('Glacis');
+                    props.total.should.be.a('Number');
+                    props.free.should.be.a('Number');
+                    props.trend.should.be.a('String');
+                    props.meta.should.be.a('object');
+                    done();
+                });
+        });
+    });
 });
