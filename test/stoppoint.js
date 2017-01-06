@@ -23,20 +23,26 @@ var invalidFeature =  {
 
 describe('StopPoints', () => {
     describe('GET /Stoppoint', () => {
-        it('should get all the stoppoints as object', (done) => {
+        it('should get all the stoppoints as geojson', (done) => {
             chai.request(server)
                 .get('/stoppoint')
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
+                    geojsonValidation.isFeatureCollection(res.body).should.be.equal(true);
                     done();
                 });
         });
-        it('should get all the stoppoints as geojson', (done) => {
+    });
+    describe('GET /Stoppoint/around', () => {
+        it('should get stoppoints around LON:6.113204 LAT:49.61028 MAX_DISTANCE:1000m as geojson', (done) => {
             chai.request(server)
-                .get('/stoppoint')
+                .get('/stoppoint/around/6.113204/49.61028/1000')
                 .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
                     geojsonValidation.isFeatureCollection(res.body).should.be.equal(true);
+                    res.body.features.length.should.be.lessThan(50);
                     done();
                 });
         });
