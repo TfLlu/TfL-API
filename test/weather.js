@@ -2,7 +2,7 @@
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 let server = require('../dist/index').listen();
-let should = chai.should();
+chai.should();
 let geojsonValidation = require('geojson-validation');
 
 chai.use(chaiHttp);
