@@ -1,9 +1,10 @@
 import * as mobiliteit from '../source/stoppoint/mobiliteit';
-import fuzzy    from 'fuzzy';
-import config   from '../config';
-import distance from '../helper/distance';
-import inbox    from '../helper/inbox';
-import cron     from 'node-cron';
+import fuzzy     from 'fuzzy';
+import config    from '../config';
+import distance  from '../helper/distance';
+import inbox     from '../helper/inbox';
+import cron      from 'node-cron';
+import deepClone from 'deep-clone'
 
 var fuzzyOptions = {
     extract: function(obj) { return obj.properties.name; }
@@ -60,16 +61,9 @@ export const around = async (lon, lat, radius) => {
         );
 
         if (dist <= radius) {
-            //TODO: fix this piece of code...
-            stopPointsAround.push({
-                type: stopPoints[i].type,
-                geometry: stopPoints[i].geometry,
-                properties: {
-                    id: stopPoints[i].properties.id,
-                    name: stopPoints[i].properties.name,
-                    distance: parseFloat(dist.toFixed(2))
-                }
-            });
+            var tmpStopPoint = deepClone(stopPoints[i]);
+            tmpStopPoint.properties.distance = parseFloat(dist.toFixed(2));
+            stopPointsAround.push(tmpStopPoint);
         }
     }
     return {

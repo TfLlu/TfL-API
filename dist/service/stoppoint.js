@@ -29,6 +29,10 @@ var _nodeCron = require('node-cron');
 
 var _nodeCron2 = _interopRequireDefault(_nodeCron);
 
+var _deepClone = require('deep-clone');
+
+var _deepClone2 = _interopRequireDefault(_deepClone);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -118,16 +122,9 @@ const around = exports.around = (() => {
             dist = (0, _distance2.default)(parseFloat(lon), parseFloat(lat), stopPoints[i].geometry.coordinates[0], stopPoints[i].geometry.coordinates[1]);
 
             if (dist <= radius) {
-                //TODO: fix this piece of code...
-                stopPointsAround.push({
-                    type: stopPoints[i].type,
-                    geometry: stopPoints[i].geometry,
-                    properties: {
-                        id: stopPoints[i].properties.id,
-                        name: stopPoints[i].properties.name,
-                        distance: parseFloat(dist.toFixed(2))
-                    }
-                });
+                var tmpStopPoint = (0, _deepClone2.default)(stopPoints[i]);
+                tmpStopPoint.properties.distance = parseFloat(dist.toFixed(2));
+                stopPointsAround.push(tmpStopPoint);
             }
         }
         return {
