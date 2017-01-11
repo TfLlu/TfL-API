@@ -8,7 +8,7 @@ var fuzzyOptions = {
     extract: function(obj) { return obj.properties.name + obj.properties.address + obj.properties.city; }
 };
 
-export const compileStation = function(provider, bikePoint) {
+export const compileBikePoint = function(provider, bikePoint) {
     bikePoint.properties.id = provider + ':' + bikePoint.properties.id;
     return bikePoint;
 };
@@ -27,18 +27,18 @@ export const all = () => {
         Object.keys(sources).map(key => sources[key])
     ).then( results => {
 
-        var stations = [];
+        var bikePoints = [];
 
         for (let i=0; i < results.length; i++) {
-            stations = [
-                ...stations,
-                ...results[i].map( station => compileStation(providers[i], station))
+            bikePoints = [
+                ...bikePoints,
+                ...results[i].map( bikePoint => compileBikePoint(providers[i], bikePoint))
             ];
         }
 
         return {
             type: 'FeatureCollection',
-            features: stations
+            features: bikePoints
         };
     });
 
@@ -54,7 +54,7 @@ export const get = async bikePoint => {
         bikePoint = await velok.get(bikePointSplit[1]);
         break;
     }
-    return compileStation(bikePointSplit[0], bikePoint);
+    return compileBikePoint(bikePointSplit[0], bikePoint);
 };
 
 export const around = async (lon, lat, radius) => {

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.compileStation = exports.get = exports.all = exports.loadBikePoints = undefined;
+exports.compileBikePoint = exports.get = exports.all = exports.loadBikePoints = undefined;
 
 var _requestPromiseNative = require('request-promise-native');
 
@@ -35,7 +35,7 @@ const loadBikePoints = exports.loadBikePoints = (() => {
 const all = exports.all = (() => {
     var _ref2 = _asyncToGenerator(function* () {
         var bikePoints = yield loadBikePoints();
-        return bikePoints.map(compileStation);
+        return bikePoints.map(compileBikePoint);
     });
 
     return function all() {
@@ -46,7 +46,7 @@ const all = exports.all = (() => {
 const get = exports.get = (() => {
     var _ref3 = _asyncToGenerator(function* (bikePointId) {
         var bikePoint = yield loadBikePoints(bikePointId);
-        return compileStation(bikePoint);
+        return compileBikePoint(bikePoint);
     });
 
     return function get(_x2) {
@@ -54,7 +54,7 @@ const get = exports.get = (() => {
     };
 })();
 
-const compileStation = exports.compileStation = bikePoint => {
+const compileBikePoint = exports.compileBikePoint = bikePoint => {
 
     var dock_status = [];
 

@@ -11,15 +11,15 @@ export const loadBikePoints = async bikePoint => JSON.parse(await getRaw(bikePoi
 
 export const all = async () => {
     var bikePoints = await loadBikePoints();
-    return bikePoints.map(compileStation);
+    return bikePoints.map(compileBikePoint);
 };
 
 export const get = async bikePointId => {
     var bikePoint = await loadBikePoints(bikePointId);
-    return compileStation(bikePoint);
+    return compileBikePoint(bikePoint);
 };
 
-export const compileStation = bikePoint => {
+export const compileBikePoint = bikePoint => {
 
     var dock_status = [];
 

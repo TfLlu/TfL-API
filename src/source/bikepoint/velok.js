@@ -11,20 +11,20 @@ export const loadBikePoints = async () => {
 
 export const all = async () => {
     var bikePoints = await loadBikePoints();
-    return bikePoints.map(compileStation);
+    return bikePoints.map(compileBikePoint);
 };
 
-export const get = async station => {
+export const get = async bikePoint => {
     var bikePoints = await loadBikePoints();
-    bikePoints = bikePoints.map(compileStation);
+    bikePoints = bikePoints.map(compileBikePoint);
     for (var i = 0; i < bikePoints.length; i++) {
-        if (bikePoints[i].properties.id == station) {
+        if (bikePoints[i].properties.id == bikePoint) {
             return bikePoints[i];
         }
     }
 };
 
-export const compileStation = bikePoint => {
+export const compileBikePoint = bikePoint => {
     var dock_status = [];
     var attache, status, bikeType;
     for (var i = 1; i <= bikePoint.attaches; i++) {

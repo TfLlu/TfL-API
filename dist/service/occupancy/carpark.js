@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.compileStation = exports.get = exports.all = undefined;
+exports.compileCarPark = exports.get = exports.all = undefined;
 
 var _vdl = require('../../source/occupancy/carpark/vdl');
 
@@ -23,7 +23,7 @@ const all = exports.all = () => {
     Object.keys(sources).map(key => sources[key])).then(results => {
         var items = [];
         for (let i = 0; i < results.length; i++) {
-            items = [...items, ...results[i].map(item => compileStation(providers[i], item))];
+            items = [...items, ...results[i].map(item => compileCarPark(providers[i], item))];
         }
         return {
             type: 'FeatureCollection',
@@ -44,7 +44,7 @@ const get = exports.get = (() => {
                 //TODO: implement not found
                 return false;
         }
-        return compileStation(provider, carPark);
+        return compileCarPark(provider, carPark);
     });
 
     return function get(_x) {
@@ -52,7 +52,7 @@ const get = exports.get = (() => {
     };
 })();
 
-const compileStation = exports.compileStation = function (provider, item) {
+const compileCarPark = exports.compileCarPark = function (provider, item) {
     item.properties.id = provider + ':' + item.properties.id;
     return item;
 };

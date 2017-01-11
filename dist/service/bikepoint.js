@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.search = exports.box = exports.around = exports.get = exports.all = exports.compileStation = undefined;
+exports.search = exports.box = exports.around = exports.get = exports.all = exports.compileBikePoint = undefined;
 
 var _velok = require('../source/bikepoint/velok');
 
@@ -37,7 +37,7 @@ var fuzzyOptions = {
     }
 };
 
-const compileStation = exports.compileStation = function (provider, bikePoint) {
+const compileBikePoint = exports.compileBikePoint = function (provider, bikePoint) {
     bikePoint.properties.id = provider + ':' + bikePoint.properties.id;
     return bikePoint;
 };
@@ -55,15 +55,15 @@ const all = exports.all = () => {
     //TODO: replace when Issue #2 is closed
     Object.keys(sources).map(key => sources[key])).then(results => {
 
-        var stations = [];
+        var bikePoints = [];
 
         for (let i = 0; i < results.length; i++) {
-            stations = [...stations, ...results[i].map(station => compileStation(providers[i], station))];
+            bikePoints = [...bikePoints, ...results[i].map(bikePoint => compileBikePoint(providers[i], bikePoint))];
         }
 
         return {
             type: 'FeatureCollection',
-            features: stations
+            features: bikePoints
         };
     });
 };
@@ -79,7 +79,7 @@ const get = exports.get = (() => {
                 bikePoint = yield velok.get(bikePointSplit[1]);
                 break;
         }
-        return compileStation(bikePointSplit[0], bikePoint);
+        return compileBikePoint(bikePointSplit[0], bikePoint);
     });
 
     return function get(_x) {

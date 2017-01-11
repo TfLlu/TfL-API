@@ -13,7 +13,7 @@ export const all = () => {
         for (let i=0; i < results.length; i++) {
             items = [
                 ...items,
-                ...results[i].map( item => compileStation(providers[i], item))
+                ...results[i].map( item => compileCarPark(providers[i], item))
             ];
         }
         return {
@@ -34,10 +34,10 @@ export const get = async carPark => {
         //TODO: implement not found
         return false;
     }
-    return compileStation(provider, carPark);
+    return compileCarPark(provider, carPark);
 };
 
-export const compileStation = function(provider, item) {
+export const compileCarPark = function(provider, item) {
     item.properties.id = provider + ':' + item.properties.id;
     return item;
 };
