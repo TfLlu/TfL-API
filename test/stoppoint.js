@@ -17,6 +17,7 @@ describe('StopPoints', () => {
                     res.should.be.json;
                     res.body.should.be.a('object');
                     geojsonValidation.isFeatureCollection(res.body).should.be.equal(true);
+                    res.body.features.length.should.be.above(2500);
                     var props = res.body.features[0].properties;
                     props.id.should.be.a('Number');
                     props.name.should.be.a('String');
