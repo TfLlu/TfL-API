@@ -7,32 +7,32 @@ const getRaw = async () => {
 
 export const load = async () => {
     var raw = await getRaw();
-    var rawStopPoints = raw.trim().split('\n');
-    var newStopPoints = [];
+    var StopPoints = raw.trim().split('\n');
+    return StopPoints.map(compileStopPoint);
 
-    for (var i = 0; i < rawStopPoints.length; i++) {
-        var paramParts = rawStopPoints[i].split('@');
-        var params = {};
-        for (var j = 0; j < paramParts.length; j++) {
-            var keyVal = paramParts[j].split('=', 2);
-            params[keyVal[0]] = keyVal[1];
-        }
-        newStopPoints.push({
-            type: 'Feature',
-            geometry: {
-                type: 'Point',
-                coordinates: [
-                    parseFloat(params.X.replace(',', '.')),
-                    parseFloat(params.Y.replace(',', '.'))
-                ]
-            },
-            properties: {
-                id: parseInt(params.L, 10),
-                name: params.O
-            }
-        });
+};
+
+const compileStopPoint = stopPoint => {
+    var paramParts = stopPoint.split('@');
+    var params = {};
+    for (var j = 0; j < paramParts.length; j++) {
+        var keyVal = paramParts[j].split('=', 2);
+        params[keyVal[0]] = keyVal[1];
     }
-    return newStopPoints;
+    return{
+        type: 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: [
+                parseFloat(params.X.replace(',', '.')),
+                parseFloat(params.Y.replace(',', '.'))
+            ]
+        },
+        properties: {
+            id: parseInt(params.L, 10),
+            name: params.O
+        }
+    };
 };
 
 export const departures = async stopPoint => {

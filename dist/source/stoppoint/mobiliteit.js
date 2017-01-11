@@ -30,35 +30,34 @@ const getRaw = (() => {
 const load = exports.load = (() => {
     var _ref2 = _asyncToGenerator(function* () {
         var raw = yield getRaw();
-        var rawStopPoints = raw.trim().split('\n');
-        var newStopPoints = [];
-
-        for (var i = 0; i < rawStopPoints.length; i++) {
-            var paramParts = rawStopPoints[i].split('@');
-            var params = {};
-            for (var j = 0; j < paramParts.length; j++) {
-                var keyVal = paramParts[j].split('=', 2);
-                params[keyVal[0]] = keyVal[1];
-            }
-            newStopPoints.push({
-                type: 'Feature',
-                geometry: {
-                    type: 'Point',
-                    coordinates: [parseFloat(params.X.replace(',', '.')), parseFloat(params.Y.replace(',', '.'))]
-                },
-                properties: {
-                    id: parseInt(params.L, 10),
-                    name: params.O
-                }
-            });
-        }
-        return newStopPoints;
+        var StopPoints = raw.trim().split('\n');
+        return StopPoints.map(compileStopPoint);
     });
 
     return function load() {
         return _ref2.apply(this, arguments);
     };
 })();
+
+const compileStopPoint = stopPoint => {
+    var paramParts = stopPoint.split('@');
+    var params = {};
+    for (var j = 0; j < paramParts.length; j++) {
+        var keyVal = paramParts[j].split('=', 2);
+        params[keyVal[0]] = keyVal[1];
+    }
+    return {
+        type: 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: [parseFloat(params.X.replace(',', '.')), parseFloat(params.Y.replace(',', '.'))]
+        },
+        properties: {
+            id: parseInt(params.L, 10),
+            name: params.O
+        }
+    };
+};
 
 const departures = exports.departures = (() => {
     var _ref3 = _asyncToGenerator(function* (stopPoint) {
