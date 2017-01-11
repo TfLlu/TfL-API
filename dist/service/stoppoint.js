@@ -9,66 +9,171 @@ var _mobiliteit = require('../source/stoppoint/mobiliteit');
 
 var mobiliteit = _interopRequireWildcard(_mobiliteit);
 
+var _fuzzy = require('fuzzy');
+
+var _fuzzy2 = _interopRequireDefault(_fuzzy);
+
+var _config = require('../config');
+
+var _config2 = _interopRequireDefault(_config);
+
+var _distance = require('../helper/distance');
+
+var _distance2 = _interopRequireDefault(_distance);
+
+var _inbox = require('../helper/inbox');
+
+var _inbox2 = _interopRequireDefault(_inbox);
+
+var _nodeCron = require('node-cron');
+
+var _nodeCron2 = _interopRequireDefault(_nodeCron);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-const all = exports.all = (() => {
+var fuzzyOptions = {
+    extract: function (obj) {
+        return obj.properties.name;
+    }
+};
+
+var stopPoints = [];
+
+_nodeCron2.default.schedule((0, _config2.default)('MOBILITEIT_REFRESH_CRON', true), function () {
+    loadStoppoints();
+});
+
+const loadStoppoints = (() => {
     var _ref = _asyncToGenerator(function* () {
-        return yield mobiliteit.all();
+        stopPoints = yield mobiliteit.load();
     });
 
-    return function all() {
+    return function loadStoppoints() {
         return _ref.apply(this, arguments);
     };
 })();
 
-const get = exports.get = (() => {
-    var _ref2 = _asyncToGenerator(function* (stopPoint) {
-        return yield mobiliteit.get(stopPoint);
+const cache = (() => {
+    var _ref2 = _asyncToGenerator(function* () {
+        if (stopPoints.length === 0) {
+            yield loadStoppoints();
+        }
     });
 
-    return function get(_x) {
+    return function cache() {
         return _ref2.apply(this, arguments);
     };
 })();
 
-const departures = exports.departures = (() => {
-    var _ref3 = _asyncToGenerator(function* (stopPoint) {
-        return yield mobiliteit.departures(stopPoint);
+const all = exports.all = (() => {
+    var _ref3 = _asyncToGenerator(function* () {
+        yield cache();
+        return {
+            type: 'FeatureCollection',
+            features: stopPoints
+        };
     });
 
-    return function departures(_x2) {
+    return function all() {
         return _ref3.apply(this, arguments);
     };
 })();
 
-const around = exports.around = (() => {
-    var _ref4 = _asyncToGenerator(function* (lon, lat, radius) {
-        return yield mobiliteit.around(lon, lat, radius);
+const get = exports.get = (() => {
+    var _ref4 = _asyncToGenerator(function* (stopPoint) {
+        yield cache();
+        for (var i = 0; i < stopPoints.length; i++) {
+            if (stopPoints[i].properties.id == stopPoint) {
+                return stopPoints[i];
+            }
+        }
     });
 
-    return function around(_x3, _x4, _x5) {
+    return function get(_x) {
         return _ref4.apply(this, arguments);
     };
 })();
 
-const box = exports.box = (() => {
-    var _ref5 = _asyncToGenerator(function* (swlon, swlat, nelon, nelat) {
-        return yield mobiliteit.box(swlon, swlat, nelon, nelat);
+const departures = exports.departures = (() => {
+    var _ref5 = _asyncToGenerator(function* (stopPoint) {
+        return yield mobiliteit.departures(stopPoint);
     });
 
-    return function box(_x6, _x7, _x8, _x9) {
+    return function departures(_x2) {
         return _ref5.apply(this, arguments);
     };
 })();
 
+const around = exports.around = (() => {
+    var _ref6 = _asyncToGenerator(function* (lon, lat, radius) {
+        yield cache();
+        var dist = 0;
+        var stopPointsAround = [];
+
+        for (var i = 0; i < stopPoints.length; i++) {
+            dist = (0, _distance2.default)(parseFloat(lon), parseFloat(lat), stopPoints[i].geometry.coordinates[0], stopPoints[i].geometry.coordinates[1]);
+
+            if (dist <= radius) {
+                //TODO: fix this piece of code...
+                stopPointsAround.push({
+                    type: stopPoints[i].type,
+                    geometry: stopPoints[i].geometry,
+                    properties: {
+                        id: stopPoints[i].properties.id,
+                        name: stopPoints[i].properties.name,
+                        distance: parseFloat(dist.toFixed(2))
+                    }
+                });
+            }
+        }
+        return {
+            type: 'FeatureCollection',
+            features: stopPointsAround
+        };
+    });
+
+    return function around(_x3, _x4, _x5) {
+        return _ref6.apply(this, arguments);
+    };
+})();
+
+const box = exports.box = (() => {
+    var _ref7 = _asyncToGenerator(function* (swlon, swlat, nelon, nelat) {
+        yield cache();
+        var stopPointsInBox = stopPoints.filter(function (stopPoint) {
+            return (0, _inbox2.default)(swlon, swlat, nelon, nelat, stopPoint.geometry.coordinates[0], stopPoint.geometry.coordinates[1]);
+        });
+        return {
+            type: 'FeatureCollection',
+            features: stopPointsInBox
+        };
+    });
+
+    return function box(_x6, _x7, _x8, _x9) {
+        return _ref7.apply(this, arguments);
+    };
+})();
+
 const search = exports.search = (() => {
-    var _ref6 = _asyncToGenerator(function* (searchString) {
-        return yield mobiliteit.search(searchString);
+    var _ref8 = _asyncToGenerator(function* (searchString) {
+        yield cache();
+
+        var results = _fuzzy2.default.filter(searchString, stopPoints, fuzzyOptions);
+        var stopPointMatches = results.map(function (res) {
+            return res.original;
+        });
+
+        return {
+            type: 'FeatureCollection',
+            features: stopPointMatches
+        };
     });
 
     return function search(_x10) {
-        return _ref6.apply(this, arguments);
+        return _ref8.apply(this, arguments);
     };
 })();
