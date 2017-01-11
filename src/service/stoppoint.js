@@ -4,7 +4,7 @@ import config    from '../config';
 import distance  from '../helper/distance';
 import inbox     from '../helper/inbox';
 import cron      from 'node-cron';
-import deepClone from 'deep-clone'
+import deepClone from 'deep-clone';
 
 var fuzzyOptions = {
     extract: function(obj) { return obj.properties.name; }
