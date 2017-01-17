@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.search = exports.box = exports.around = exports.departures = exports.get = exports.all = undefined;
+exports.search = exports.box = exports.around = exports.departures = exports.getByName = exports.get = exports.all = undefined;
 
 var _mobiliteit = require('../source/stoppoint/mobiliteit');
 
@@ -102,8 +102,23 @@ const get = exports.get = (() => {
     };
 })();
 
+const getByName = exports.getByName = (() => {
+    var _ref5 = _asyncToGenerator(function* (name) {
+        yield cache();
+        for (var i = 0; i < stopPoints.length; i++) {
+            if (stopPoints[i].properties.name == name) {
+                return stopPoints[i];
+            }
+        }
+    });
+
+    return function getByName(_x2) {
+        return _ref5.apply(this, arguments);
+    };
+})();
+
 const departures = exports.departures = (() => {
-    var _ref5 = _asyncToGenerator(function* (stopPoint) {
+    var _ref6 = _asyncToGenerator(function* (stopPoint) {
         var departuresRaw = yield mobiliteit.departures(stopPoint);
         var departures = [];
         var rawDepartures = JSON.parse(departuresRaw).Departure;
@@ -135,19 +150,25 @@ const departures = exports.departures = (() => {
                     departure.live = false;
                 }
                 departure.destination = rawDepartures[i].direction;
+                var destination = yield getByName(departure.destination);
+                if (typeof destination !== 'undefined') {
+                    departure.destinationId = destination.properties.id;
+                } else {
+                    departure.destinationId = null;
+                }
                 departures.push(departure);
             }
         }
         return departures;
     });
 
-    return function departures(_x2) {
-        return _ref5.apply(this, arguments);
+    return function departures(_x3) {
+        return _ref6.apply(this, arguments);
     };
 })();
 
 const around = exports.around = (() => {
-    var _ref6 = _asyncToGenerator(function* (lon, lat, radius) {
+    var _ref7 = _asyncToGenerator(function* (lon, lat, radius) {
         yield cache();
         var dist = 0;
         var stopPointsAround = [];
@@ -167,13 +188,13 @@ const around = exports.around = (() => {
         };
     });
 
-    return function around(_x3, _x4, _x5) {
-        return _ref6.apply(this, arguments);
+    return function around(_x4, _x5, _x6) {
+        return _ref7.apply(this, arguments);
     };
 })();
 
 const box = exports.box = (() => {
-    var _ref7 = _asyncToGenerator(function* (swlon, swlat, nelon, nelat) {
+    var _ref8 = _asyncToGenerator(function* (swlon, swlat, nelon, nelat) {
         yield cache();
         var stopPointsInBox = stopPoints.filter(function (stopPoint) {
             return (0, _inbox2.default)(swlon, swlat, nelon, nelat, stopPoint.geometry.coordinates[0], stopPoint.geometry.coordinates[1]);
@@ -184,13 +205,13 @@ const box = exports.box = (() => {
         };
     });
 
-    return function box(_x6, _x7, _x8, _x9) {
-        return _ref7.apply(this, arguments);
+    return function box(_x7, _x8, _x9, _x10) {
+        return _ref8.apply(this, arguments);
     };
 })();
 
 const search = exports.search = (() => {
-    var _ref8 = _asyncToGenerator(function* (searchString) {
+    var _ref9 = _asyncToGenerator(function* (searchString) {
         yield cache();
 
         var results = _fuzzy2.default.filter(searchString, stopPoints, fuzzyOptions);
@@ -204,7 +225,7 @@ const search = exports.search = (() => {
         };
     });
 
-    return function search(_x10) {
-        return _ref8.apply(this, arguments);
+    return function search(_x11) {
+        return _ref9.apply(this, arguments);
     };
 })();

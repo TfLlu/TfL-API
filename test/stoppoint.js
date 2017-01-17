@@ -42,23 +42,29 @@ describe('StopPoints', () => {
                 });
         });
     });
-    describe('GET /StopPoint/Departures/200901011', () => {
-        it('should get departures from "Strassen, Schoenacht"', (done) => {
+    describe('GET /StopPoint/Departures/200405035', () => {
+        it('should get departures from "Luxembourg, Gare Centrale"', (done) => {
             chai.request(server)
-                .get('/StopPoint/Departures/200901011')
+                .get('/StopPoint/Departures/200405035')
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.should.be.json;
                     res.body.should.be.a('array');
                     res.body.length.should.be.within(1,25);
-                    var departure = res.body[0];
-                    departure.type.should.be.a('String');
-                    departure.line.should.be.a('String');
-                    departure.number.should.be.a('Number');
-                    departure.departure.should.be.a('Number');
-                    departure.delay.should.be.a('Number');
-                    departure.live.should.be.a('Boolean');
-                    departure.destination.should.be.a('String');
+                    for(var i = 0; i < res.body.length; i++) {
+                        var departure = res.body[i];
+                        departure.type.should.be.a('String');
+                        if (departure.trainId !== null) {
+                            departure.trainId.should.be.a('String');
+                        }
+                        departure.line.should.be.a('String');
+                        departure.number.should.be.a('Number');
+                        departure.departure.should.be.a('Number');
+                        departure.delay.should.be.a('Number');
+                        departure.live.should.be.a('Boolean');
+                        departure.destination.should.be.a('String');
+                        departure.destinationId.should.be.a('Number');
+                    }
                     done();
                 });
         });

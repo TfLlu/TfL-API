@@ -43,6 +43,15 @@ export const get = async stopPoint => {
     }
 };
 
+export const getByName = async name => {
+    await cache();
+    for (var i = 0; i < stopPoints.length; i++) {
+        if (stopPoints[i].properties.name == name) {
+            return stopPoints[i];
+        }
+    }
+};
+
 export const departures = async stopPoint => {
     var departuresRaw = await mobiliteit.departures(stopPoint);
     var departures = [];
@@ -75,6 +84,12 @@ export const departures = async stopPoint => {
                 departure.live = false;
             }
             departure.destination = rawDepartures[i].direction;
+            var destination = await getByName(departure.destination);
+            if (typeof destination !== 'undefined') {
+                departure.destinationId = destination.properties.id;
+            } else {
+                departure.destinationId = null;
+            }
             departures.push(departure);
         }
     }
