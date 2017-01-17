@@ -45,9 +45,11 @@ export const departures = async stopPoint => {
             switch (rawDepartures[i].Product.operatorCode.toLowerCase()) {
             case 'cfl':
                 departure.type = 'train';
+                departure.trainId = rawDepartures[i].Product.name.replace(/ +/g,' ');
                 break;
             default:
                 departure.type = 'bus';
+                departure.trainId = null;
                 break;
             }
             departure.line = rawDepartures[i].Product.line.trim();
