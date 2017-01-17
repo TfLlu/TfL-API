@@ -16,13 +16,15 @@ describe('StopPoints', () => {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     geojsonValidation.isFeatureCollection(res.body).should.be.equal(true);
-                    var props = res.body.features[0].properties;
-                    props.id.should.be.a('String');
-                    props.name.should.be.a('String');
-                    props.total.should.be.a('Number');
-                    props.free.should.be.a('Number');
-                    props.trend.should.be.a('String');
-                    props.meta.should.be.a('object');
+                    for(var i = 0; i < res.body.features.length; i++) {
+                        var props = res.body.features[i].properties;
+                        props.id.should.be.a('String');
+                        props.name.should.be.a('String');
+                        props.total.should.be.a('Number');
+                        props.free.should.be.a('Number');
+                        props.trend.should.be.a('String');
+                        props.meta.should.be.a('object');
+                    }
                     done();
                 });
         });

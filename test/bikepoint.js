@@ -15,31 +15,32 @@ describe('BikePoints', () => {
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.should.be.json;
-                    //res.should.have.header('Access-Control-Allow-Origin', '*');
                     res.body.should.be.a('object');
                     geojsonValidation.isFeatureCollection(res.body).should.be.equal(true);
-                    var props = res.body.features[0].properties;
-                    props.id.should.be.a('String');
-                    props.open.should.be.a('Boolean');
-                    props.name.should.be.a('String');
-                    if (props.city !== null) {
-                        props.city.should.be.a('String');
-                    }
-                    props.address.should.be.a('String');
-                    if (props.photo !== null) {
-                        props.photo.should.be.a('String');
-                    }
-                    props.docks.should.be.a('Number');
-                    props.available_bikes.should.be.a('Number');
-                    props.available_ebikes.should.be.a('Number');
-                    props.available_docks.should.be.a('Number');
-                    if (props.last_update !== null) {
-                        props.last_update.should.be.a('Number');
-                    }
-                    props.dock_status.should.be.a('array');
-                    props.dock_status[0].status.should.be.a('String');
-                    if (props.dock_status[0].bikeType !== null) {
-                        props.dock_status[0].bikeType.should.be.a('String');
+                    for(var i = 0; i < res.body.features.length; i++) {
+                        var props = res.body.features[i].properties;
+                        props.id.should.be.a('String');
+                        props.open.should.be.a('Boolean');
+                        props.name.should.be.a('String');
+                        if (props.city !== null) {
+                            props.city.should.be.a('String');
+                        }
+                        props.address.should.be.a('String');
+                        if (props.photo !== null) {
+                            props.photo.should.be.a('String');
+                        }
+                        props.docks.should.be.a('Number');
+                        props.available_bikes.should.be.a('Number');
+                        props.available_ebikes.should.be.a('Number');
+                        props.available_docks.should.be.a('Number');
+                        if (props.last_update !== null) {
+                            props.last_update.should.be.a('Number');
+                        }
+                        props.dock_status.should.be.a('array');
+                        props.dock_status[0].status.should.be.a('String');
+                        if (props.dock_status[0].bikeType !== null) {
+                            props.dock_status[0].bikeType.should.be.a('String');
+                        }
                     }
                     done();
                 });
@@ -95,28 +96,30 @@ describe('BikePoints', () => {
                     res.body.should.be.a('object');
                     geojsonValidation.isFeatureCollection(res.body).should.be.equal(true);
                     res.body.features.length.should.be.within(2,5);
-                    var props = res.body.features[0].properties;
-                    props.id.should.be.a('String');
-                    props.open.should.be.a('Boolean');
-                    props.name.should.be.a('String');
-                    if (props.city !== null) {
-                        props.city.should.be.a('String');
-                    }
-                    props.address.should.be.a('String');
-                    if (props.photo !== null) {
-                        props.photo.should.be.a('String');
-                    }
-                    props.docks.should.be.a('Number');
-                    props.available_bikes.should.be.a('Number');
-                    props.available_ebikes.should.be.a('Number');
-                    props.available_docks.should.be.a('Number');
-                    if (props.last_update !== null) {
-                        props.last_update.should.be.a('Number');
-                    }
-                    props.dock_status.should.be.a('array');
-                    props.dock_status[0].status.should.be.a('String');
-                    if (props.dock_status[0].bikeType !== null) {
-                        props.dock_status[0].bikeType.should.be.a('String');
+                    for(var i = 0; i < res.body.features.length; i++) {
+                        var props = res.body.features[i].properties;
+                        props.id.should.be.a('String');
+                        props.open.should.be.a('Boolean');
+                        props.name.should.be.a('String');
+                        if (props.city !== null) {
+                            props.city.should.be.a('String');
+                        }
+                        props.address.should.be.a('String');
+                        if (props.photo !== null) {
+                            props.photo.should.be.a('String');
+                        }
+                        props.docks.should.be.a('Number');
+                        props.available_bikes.should.be.a('Number');
+                        props.available_ebikes.should.be.a('Number');
+                        props.available_docks.should.be.a('Number');
+                        if (props.last_update !== null) {
+                            props.last_update.should.be.a('Number');
+                        }
+                        props.dock_status.should.be.a('array');
+                        props.dock_status[0].status.should.be.a('String');
+                        if (props.dock_status[0].bikeType !== null) {
+                            props.dock_status[0].bikeType.should.be.a('String');
+                        }
                     }
                     done();
                 });
@@ -133,28 +136,30 @@ describe('BikePoints', () => {
                     res.body.should.be.a('object');
                     geojsonValidation.isFeatureCollection(res.body).should.be.equal(true);
                     res.body.features.length.should.be.within(1,10);
-                    var props = res.body.features[0].properties;
-                    props.id.should.be.a('String');
-                    props.open.should.be.a('Boolean');
-                    props.name.should.be.a('String');
-                    if (props.city !== null) {
-                        props.city.should.be.a('String');
-                    }
-                    props.address.should.be.a('String');
-                    if (props.photo !== null) {
-                        props.photo.should.be.a('String');
-                    }
-                    props.docks.should.be.a('Number');
-                    props.available_bikes.should.be.a('Number');
-                    props.available_ebikes.should.be.a('Number');
-                    props.available_docks.should.be.a('Number');
-                    if (props.last_update !== null) {
-                        props.last_update.should.be.a('Number');
-                    }
-                    props.dock_status.should.be.a('array');
-                    props.dock_status[0].status.should.be.a('String');
-                    if (props.dock_status[0].bikeType !== null) {
-                        props.dock_status[0].bikeType.should.be.a('String');
+                    for(var i = 0; i < res.body.features.length; i++) {
+                        var props = res.body.features[i].properties;
+                        props.id.should.be.a('String');
+                        props.open.should.be.a('Boolean');
+                        props.name.should.be.a('String');
+                        if (props.city !== null) {
+                            props.city.should.be.a('String');
+                        }
+                        props.address.should.be.a('String');
+                        if (props.photo !== null) {
+                            props.photo.should.be.a('String');
+                        }
+                        props.docks.should.be.a('Number');
+                        props.available_bikes.should.be.a('Number');
+                        props.available_ebikes.should.be.a('Number');
+                        props.available_docks.should.be.a('Number');
+                        if (props.last_update !== null) {
+                            props.last_update.should.be.a('Number');
+                        }
+                        props.dock_status.should.be.a('array');
+                        props.dock_status[0].status.should.be.a('String');
+                        if (props.dock_status[0].bikeType !== null) {
+                            props.dock_status[0].bikeType.should.be.a('String');
+                        }
                     }
                     done();
                 });
@@ -171,28 +176,30 @@ describe('BikePoints', () => {
                     res.body.should.be.a('object');
                     geojsonValidation.isFeatureCollection(res.body).should.be.equal(true);
                     res.body.features.length.should.be.within(1,10);
-                    var props = res.body.features[0].properties;
-                    props.id.should.be.a('String');
-                    props.open.should.be.a('Boolean');
-                    props.name.should.be.a('String');
-                    if (props.city !== null) {
-                        props.city.should.be.a('String');
-                    }
-                    props.address.should.be.a('String');
-                    if (props.photo !== null) {
-                        props.photo.should.be.a('String');
-                    }
-                    props.docks.should.be.a('Number');
-                    props.available_bikes.should.be.a('Number');
-                    props.available_ebikes.should.be.a('Number');
-                    props.available_docks.should.be.a('Number');
-                    if (props.last_update !== null) {
-                        props.last_update.should.be.a('Number');
-                    }
-                    props.dock_status.should.be.a('array');
-                    props.dock_status[0].status.should.be.a('String');
-                    if (props.dock_status[0].bikeType !== null) {
-                        props.dock_status[0].bikeType.should.be.a('String');
+                    for(var i = 0; i < res.body.features.length; i++) {
+                        var props = res.body.features[i].properties;
+                        props.id.should.be.a('String');
+                        props.open.should.be.a('Boolean');
+                        props.name.should.be.a('String');
+                        if (props.city !== null) {
+                            props.city.should.be.a('String');
+                        }
+                        props.address.should.be.a('String');
+                        if (props.photo !== null) {
+                            props.photo.should.be.a('String');
+                        }
+                        props.docks.should.be.a('Number');
+                        props.available_bikes.should.be.a('Number');
+                        props.available_ebikes.should.be.a('Number');
+                        props.available_docks.should.be.a('Number');
+                        if (props.last_update !== null) {
+                            props.last_update.should.be.a('Number');
+                        }
+                        props.dock_status.should.be.a('array');
+                        props.dock_status[0].status.should.be.a('String');
+                        if (props.dock_status[0].bikeType !== null) {
+                            props.dock_status[0].bikeType.should.be.a('String');
+                        }
                     }
                     done();
                 });

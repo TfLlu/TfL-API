@@ -18,10 +18,12 @@ describe('StopPoints', () => {
                     res.body.should.be.a('object');
                     geojsonValidation.isFeatureCollection(res.body).should.be.equal(true);
                     res.body.features.length.should.be.above(2500);
-                    var props = res.body.features[0].properties;
-                    props.id.should.be.a('Number');
-                    props.name.should.be.a('String');
-                    props.should.not.have.property('distance');
+                    for(var i = 0; i < res.body.features.length; i++) {
+                        var props = res.body.features[i].properties;
+                        props.id.should.be.a('Number');
+                        props.name.should.be.a('String');
+                        props.should.not.have.property('distance');
+                    }
                     done();
                 });
         });
@@ -79,10 +81,12 @@ describe('StopPoints', () => {
                     res.body.should.be.a('object');
                     geojsonValidation.isFeatureCollection(res.body).should.be.equal(true);
                     res.body.features.length.should.be.within(2,10);
-                    var props = res.body.features[0].properties;
-                    props.id.should.be.a('Number');
-                    props.name.should.be.a('String');
-                    props.distance.should.be.a('Number');
+                    for(var i = 0; i < res.body.features.length; i++) {
+                        var props = res.body.features[i].properties;
+                        props.id.should.be.a('Number');
+                        props.name.should.be.a('String');
+                        props.distance.should.be.a('Number');
+                    }
                     done();
                 });
         });
@@ -97,10 +101,12 @@ describe('StopPoints', () => {
                     res.body.should.be.a('object');
                     geojsonValidation.isFeatureCollection(res.body).should.be.equal(true);
                     res.body.features.length.should.be.equal(2);
-                    var props = res.body.features[0].properties;
-                    props.id.should.be.a('Number');
-                    props.name.should.be.a('String');
-                    props.should.not.have.property('distance');
+                    for(var i = 0; i < res.body.features.length; i++) {
+                        var props = res.body.features[i].properties;
+                        props.id.should.be.a('Number');
+                        props.name.should.be.a('String');
+                        props.should.not.have.property('distance');
+                    }
                     done();
                 });
         });
@@ -115,10 +121,12 @@ describe('StopPoints', () => {
                     res.body.should.be.a('object');
                     geojsonValidation.isFeatureCollection(res.body).should.be.equal(true);
                     res.body.features.length.should.be.equal(1,5);
-                    var props = res.body.features[0].properties;
-                    props.id.should.be.a('Number');
-                    props.name.should.be.a('String');
-                    props.should.not.have.property('distance');
+                    for(var i = 0; i < res.body.features.length; i++) {
+                        var props = res.body.features[i].properties;
+                        props.id.should.be.a('Number');
+                        props.name.should.be.a('String');
+                        props.should.not.have.property('distance');
+                    }
                     done();
                 });
         });
