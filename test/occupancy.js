@@ -7,7 +7,7 @@ let geojsonValidation = require('geojson-validation');
 
 chai.use(chaiHttp);
 
-describe('StopPoints', () => {
+describe('Occupancy', () => {
     describe('GET /Occupancy/CarPark', () => {
         it('should get all the carparks as geojson', (done) => {
             chai.request(server)
