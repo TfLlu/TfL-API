@@ -5,6 +5,7 @@ import distance  from '../helper/distance';
 import inbox     from '../helper/inbox';
 import cron      from 'node-cron';
 import deepClone from 'deep-clone';
+import moment from 'moment';
 
 var fuzzyOptions = {
     extract: function(obj) { return obj.properties.name; }
@@ -83,6 +84,7 @@ export const departures = async (stopPoint, limit) => {
                 departure.delay = 0;
                 departure.live = false;
             }
+            departure.departureISO = moment.unix(departure.departure).format();
             departure.destination = rawDepartures[i].direction;
             var destination = await getByName(departure.destination);
             if (typeof destination !== 'undefined') {

@@ -33,6 +33,10 @@ var _deepClone = require('deep-clone');
 
 var _deepClone2 = _interopRequireDefault(_deepClone);
 
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -149,6 +153,7 @@ const departures = exports.departures = (() => {
                     departure.delay = 0;
                     departure.live = false;
                 }
+                departure.departureISO = _moment2.default.unix(departure.departure).format();
                 departure.destination = rawDepartures[i].direction;
                 var destination = yield getByName(departure.destination);
                 if (typeof destination !== 'undefined') {

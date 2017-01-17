@@ -12,7 +12,7 @@ function random(min, max) {
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-var randomLimit = random(25, 50);
+var randomLimit = random(25, 200);
 
 describe('StopPoints', () => {
     describe('GET /Stoppoint', () => {
@@ -96,10 +96,13 @@ describe('StopPoints', () => {
                         departure.line.should.be.a('String');
                         departure.number.should.be.a('Number');
                         departure.departure.should.be.a('Number');
+                        departure.departureISO.should.be.a('String');
                         departure.delay.should.be.a('Number');
                         departure.live.should.be.a('Boolean');
                         departure.destination.should.be.a('String');
-                        departure.destinationId.should.be.a('Number');
+                        if (departure.destinationId !== null) {
+                            departure.destinationId.should.be.a('Number');
+                        }
                     }
                     done();
                 });
