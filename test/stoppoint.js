@@ -12,7 +12,7 @@ function random(min, max) {
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-var randomLimit = random(5, 200);
+var randomLimit = random(25, 50);
 
 describe('StopPoints', () => {
     describe('GET /Stoppoint', () => {
