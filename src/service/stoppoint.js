@@ -44,7 +44,41 @@ export const get = async stopPoint => {
 };
 
 export const departures = async stopPoint => {
-    return await mobiliteit.departures(stopPoint);
+    var departuresRaw = await mobiliteit.departures(stopPoint);
+    var departures = [];
+    var rawDepartures = JSON.parse(departuresRaw).Departure;
+    if (rawDepartures) {
+        for (var i = 0; i < rawDepartures.length; i++) {
+            var departure = {};
+            switch (rawDepartures[i].Product.operatorCode.toLowerCase()) {
+            case 'cfl':
+                departure.type = 'train';
+                departure.trainId = rawDepartures[i].Product.name.replace(/ +/g,' ');
+                break;
+            default:
+                departure.type = 'bus';
+                departure.trainId = null;
+                break;
+            }
+            departure.line = rawDepartures[i].Product.line.trim();
+            departure.number = parseInt(rawDepartures[i].Product.num.trim(), 10);
+
+            var time = Math.round(Date.parse(rawDepartures[i].date + ' ' + rawDepartures[i].time) / 1000);
+            if (rawDepartures[i].rtDate) {
+                var realTime = Math.round(Date.parse(rawDepartures[i].rtDate + ' ' + rawDepartures[i].rtTime) / 1000);
+                departure.departure = realTime;
+                departure.delay = realTime - time;
+                departure.live = true;
+            } else {
+                departure.departure = time;
+                departure.delay = 0;
+                departure.live = false;
+            }
+            departure.destination = rawDepartures[i].direction;
+            departures.push(departure);
+        }
+    }
+    return departures;
 };
 
 export const around = async (lon, lat, radius) => {
