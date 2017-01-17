@@ -35,7 +35,7 @@ const get = exports.get = (() => {
 
 const departures = exports.departures = (() => {
     var _ref3 = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield stoppoint.departures(parseInt(ctx.params.stopPoint));
+        ctx.body = yield stoppoint.departures(parseInt(ctx.params.stopPoint), parseInt(ctx.params.limit));
     });
 
     return function departures(_x3) {

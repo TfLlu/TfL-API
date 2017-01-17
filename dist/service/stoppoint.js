@@ -118,8 +118,8 @@ const getByName = exports.getByName = (() => {
 })();
 
 const departures = exports.departures = (() => {
-    var _ref6 = _asyncToGenerator(function* (stopPoint) {
-        var departuresRaw = yield mobiliteit.departures(stopPoint);
+    var _ref6 = _asyncToGenerator(function* (stopPoint, limit) {
+        var departuresRaw = yield mobiliteit.departures(stopPoint, limit);
         var departures = [];
         var rawDepartures = JSON.parse(departuresRaw).Departure;
         if (rawDepartures) {
@@ -162,7 +162,7 @@ const departures = exports.departures = (() => {
         return departures;
     });
 
-    return function departures(_x3) {
+    return function departures(_x3, _x4) {
         return _ref6.apply(this, arguments);
     };
 })();
@@ -188,7 +188,7 @@ const around = exports.around = (() => {
         };
     });
 
-    return function around(_x4, _x5, _x6) {
+    return function around(_x5, _x6, _x7) {
         return _ref7.apply(this, arguments);
     };
 })();
@@ -205,7 +205,7 @@ const box = exports.box = (() => {
         };
     });
 
-    return function box(_x7, _x8, _x9, _x10) {
+    return function box(_x8, _x9, _x10, _x11) {
         return _ref8.apply(this, arguments);
     };
 })();
@@ -225,7 +225,7 @@ const search = exports.search = (() => {
         };
     });
 
-    return function search(_x11) {
+    return function search(_x12) {
         return _ref9.apply(this, arguments);
     };
 })();

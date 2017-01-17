@@ -35,4 +35,9 @@ const compileStopPoint = stopPoint => {
     };
 };
 
-export const departures = async stopPoint => await request(config('MOBILITEIT_DEPARTURE', true) + stopPoint);
+export const departures = async (stopPoint, maxJourneys) => {
+    var requestUrl = config('MOBILITEIT_DEPARTURE', true);
+    requestUrl = requestUrl.replace('{{stopPoint}}', stopPoint);
+    requestUrl = requestUrl.replace('{{maxJourneys}}', maxJourneys||10);
+    return await request(requestUrl);
+};

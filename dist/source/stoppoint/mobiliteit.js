@@ -60,11 +60,14 @@ const compileStopPoint = stopPoint => {
 };
 
 const departures = exports.departures = (() => {
-    var _ref3 = _asyncToGenerator(function* (stopPoint) {
-        return yield (0, _requestPromiseNative2.default)((0, _config2.default)('MOBILITEIT_DEPARTURE', true) + stopPoint);
+    var _ref3 = _asyncToGenerator(function* (stopPoint, maxJourneys) {
+        var requestUrl = (0, _config2.default)('MOBILITEIT_DEPARTURE', true);
+        requestUrl = requestUrl.replace('{{stopPoint}}', stopPoint);
+        requestUrl = requestUrl.replace('{{maxJourneys}}', maxJourneys || 10);
+        return yield (0, _requestPromiseNative2.default)(requestUrl);
     });
 
-    return function departures(_x) {
+    return function departures(_x, _x2) {
         return _ref3.apply(this, arguments);
     };
 })();
