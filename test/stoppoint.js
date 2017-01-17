@@ -43,14 +43,14 @@ describe('StopPoints', () => {
         });
     });
     describe('GET /StopPoint/Departures/200405035', () => {
-        it('should get departures from "Luxembourg, Gare Centrale"', (done) => {
+        it('should get 10 departures from "Luxembourg, Gare Centrale"', (done) => {
             chai.request(server)
                 .get('/StopPoint/Departures/200405035')
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.should.be.json;
                     res.body.should.be.a('array');
-                    res.body.length.should.be.within(1,25);
+                    res.body.length.should.be.equal(10);
                     for(var i = 0; i < res.body.length; i++) {
                         var departure = res.body[i];
                         departure.type.should.be.a('String');
