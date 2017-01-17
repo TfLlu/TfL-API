@@ -21,8 +21,12 @@ describe('StopPoints', () => {
                         props.id.should.be.a('String');
                         props.name.should.be.a('String');
                         props.total.should.be.a('Number');
-                        props.free.should.be.a('Number');
-                        props.trend.should.be.a('String');
+                        if (props.free !== null) {
+                            props.free.should.be.a('Number');
+                        }
+                        if (props.trend !== null) {
+                            props.trend.should.be.a('String');
+                        }
                         props.meta.should.be.a('object');
                     }
                     done();
