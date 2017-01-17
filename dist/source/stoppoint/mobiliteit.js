@@ -67,15 +67,12 @@ const departures = exports.departures = (() => {
         if (rawDepartures) {
             for (var i = 0; i < rawDepartures.length; i++) {
                 var departure = {};
-                switch (rawDepartures[i].Product.catCode) {
-                    case '2':
+                switch (rawDepartures[i].Product.operatorCode.toLowerCase()) {
+                    case 'cfl':
                         departure.type = 'train';
                         break;
-                    case '5':
-                        departure.type = 'bus';
-                        break;
                     default:
-                        departure.type = 'unknown';
+                        departure.type = 'bus';
                         break;
                 }
                 departure.line = rawDepartures[i].Product.line.trim();
