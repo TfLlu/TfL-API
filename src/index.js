@@ -1,5 +1,7 @@
+import { Server } from 'http';
 import Koa        from 'koa';
 import KoaRouter  from 'koa-router';
+import Stream     from './stream';
 import controller from './controller';
 import monitor    from './monitor';
 import config     from './config';
@@ -24,11 +26,12 @@ router.get('/StopPoint/box/:swlon/:swlat/:nelon/:nelat', controller.stoppoint.bo
 router.get('/StopPoint/search/:searchstring',            controller.stoppoint.search);
 router.get('/Journey/:from/to/:to',                      controller.journey.plan);
 router.get('/Weather',                                   controller.weather.current);
+router.io('/test/:value',                                controller.test.index);
 
 app.use(monitor)
    .use(router.routes())
    .use(router.allowedMethods());
 
-app.listen(process.env.PORT||config('SERVER_PORT', true));
-
-module.exports = app;
+const server = Server(app.callback());
+Stream.bind(server, router);
+server.listen(process.env.PORT||config('SERVER_PORT', true));

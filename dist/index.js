@@ -1,5 +1,7 @@
 'use strict';
 
+var _http = require('http');
+
 var _koa = require('koa');
 
 var _koa2 = _interopRequireDefault(_koa);
@@ -7,6 +9,10 @@ var _koa2 = _interopRequireDefault(_koa);
 var _koaRouter = require('koa-router');
 
 var _koaRouter2 = _interopRequireDefault(_koaRouter);
+
+var _stream = require('./stream');
+
+var _stream2 = _interopRequireDefault(_stream);
 
 var _controller = require('./controller');
 
@@ -42,9 +48,10 @@ router.get('/StopPoint/box/:swlon/:swlat/:nelon/:nelat', _controller2.default.st
 router.get('/StopPoint/search/:searchstring', _controller2.default.stoppoint.search);
 router.get('/Journey/:from/to/:to', _controller2.default.journey.plan);
 router.get('/Weather', _controller2.default.weather.current);
+router.io('/test/:value', _controller2.default.test.index);
 
 app.use(_monitor2.default).use(router.routes()).use(router.allowedMethods());
 
-app.listen(process.env.PORT || (0, _config2.default)('SERVER_PORT', true));
-
-module.exports = app;
+const server = (0, _http.Server)(app.callback());
+_stream2.default.bind(server, router);
+server.listen(process.env.PORT || (0, _config2.default)('SERVER_PORT', true));
