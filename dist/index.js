@@ -31,6 +31,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const app = new _koa2.default();
 const router = new _koaRouter2.default();
 
+router.use(_monitor.middleware.routeAccess(router));
+
 router.get('/', _controller2.default.home.index);
 router.get('/BikePoint', _controller2.default.bikepoint.index);
 router.get('/BikePoint/:bikePoint', _controller2.default.bikepoint.get);
@@ -50,7 +52,7 @@ router.get('/Journey/:from/to/:to', _controller2.default.journey.plan);
 router.get('/Weather', _controller2.default.weather.current);
 router.io('/test/:value', _controller2.default.test.index);
 
-app.use(_monitor2.default).use(router.routes()).use(router.allowedMethods());
+app.use((0, _monitor2.default)()).use(_monitor.middleware.responseTime()).use(router.routes()).use(router.allowedMethods());
 
 const server = (0, _http.Server)(app.callback());
 _stream2.default.bind(server, router);
