@@ -5,9 +5,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.compileParking = exports.get = exports.all = exports.loadCarParks = undefined;
 
-var _axios = require('axios');
+var _request = require('../../../request');
 
-var _axios2 = _interopRequireDefault(_axios);
+var _request2 = _interopRequireDefault(_request);
 
 var _xmlParser = require('../../../helper/xmlParser');
 
@@ -19,7 +19,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 const getRaw = (() => {
     var _ref = _asyncToGenerator(function* () {
-        return (yield (0, _axios2.default)('http://service.vdl.lu/rss/circulation_guidageparking.php')).data;
+        return (yield (0, _request2.default)('http://service.vdl.lu/rss/circulation_guidageparking.php')).data;
     });
 
     return function getRaw() {

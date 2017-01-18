@@ -34,10 +34,24 @@ const responseTime = () => {
     };
 };
 
-export const middleware = {
+const requestTime = response => {
+    const requestTime = response.config.endTime - response.config.startTime;
+    onData({
+        REQUEST_TIME: {
+            url: response.config.url,
+            method: response.config.method,
+            status: response.status,
+            time: requestTime
+        }
+    });
+};
+
+const middleware = {
     responseTime,
     routeAccess
 };
+
+export { requestTime, middleware };
 
 export default () => {
     return async (ctx, next) => {

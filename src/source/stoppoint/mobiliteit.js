@@ -1,4 +1,4 @@
-import request from 'axios';
+import request from '../../request';
 import config  from '../../config';
 
 const getRaw = async () => {

@@ -5,9 +5,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.compileBikePoint = exports.get = exports.all = exports.loadBikePoints = undefined;
 
-var _axios = require('axios');
+var _request = require('../../request');
 
-var _axios2 = _interopRequireDefault(_axios);
+var _request2 = _interopRequireDefault(_request);
 
 var _config = require('../../config');
 
@@ -19,8 +19,8 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 const getRaw = (() => {
     var _ref = _asyncToGenerator(function* (bikePoint) {
-        if (typeof bikePoint === 'undefined') return (yield (0, _axios2.default)('https://api.jcdecaux.com/vls/v1/stations?contract=Luxembourg&apiKey=' + (0, _config2.default)('API_KEY_JCD', true))).data;
-        return (yield (0, _axios2.default)('https://api.jcdecaux.com/vls/v1/stations/' + bikePoint + '?contract=Luxembourg&apiKey=' + (0, _config2.default)('API_KEY_JCD', true))).data;
+        if (typeof bikePoint === 'undefined') return (yield (0, _request2.default)('https://api.jcdecaux.com/vls/v1/stations?contract=Luxembourg&apiKey=' + (0, _config2.default)('API_KEY_JCD', true))).data;
+        return (yield (0, _request2.default)('https://api.jcdecaux.com/vls/v1/stations/' + bikePoint + '?contract=Luxembourg&apiKey=' + (0, _config2.default)('API_KEY_JCD', true))).data;
     });
 
     return function getRaw(_x) {

@@ -1,4 +1,4 @@
-import request from 'axios';
+import request from '../../request';
 
 const getRaw = async () => {
     return (await request('http://meteolux.lu/Opendata/data_LUX_actual.csv')).data;

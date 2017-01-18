@@ -54,10 +54,25 @@ const responseTime = () => {
     })();
 };
 
-const middleware = exports.middleware = {
+const requestTime = response => {
+    const requestTime = response.config.endTime - response.config.startTime;
+    onData({
+        REQUEST_TIME: {
+            url: response.config.url,
+            method: response.config.method,
+            status: response.status,
+            time: requestTime
+        }
+    });
+};
+
+const middleware = {
     responseTime,
     routeAccess
 };
+
+exports.requestTime = requestTime;
+exports.middleware = middleware;
 
 exports.default = () => {
     return (() => {

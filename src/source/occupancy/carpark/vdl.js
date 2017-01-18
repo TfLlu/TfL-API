@@ -1,4 +1,4 @@
-import request   from 'axios';
+import request   from '../../../request';
 import xmlParser from '../../../helper/xmlParser';
 
 const getRaw = async () => (await request('http://service.vdl.lu/rss/circulation_guidageparking.php')).data;

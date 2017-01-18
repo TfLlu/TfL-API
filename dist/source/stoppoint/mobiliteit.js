@@ -5,9 +5,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.departures = exports.load = undefined;
 
-var _axios = require('axios');
+var _request = require('../../request');
 
-var _axios2 = _interopRequireDefault(_axios);
+var _request2 = _interopRequireDefault(_request);
 
 var _config = require('../../config');
 
@@ -19,7 +19,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 const getRaw = (() => {
     var _ref = _asyncToGenerator(function* () {
-        return (yield (0, _axios2.default)((0, _config2.default)('MOBILITEIT_STOPPOINTS', true))).data;
+        return (yield (0, _request2.default)((0, _config2.default)('MOBILITEIT_STOPPOINTS', true))).data;
     });
 
     return function getRaw() {
@@ -64,7 +64,7 @@ const departures = exports.departures = (() => {
         var requestUrl = (0, _config2.default)('MOBILITEIT_DEPARTURE', true);
         requestUrl = requestUrl.replace('{{stopPoint}}', stopPoint);
         requestUrl = requestUrl.replace('{{maxJourneys}}', maxJourneys || 10);
-        return (yield (0, _axios2.default)(requestUrl)).data;
+        return (yield (0, _request2.default)(requestUrl)).data;
     });
 
     return function departures(_x, _x2) {
