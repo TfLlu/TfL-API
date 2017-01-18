@@ -1,12 +1,7 @@
-import request from '../../request';
-import config  from '../../config';
-
-const getRaw = async () => {
-    return (await request(config('MOBILITEIT_STOPPOINTS', true))).data;
-};
+import { mobiliteitStoppoints, mobiliteitDeparture } from '../../requests';
 
 export const load = async () => {
-    var raw = await getRaw();
+    var raw = await mobiliteitStoppoints();
     var StopPoints = raw.trim().split('\n');
     return StopPoints.map(compileStopPoint);
 };
@@ -34,9 +29,4 @@ const compileStopPoint = stopPoint => {
     };
 };
 
-export const departures = async (stopPoint, maxJourneys) => {
-    var requestUrl = config('MOBILITEIT_DEPARTURE', true);
-    requestUrl = requestUrl.replace('{{stopPoint}}', stopPoint);
-    requestUrl = requestUrl.replace('{{maxJourneys}}', maxJourneys||10);
-    return (await request(requestUrl)).data;
-};
+export const departures = (stopPoint, maxJourneys) => mobiliteitDeparture(stopPoint, maxJourneys);

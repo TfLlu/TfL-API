@@ -1,12 +1,8 @@
-import request from '../../request';
+import { meteolux } from '../../requests';
 
-const getRaw = async () => {
-    return (await request('http://meteolux.lu/Opendata/data_LUX_actual.csv')).data;
-};
+export const get = async () => {
 
-export const get = async bikePoint => {
-
-    var raw = await getRaw(bikePoint);
+    var raw = await meteolux();
     var lines = raw.trim().split('\r\n');
     var result = {};
 

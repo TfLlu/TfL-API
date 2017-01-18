@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.velok = exports.veloh = undefined;
+exports.meteolux = exports.mobiliteitDeparture = exports.mobiliteitStoppoints = exports.vdl = exports.openov = exports.velok = exports.veloh = undefined;
 
 var _config = require('./config');
 
@@ -27,4 +27,29 @@ const veloh = exports.veloh = bikePoint => {
 const velok = exports.velok = () => {
     const url = 'https://webservice.velok.lu/stationattache.aspx';
     return run('velok', url);
+};
+
+const openov = exports.openov = (from, to) => {
+    const url = 'https://planner.tfl.lu/rrrr/plan?from-latlng=' + from + '&to-latlng=' + to;
+    return run('openov', url);
+};
+
+const vdl = exports.vdl = () => {
+    const url = 'http://service.vdl.lu/rss/circulation_guidageparking.php';
+    return run('vdl', url);
+};
+
+const mobiliteitStoppoints = exports.mobiliteitStoppoints = () => {
+    const url = (0, _config2.default)('MOBILITEIT_STOPPOINTS', true);
+    return run('mobiliteit-stoppoints', url);
+};
+
+const mobiliteitDeparture = exports.mobiliteitDeparture = (stopPoint, maxJourneys) => {
+    const url = (0, _config2.default)('MOBILITEIT_DEPARTURE', true).replace('{{stopPoint}}', stopPoint).replace('{{maxJourneys}}', maxJourneys || 10);
+    return run('mobiliteit-departure', url);
+};
+
+const meteolux = exports.meteolux = () => {
+    const url = 'http://meteolux.lu/Opendata/data_LUX_actual.csv';
+    return run('meteolux', url);
 };

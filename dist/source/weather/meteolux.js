@@ -5,28 +5,14 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.compileSituation = exports.current = exports.get = undefined;
 
-var _request = require('../../request');
-
-var _request2 = _interopRequireDefault(_request);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _requests = require('../../requests');
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-const getRaw = (() => {
-    var _ref = _asyncToGenerator(function* () {
-        return (yield (0, _request2.default)('http://meteolux.lu/Opendata/data_LUX_actual.csv')).data;
-    });
-
-    return function getRaw() {
-        return _ref.apply(this, arguments);
-    };
-})();
-
 const get = exports.get = (() => {
-    var _ref2 = _asyncToGenerator(function* (bikePoint) {
+    var _ref = _asyncToGenerator(function* () {
 
-        var raw = yield getRaw(bikePoint);
+        var raw = yield (0, _requests.meteolux)();
         var lines = raw.trim().split('\r\n');
         var result = {};
 
@@ -39,19 +25,19 @@ const get = exports.get = (() => {
         return result;
     });
 
-    return function get(_x) {
-        return _ref2.apply(this, arguments);
+    return function get() {
+        return _ref.apply(this, arguments);
     };
 })();
 
 const current = exports.current = (() => {
-    var _ref3 = _asyncToGenerator(function* () {
+    var _ref2 = _asyncToGenerator(function* () {
         var situation = yield get();
         return compileSituation(situation);
     });
 
     return function current() {
-        return _ref3.apply(this, arguments);
+        return _ref2.apply(this, arguments);
     };
 })();
 

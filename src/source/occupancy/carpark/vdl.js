@@ -1,10 +1,8 @@
-import request   from '../../../request';
+import { vdl } from '../../../requests';
 import xmlParser from '../../../helper/xmlParser';
 
-const getRaw = async () => (await request('http://service.vdl.lu/rss/circulation_guidageparking.php')).data;
-
 export const loadCarParks = async () => {
-    var raw = await getRaw();
+    var raw = await vdl();
     var data = await xmlParser(raw);
 
     return data['rss']['channel']['item'];
