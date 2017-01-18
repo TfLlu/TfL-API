@@ -38,6 +38,7 @@ const requestTime = response => {
     const requestTime = response.config.endTime - response.config.startTime;
     onData({
         REQUEST_TIME: {
+            name: response.config.name || null,
             url: response.config.url,
             method: response.config.method,
             status: response.status,
