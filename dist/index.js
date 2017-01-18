@@ -30,7 +30,13 @@ var _config = require('./config');
 
 var _config2 = _interopRequireDefault(_config);
 
+var _axios = require('axios');
+
+var _axios2 = _interopRequireDefault(_axios);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_axios2.default.defaults.responseType = 'text';
 
 const app = new _koa2.default();
 const router = new _koaRouter2.default();

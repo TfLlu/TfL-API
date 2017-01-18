@@ -1,7 +1,7 @@
-import request from 'request-promise-native';
+import request from 'axios';
 
-const getRaw = () => {
-    return request('http://meteolux.lu/Opendata/data_LUX_actual.csv');
+const getRaw = async () => {
+    return (await request('http://meteolux.lu/Opendata/data_LUX_actual.csv')).data;
 };
 
 export const get = async bikePoint => {

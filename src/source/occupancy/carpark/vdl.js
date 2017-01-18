@@ -1,7 +1,7 @@
-import request from 'request-promise-native';
+import request   from 'axios';
 import xmlParser from '../../../helper/xmlParser';
 
-const getRaw = () => request('http://service.vdl.lu/rss/circulation_guidageparking.php');
+const getRaw = async () => (await request('http://service.vdl.lu/rss/circulation_guidageparking.php')).data;
 
 export const loadCarParks = async () => {
     var raw = await getRaw();

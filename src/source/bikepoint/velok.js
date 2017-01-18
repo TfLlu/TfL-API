@@ -1,7 +1,7 @@
-import request from 'request-promise-native';
+import request   from 'axios';
 import xmlParser from '../../helper/xmlParser';
 
-const getRaw = () => request('https://webservice.velok.lu/stationattache.aspx');
+const getRaw = async () => (await request('https://webservice.velok.lu/stationattache.aspx')).data;
 
 export const loadBikePoints = async () => {
     var raw = await getRaw();

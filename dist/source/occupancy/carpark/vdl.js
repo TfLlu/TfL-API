@@ -5,9 +5,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.compileParking = exports.get = exports.all = exports.loadCarParks = undefined;
 
-var _requestPromiseNative = require('request-promise-native');
+var _axios = require('axios');
 
-var _requestPromiseNative2 = _interopRequireDefault(_requestPromiseNative);
+var _axios2 = _interopRequireDefault(_axios);
 
 var _xmlParser = require('../../../helper/xmlParser');
 
@@ -17,10 +17,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-const getRaw = () => (0, _requestPromiseNative2.default)('http://service.vdl.lu/rss/circulation_guidageparking.php');
+const getRaw = (() => {
+    var _ref = _asyncToGenerator(function* () {
+        return (yield (0, _axios2.default)('http://service.vdl.lu/rss/circulation_guidageparking.php')).data;
+    });
+
+    return function getRaw() {
+        return _ref.apply(this, arguments);
+    };
+})();
 
 const loadCarParks = exports.loadCarParks = (() => {
-    var _ref = _asyncToGenerator(function* () {
+    var _ref2 = _asyncToGenerator(function* () {
         var raw = yield getRaw();
         var data = yield (0, _xmlParser2.default)(raw);
 
@@ -28,23 +36,23 @@ const loadCarParks = exports.loadCarParks = (() => {
     });
 
     return function loadCarParks() {
-        return _ref.apply(this, arguments);
+        return _ref2.apply(this, arguments);
     };
 })();
 
 const all = exports.all = (() => {
-    var _ref2 = _asyncToGenerator(function* () {
+    var _ref3 = _asyncToGenerator(function* () {
         var carParks = yield loadCarParks();
         return carParks.map(compileParking);
     });
 
     return function all() {
-        return _ref2.apply(this, arguments);
+        return _ref3.apply(this, arguments);
     };
 })();
 
 const get = exports.get = (() => {
-    var _ref3 = _asyncToGenerator(function* (carPark) {
+    var _ref4 = _asyncToGenerator(function* (carPark) {
         var carParks = yield loadCarParks();
         carParks = carParks.map(compileParking);
         for (var i = 0; i < carParks.length; i++) {
@@ -55,7 +63,7 @@ const get = exports.get = (() => {
     });
 
     return function get(_x) {
-        return _ref3.apply(this, arguments);
+        return _ref4.apply(this, arguments);
     };
 })();
 

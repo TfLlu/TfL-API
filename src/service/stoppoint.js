@@ -56,7 +56,7 @@ export const getByName = async name => {
 export const departures = async (stopPoint, limit) => {
     var departuresRaw = await mobiliteit.departures(stopPoint, limit);
     var departures = [];
-    var rawDepartures = JSON.parse(departuresRaw).Departure;
+    var rawDepartures = departuresRaw.Departure;
     if (rawDepartures) {
         for (var i = 0; i < rawDepartures.length; i++) {
             var departure = {};

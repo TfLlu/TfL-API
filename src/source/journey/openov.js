@@ -1,5 +1,5 @@
-import request from 'request-promise-native';
+import request from 'axios';
 
-export const plan = (from, to) => {
-    return request('https://planner.tfl.lu/rrrr/plan?from-latlng=' + from + '&to-latlng=' + to);
+export const plan = async (from, to) => {
+    return (await request('https://planner.tfl.lu/rrrr/plan?from-latlng=' + from + '&to-latlng=' + to)).data;
 };

@@ -125,7 +125,7 @@ const departures = exports.departures = (() => {
     var _ref6 = _asyncToGenerator(function* (stopPoint, limit) {
         var departuresRaw = yield mobiliteit.departures(stopPoint, limit);
         var departures = [];
-        var rawDepartures = JSON.parse(departuresRaw).Departure;
+        var rawDepartures = departuresRaw.Departure;
         if (rawDepartures) {
             for (var i = 0; i < rawDepartures.length; i++) {
                 var departure = {};

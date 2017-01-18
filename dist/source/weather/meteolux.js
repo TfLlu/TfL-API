@@ -5,20 +5,26 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.compileSituation = exports.current = exports.get = undefined;
 
-var _requestPromiseNative = require('request-promise-native');
+var _axios = require('axios');
 
-var _requestPromiseNative2 = _interopRequireDefault(_requestPromiseNative);
+var _axios2 = _interopRequireDefault(_axios);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-const getRaw = () => {
-    return (0, _requestPromiseNative2.default)('http://meteolux.lu/Opendata/data_LUX_actual.csv');
-};
+const getRaw = (() => {
+    var _ref = _asyncToGenerator(function* () {
+        return (yield (0, _axios2.default)('http://meteolux.lu/Opendata/data_LUX_actual.csv')).data;
+    });
+
+    return function getRaw() {
+        return _ref.apply(this, arguments);
+    };
+})();
 
 const get = exports.get = (() => {
-    var _ref = _asyncToGenerator(function* (bikePoint) {
+    var _ref2 = _asyncToGenerator(function* (bikePoint) {
 
         var raw = yield getRaw(bikePoint);
         var lines = raw.trim().split('\r\n');
@@ -34,18 +40,18 @@ const get = exports.get = (() => {
     });
 
     return function get(_x) {
-        return _ref.apply(this, arguments);
+        return _ref2.apply(this, arguments);
     };
 })();
 
 const current = exports.current = (() => {
-    var _ref2 = _asyncToGenerator(function* () {
+    var _ref3 = _asyncToGenerator(function* () {
         var situation = yield get();
         return compileSituation(situation);
     });
 
     return function current() {
-        return _ref2.apply(this, arguments);
+        return _ref3.apply(this, arguments);
     };
 })();
 

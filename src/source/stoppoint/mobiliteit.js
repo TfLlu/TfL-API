@@ -1,15 +1,14 @@
-import request  from 'request-promise-native';
-import config   from '../../config';
+import request from 'axios';
+import config  from '../../config';
 
 const getRaw = async () => {
-    return await request(config('MOBILITEIT_STOPPOINTS', true));
+    return (await request(config('MOBILITEIT_STOPPOINTS', true))).data;
 };
 
 export const load = async () => {
     var raw = await getRaw();
     var StopPoints = raw.trim().split('\n');
     return StopPoints.map(compileStopPoint);
-
 };
 
 const compileStopPoint = stopPoint => {
@@ -39,5 +38,5 @@ export const departures = async (stopPoint, maxJourneys) => {
     var requestUrl = config('MOBILITEIT_DEPARTURE', true);
     requestUrl = requestUrl.replace('{{stopPoint}}', stopPoint);
     requestUrl = requestUrl.replace('{{maxJourneys}}', maxJourneys||10);
-    return await request(requestUrl);
+    return (await request(requestUrl)).data;
 };

@@ -6,6 +6,9 @@ import controller     from './controller';
 import { middleware } from './monitor';
 import monitor        from './monitor';
 import config         from './config';
+import request        from 'axios';
+
+request.defaults.responseType = 'text';
 
 const app    = new Koa();
 const router = new KoaRouter();

@@ -5,9 +5,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.compileBikePoint = exports.get = exports.all = exports.loadBikePoints = undefined;
 
-var _requestPromiseNative = require('request-promise-native');
+var _axios = require('axios');
 
-var _requestPromiseNative2 = _interopRequireDefault(_requestPromiseNative);
+var _axios2 = _interopRequireDefault(_axios);
 
 var _config = require('../../config');
 
@@ -17,40 +17,46 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-const getRaw = bikePoint => {
-    if (typeof bikePoint === 'undefined') return (0, _requestPromiseNative2.default)('https://api.jcdecaux.com/vls/v1/stations?contract=Luxembourg&apiKey=' + (0, _config2.default)('API_KEY_JCD', true));
-    return (0, _requestPromiseNative2.default)('https://api.jcdecaux.com/vls/v1/stations/' + bikePoint + '?contract=Luxembourg&apiKey=' + (0, _config2.default)('API_KEY_JCD', true));
-};
-
-const loadBikePoints = exports.loadBikePoints = (() => {
+const getRaw = (() => {
     var _ref = _asyncToGenerator(function* (bikePoint) {
-        return JSON.parse((yield getRaw(bikePoint)));
+        if (typeof bikePoint === 'undefined') return (yield (0, _axios2.default)('https://api.jcdecaux.com/vls/v1/stations?contract=Luxembourg&apiKey=' + (0, _config2.default)('API_KEY_JCD', true))).data;
+        return (yield (0, _axios2.default)('https://api.jcdecaux.com/vls/v1/stations/' + bikePoint + '?contract=Luxembourg&apiKey=' + (0, _config2.default)('API_KEY_JCD', true))).data;
     });
 
-    return function loadBikePoints(_x) {
+    return function getRaw(_x) {
         return _ref.apply(this, arguments);
     };
 })();
 
+const loadBikePoints = exports.loadBikePoints = (() => {
+    var _ref2 = _asyncToGenerator(function* (bikePoint) {
+        return yield getRaw(bikePoint);
+    });
+
+    return function loadBikePoints(_x2) {
+        return _ref2.apply(this, arguments);
+    };
+})();
+
 const all = exports.all = (() => {
-    var _ref2 = _asyncToGenerator(function* () {
+    var _ref3 = _asyncToGenerator(function* () {
         var bikePoints = yield loadBikePoints();
         return bikePoints.map(compileBikePoint);
     });
 
     return function all() {
-        return _ref2.apply(this, arguments);
+        return _ref3.apply(this, arguments);
     };
 })();
 
 const get = exports.get = (() => {
-    var _ref3 = _asyncToGenerator(function* (bikePointId) {
+    var _ref4 = _asyncToGenerator(function* (bikePointId) {
         var bikePoint = yield loadBikePoints(bikePointId);
         return compileBikePoint(bikePoint);
     });
 
-    return function get(_x2) {
-        return _ref3.apply(this, arguments);
+    return function get(_x3) {
+        return _ref4.apply(this, arguments);
     };
 })();
 
