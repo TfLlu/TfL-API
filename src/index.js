@@ -38,4 +38,10 @@ app.use(monitor())
 
 const server = Server(app.callback());
 Stream.bind(server, router);
-server.listen(process.env.PORT||config('SERVER_PORT', true));
+
+const PORT = config('SERVER_PORT', true);
+if (PORT) {
+    server.listen(PORT);
+}
+
+export default server;

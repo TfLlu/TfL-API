@@ -1,5 +1,9 @@
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+   value: true
+});
+
 var _http = require('http');
 
 var _koa = require('koa');
@@ -56,4 +60,10 @@ app.use((0, _monitor2.default)()).use(_monitor.middleware.responseTime()).use(ro
 
 const server = (0, _http.Server)(app.callback());
 _stream2.default.bind(server, router);
-server.listen(process.env.PORT || (0, _config2.default)('SERVER_PORT', true));
+
+const PORT = (0, _config2.default)('SERVER_PORT', true);
+if (PORT) {
+   server.listen(PORT);
+}
+
+exports.default = server;
