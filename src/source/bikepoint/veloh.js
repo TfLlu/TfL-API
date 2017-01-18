@@ -1,13 +1,6 @@
-import request from '../../request';
-import config  from '../../config';
+import { veloh }  from '../../requests';
 
-const getRaw = async bikePoint => {
-    if (typeof bikePoint === 'undefined')
-        return (await request('https://api.jcdecaux.com/vls/v1/stations?contract=Luxembourg&apiKey=' + config('API_KEY_JCD', true))).data;
-    return (await request('https://api.jcdecaux.com/vls/v1/stations/' + bikePoint + '?contract=Luxembourg&apiKey=' + config('API_KEY_JCD', true))).data;
-};
-
-export const loadBikePoints = async bikePoint => await getRaw(bikePoint);
+export const loadBikePoints = () => veloh();
 
 export const all = async () => {
     var bikePoints = await loadBikePoints();

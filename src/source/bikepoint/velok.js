@@ -1,10 +1,8 @@
-import request   from '../../request';
+import { velok } from '../../requests';
 import xmlParser from '../../helper/xmlParser';
 
-const getRaw = async () => (await request('https://webservice.velok.lu/stationattache.aspx')).data;
-
 export const loadBikePoints = async () => {
-    var raw = await getRaw();
+    var raw = await velok();
     var data = await xmlParser(raw);
     return data['velok']['station'];
 };
