@@ -25,6 +25,9 @@ if ((0, _config2.default)('INFLUXDB')) {
 const onData = data => {
     if (!influxdb) return;
     if (data.RESPONSE_TIME) {
+        if (data.ROUTE_ACCESS) {
+            data.RESPONSE_TIME.path = data.ROUTE_ACCESS.path;
+        }
         influxdb.write('responses').field(data.RESPONSE_TIME).then();
     } else if (data.REQUEST_TIME) {
         influxdb.write('requests').field(data.REQUEST_TIME).then();

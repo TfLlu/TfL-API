@@ -11,6 +11,9 @@ const onData = data => {
     if (!influxdb)
         return;
     if (data.RESPONSE_TIME) {
+        if (data.ROUTE_ACCESS) {
+            data.RESPONSE_TIME.path = data.ROUTE_ACCESS.path;
+        }
         influxdb.write('responses')
             .field(data.RESPONSE_TIME)
             .then();
