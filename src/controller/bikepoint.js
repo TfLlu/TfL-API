@@ -5,6 +5,7 @@ export const index = async ctx => {
 };
 
 export const streamIndex = ({ emit, disconnect }) => {
+    console.log('client connected to stream/BikePoint');
     var res = bikepoint.stream(data => {
         emit(data);
     });

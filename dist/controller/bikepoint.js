@@ -24,6 +24,7 @@ const index = exports.index = (() => {
 })();
 
 const streamIndex = exports.streamIndex = ({ emit, disconnect }) => {
+    console.log('client connected to stream/BikePoint');
     var res = bikepoint.stream(data => {
         emit(data);
     });
