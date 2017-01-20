@@ -39,6 +39,7 @@ router.use(_monitor.middleware.routeAccess(router));
 
 router.get('/', _controller2.default.home.index);
 router.get('/BikePoint', _controller2.default.bikepoint.index);
+router.io('/BikePoint', _controller2.default.bikepoint.streamIndex);
 router.get('/BikePoint/:bikePoint', _controller2.default.bikepoint.get);
 router.get('/BikePoint/around/:lon/:lat/:radius', _controller2.default.bikepoint.around);
 router.get('/BikePoint/box/:swlon/:swlat/:nelon/:nelat', _controller2.default.bikepoint.box);

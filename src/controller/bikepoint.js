@@ -4,6 +4,16 @@ export const index = async ctx => {
     ctx.body = await bikepoint.all();
 };
 
+export const streamIndex = ({ emit, disconnect }) => {
+    var res = bikepoint.stream(data => {
+        emit(data);
+    });
+
+    disconnect(() => {
+        res.off();
+    });
+};
+
 export const get = async ctx => {
     ctx.body = await bikepoint.get(ctx.params.bikePoint);
 };

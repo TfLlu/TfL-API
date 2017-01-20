@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.search = exports.box = exports.around = exports.get = exports.index = undefined;
+exports.search = exports.box = exports.around = exports.get = exports.streamIndex = exports.index = undefined;
 
 var _bikepoint = require('../service/bikepoint');
 
@@ -22,6 +22,16 @@ const index = exports.index = (() => {
         return _ref.apply(this, arguments);
     };
 })();
+
+const streamIndex = exports.streamIndex = ({ emit, disconnect }) => {
+    var res = bikepoint.stream(data => {
+        emit(data);
+    });
+
+    disconnect(() => {
+        res.off();
+    });
+};
 
 const get = exports.get = (() => {
     var _ref2 = _asyncToGenerator(function* (ctx) {

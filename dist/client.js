@@ -17,11 +17,11 @@ class Client {
         this.io = (0, _socket2.default)(this.host, {
             path: '/stream'
         });
-        this.io.on('update', update => {
-            if (!update.path || !this.subscriptions[update.path]) {
+        this.io.on('data', data => {
+            if (!data.path || !this.subscriptions[data.path]) {
                 return;
             }
-            this.subscriptions[update.path].forEach(callback => callback(update.data || {}));
+            this.subscriptions[data.path].forEach(callback => callback(data.data || {}));
         });
     }
 

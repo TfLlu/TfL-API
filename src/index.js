@@ -14,6 +14,7 @@ router.use(middleware.routeAccess(router));
 
 router.get('/',                                          controller.home.index);
 router.get('/BikePoint',                                 controller.bikepoint.index);
+router.io ('/BikePoint',                                 controller.bikepoint.streamIndex);
 router.get('/BikePoint/:bikePoint',                      controller.bikepoint.get);
 router.get('/BikePoint/around/:lon/:lat/:radius',        controller.bikepoint.around);
 router.get('/BikePoint/box/:swlon/:swlat/:nelon/:nelat', controller.bikepoint.box);

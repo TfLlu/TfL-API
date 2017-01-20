@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.search = exports.box = exports.around = exports.get = exports.all = exports.compileBikePoint = undefined;
+exports.cron = exports.stream = exports.search = exports.box = exports.around = exports.get = exports.all = exports.compileBikePoint = undefined;
 
 var _velok = require('../source/bikepoint/velok');
 
@@ -24,6 +24,14 @@ var _distance2 = _interopRequireDefault(_distance);
 var _inbox = require('../helper/inbox');
 
 var _inbox2 = _interopRequireDefault(_inbox);
+
+var _events = require('events');
+
+var _events2 = _interopRequireDefault(_events);
+
+var _config = require('../config');
+
+var _config2 = _interopRequireDefault(_config);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -152,3 +160,100 @@ const search = exports.search = (() => {
         return _ref4.apply(this, arguments);
     };
 })();
+
+const emitter = new _events2.default();
+
+const stream = exports.stream = callback => {
+    emitter.on('data', callback);
+    if (emitter.listenerCount('data') === 1) {
+        cron();
+    } else {
+        emitter.emit('data', {
+            type: 'new',
+            data: cacheData.features.map(compileStream)
+        });
+    }
+    return {
+        off: function () {
+            emitter.removeListener('data', callback);
+        }
+    };
+};
+
+var newData = [];
+var cacheData;
+
+const cron = exports.cron = (() => {
+    var _ref5 = _asyncToGenerator(function* () {
+        if (emitter.listenerCount('data') === 0) {
+            cacheData = null;
+            return;
+        }
+        if (!cacheData) {
+            cacheData = yield all();
+            emitter.emit('data', {
+                type: 'new',
+                data: cacheData.features.map(compileStream)
+            });
+            setTimeout(cron, (0, _config2.default)('STREAM_TTL_BIKEPOINT', true));
+            return;
+        }
+        newData = yield all();
+
+        // update
+        var updatedBikePoints = cacheData.features.filter(function (row) {
+            var oldRow = newData.features.find(function (row2) {
+                return row2.properties.id === row.properties.id;
+            });
+            return oldRow && JSON.stringify(row) != JSON.stringify(oldRow);
+        });
+
+        if (updatedBikePoints.length) {
+            emitter.emit('data', {
+                type: 'update',
+                data: updatedBikePoints.map(compileStream)
+            });
+        }
+
+        // new
+        var newBikePoints = newData.features.filter(function (row) {
+            return !cacheData.features.find(function (row2) {
+                return row2.properties.id === row.properties.id;
+            });
+        });
+
+        if (newBikePoints.length) {
+            emitter.emit('data', {
+                type: 'new',
+                data: newBikePoints.map(compileStream)
+            });
+        }
+
+        // deleted
+        var deletedBikePoints = cacheData.features.filter(function (row) {
+            return !newData.features.find(function (row2) {
+                return row2.properties.id === row.properties.id;
+            });
+        });
+        if (deletedBikePoints.length) {
+            emitter.emit('data', {
+                type: 'delete',
+                data: deletedBikePoints.map(compileStream)
+            });
+        }
+
+        cacheData = newData;
+        setTimeout(cron, (0, _config2.default)('STREAM_TTL_BIKEPOINT', true));
+    });
+
+    return function cron() {
+        return _ref5.apply(this, arguments);
+    };
+})();
+
+const compileStream = bikePoint => {
+    return {
+        id: bikePoint.properties.id,
+        data: bikePoint
+    };
+};
