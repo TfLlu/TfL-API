@@ -15,6 +15,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 const index = exports.index = (() => {
     var _ref = _asyncToGenerator(function* (ctx) {
+        console.log('client connected to /BikePoint');
         ctx.body = yield bikepoint.all();
     });
 
@@ -24,7 +25,7 @@ const index = exports.index = (() => {
 })();
 
 const streamIndex = exports.streamIndex = ({ emit, disconnect }) => {
-    console.log('client connected to stream/BikePoint');
+    console.log('client connected to /stream/BikePoint');
     var res = bikepoint.stream(data => {
         emit(data);
     });
