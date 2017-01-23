@@ -12,17 +12,15 @@ var _deepClone = require('deep-clone');
 
 var _deepClone2 = _interopRequireDefault(_deepClone);
 
-var _ioredis = require('ioredis');
+var _redis = require('../redis');
 
-var _ioredis2 = _interopRequireDefault(_ioredis);
+var _redis2 = _interopRequireDefault(_redis);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
-var redis = new _ioredis2.default();
 
 var newData = [];
 var cache;
@@ -32,7 +30,7 @@ const crawl = (() => {
         var startTime = new Date().getTime();
         if (!cache) {
             cache = yield bikepoint.load();
-            yield redis.set((0, _config2.default)('NAME_VERSION', true) + '_cache_bikepoint', JSON.stringify(cache), 'EX', (0, _config2.default)('CACHE_TTL', true));
+            yield _redis2.default.set((0, _config2.default)('NAME_VERSION', true) + '_cache_bikepoint', JSON.stringify(cache), 'EX', (0, _config2.default)('CACHE_TTL', true));
             console.log('set   ', (0, _config2.default)('NAME_VERSION', true) + '_cache_bikepoint');
             setTimeout(crawl, (0, _config2.default)('CRAWL_TTL_BIKEPOINT', true));
             return;
@@ -54,7 +52,7 @@ const crawl = (() => {
 
         // update
         if (updatedBikePoints.length) {
-            redis.publish((0, _config2.default)('NAME_VERSION', true) + '_bikepoint', JSON.stringify({
+            _redis2.default.publish((0, _config2.default)('NAME_VERSION', true) + '_bikepoint', JSON.stringify({
                 type: 'update',
                 data: updatedBikePoints.map(compileStream)
             }));
@@ -69,7 +67,7 @@ const crawl = (() => {
         });
 
         if (newBikePoints.length) {
-            redis.publish((0, _config2.default)('NAME_VERSION', true) + '_bikepoint', JSON.stringify({
+            _redis2.default.publish((0, _config2.default)('NAME_VERSION', true) + '_bikepoint', JSON.stringify({
                 type: 'new',
                 data: newBikePoints.map(compileStream)
             }));
@@ -83,7 +81,7 @@ const crawl = (() => {
             });
         });
         if (deletedBikePoints.length) {
-            redis.publish((0, _config2.default)('NAME_VERSION', true) + '_bikepoint', JSON.stringify({
+            _redis2.default.publish((0, _config2.default)('NAME_VERSION', true) + '_bikepoint', JSON.stringify({
                 type: 'delete',
                 data: deletedBikePoints.map(compileStream)
             }));
@@ -92,7 +90,7 @@ const crawl = (() => {
 
         cache = newData;
 
-        yield redis.set((0, _config2.default)('NAME_VERSION', true) + '_cache_bikepoint', JSON.stringify(cache));
+        yield _redis2.default.set((0, _config2.default)('NAME_VERSION', true) + '_cache_bikepoint', JSON.stringify(cache));
         console.log('set   ', (0, _config2.default)('NAME_VERSION', true) + '_cache_bikepoint');
 
         var diffTime = new Date().getTime() - startTime;

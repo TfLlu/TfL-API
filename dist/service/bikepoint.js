@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.search = exports.box = exports.around = exports.get = exports.load = exports.all = exports.compileBikePoint = undefined;
+exports.stream = exports.search = exports.box = exports.around = exports.get = exports.load = exports.all = exports.compileBikePoint = undefined;
 
 var _velok = require('../source/bikepoint/velok');
 
@@ -29,9 +29,7 @@ var _config = require('../config');
 
 var _config2 = _interopRequireDefault(_config);
 
-var _ioredis = require('ioredis');
-
-var _ioredis2 = _interopRequireDefault(_ioredis);
+var _redis = require('../redis');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -43,7 +41,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 //import deepClone  from 'deep-clone';
 
 
-var redis = new _ioredis2.default();
+const STREAM_NAME = (0, _config2.default)('NAME_VERSION', true) + '_bikepoint';
 
 var fuzzyOptions = {
     extract: function (obj) {
@@ -57,11 +55,11 @@ const compileBikePoint = exports.compileBikePoint = function (provider, bikePoin
 };
 
 const all = exports.all = () => {
-    return redis.get((0, _config2.default)('NAME_VERSION', true) + '_cache_bikepoint').then(function (result) {
+    return _redis.redis.get((0, _config2.default)('NAME_VERSION', true) + '_cache_bikepoint').then(function (result) {
         if (result && result !== '') {
             return JSON.parse(result);
         } else {
-            throw new Error(`no Bikepoints in Redis`);
+            throw new Error('no Bikepoints in Redis');
         }
     });
 };
@@ -176,17 +174,32 @@ const search = exports.search = (() => {
     };
 })();
 
-//const emitter = new Events();
+_redis.redisPubSub.subscribe(STREAM_NAME);
+const stream = exports.stream = callback => {
+    const messageCallback = (channel, message) => {
+        if (channel === STREAM_NAME) {
+            callback(JSON.parse(message));
+        }
+    };
+    all().then(data => {
+        callback({
+            type: 'new',
+            data: data.features.map(compileStream)
+        });
+    });
 
-/*export const stream = callback => {
-    emitter.on('data', callback);
-    if (emitter.listenerCount('data') === 1) {
-        cron();
-    }
+    _redis.redisPubSub.on('message', messageCallback);
+
     return {
         off: function () {
-            emitter.removeListener('data', callback);
+            _redis.redisPubSub.removeListener('message', messageCallback);
         }
     };
 };
-*/
+
+const compileStream = bikePoint => {
+    return {
+        id: bikePoint.properties.id,
+        data: bikePoint
+    };
+};

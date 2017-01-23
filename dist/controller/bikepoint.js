@@ -13,6 +13,8 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
+//import {redis}        from '../redis';
+
 const index = exports.index = (() => {
     var _ref = _asyncToGenerator(function* (ctx) {
         ctx.body = yield bikepoint.all();
@@ -25,12 +27,8 @@ const index = exports.index = (() => {
 
 const streamIndex = exports.streamIndex = (() => {
     var _ref2 = _asyncToGenerator(function* ({ emit, disconnect }) {
-        emit({
-            type: 'new',
-            data: (yield bikepoint.all()).features.map(bikepoint.compileStream)
-        });
-
         var res = bikepoint.stream(function (data) {
+            console.log(data);
             emit(data);
         });
 

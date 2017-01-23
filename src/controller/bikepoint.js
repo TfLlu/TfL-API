@@ -1,16 +1,13 @@
 import * as bikepoint from '../service/bikepoint';
+//import {redis}        from '../redis';
 
 export const index = async ctx => {
     ctx.body = await bikepoint.all();
 };
 
 export const streamIndex = async ({ emit, disconnect }) => {
-    emit({
-        type: 'new',
-        data: (await bikepoint.all()).features.map(bikepoint.compileStream)
-    });
-
     var res = bikepoint.stream(data => {
+        console.log(data);
         emit(data);
     });
 

@@ -6,8 +6,9 @@ import inbox      from '../helper/inbox';
 //import Events     from 'events';
 import config     from '../config';
 //import deepClone  from 'deep-clone';
-import Redis      from 'ioredis';
-var redis = new Redis();
+import {redis, redisPubSub} from '../redis';
+
+const STREAM_NAME = config('NAME_VERSION', true) + '_bikepoint';
 
 var fuzzyOptions = {
     extract: function(obj) { return obj.properties.name + obj.properties.address + obj.properties.city; }
@@ -25,7 +26,7 @@ export const all = () => {
                 if (result && result !== '') {
                     return JSON.parse(result);
                 } else {
-                    throw new Error(`no Bikepoints in Redis`);
+                    throw new Error('no Bikepoints in Redis');
                 }
             }
         );
@@ -58,7 +59,6 @@ export const load = () => {
             features: bikePoints
         };
     });
-
 };
 
 export const get = async bikePoint => {
@@ -130,17 +130,32 @@ export const search = async searchString => {
     };
 };
 
-//const emitter = new Events();
+redisPubSub.subscribe(STREAM_NAME);
+export const stream = callback => {
+    const messageCallback = (channel, message) => {
+        if (channel === STREAM_NAME) {
+            callback(JSON.parse(message));
+        }
+    };
+    all().then(data => {
+        callback({
+            type: 'new',
+            data: data.features.map(compileStream)
+        });
+    });
 
-/*export const stream = callback => {
-    emitter.on('data', callback);
-    if (emitter.listenerCount('data') === 1) {
-        cron();
-    }
+    redisPubSub.on('message', messageCallback);
+
     return {
         off: function () {
-            emitter.removeListener('data', callback);
+            redisPubSub.removeListener('message', messageCallback);
         }
     };
 };
-*/
+
+const compileStream = bikePoint => {
+    return {
+        id: bikePoint.properties.id,
+        data: bikePoint,
+    };
+};

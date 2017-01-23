@@ -1,8 +1,7 @@
 import * as bikepoint from '../service/bikepoint';
 import config         from '../config';
 import deepClone      from 'deep-clone';
-import Redis          from 'ioredis';
-var redis = new Redis();
+import redis          from '../redis';
 
 var newData = [];
 var cache;
