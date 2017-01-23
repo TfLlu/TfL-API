@@ -4,7 +4,7 @@ import Influx from 'influxdb-nodejs';
 
 var influxdb = false;
 if (config('INFLUXDB')) {
-    influxdb = new Influx(config('INFLUXDB'));
+    influxdb = new Influx(config('INFLUXDB') + config('NAME_VERSION'));
 }
 
 const onData = data => {
@@ -54,7 +54,7 @@ const responseTime = () => {
             status: ctx.response.status,
             responseTime
         };
-        //console.log(`Response Time: ${responseTime}ms`);
+        console.log(`Response Time: ${responseTime}ms`);
     };
 };
 

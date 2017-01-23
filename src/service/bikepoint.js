@@ -3,9 +3,11 @@ import * as veloh from '../source/bikepoint/veloh';
 import fuzzy      from 'fuzzy';
 import distance   from '../helper/distance';
 import inbox      from '../helper/inbox';
-import Events     from 'events';
+//import Events     from 'events';
 import config     from '../config';
-import deepClone  from 'deep-clone';
+//import deepClone  from 'deep-clone';
+import Redis      from 'ioredis';
+var redis = new Redis();
 
 var fuzzyOptions = {
     extract: function(obj) { return obj.properties.name + obj.properties.address + obj.properties.city; }
@@ -16,9 +18,20 @@ export const compileBikePoint = function(provider, bikePoint) {
     return bikePoint;
 };
 
-var cacheData;
 export const all = () => {
+    return redis.get(config('NAME_VERSION', true) + '_cache_bikepoint')
+        .then(
+            function (result) {
+                if (result && result !== '') {
+                    return JSON.parse(result);
+                } else {
+                    throw new Error(`no Bikepoints in Redis`);
+                }
+            }
+        );
+};
 
+export const load = () => {
     const sources = {
         'velok': velok.all(),
         'veloh': veloh.all()
@@ -117,9 +130,9 @@ export const search = async searchString => {
     };
 };
 
-const emitter = new Events();
+//const emitter = new Events();
 
-export const stream = callback => {
+/*export const stream = callback => {
     emitter.on('data', callback);
     if (emitter.listenerCount('data') === 1) {
         cron();
@@ -130,70 +143,4 @@ export const stream = callback => {
         }
     };
 };
-
-var newData = [];
-
-export const cron = async () => {
-    if (emitter.listenerCount('data') === 0) {
-        cacheData = null;
-        return;
-    }
-    if (!cacheData) {
-        cacheData = await all();
-        setTimeout(cron, config('STREAM_TTL_BIKEPOINT', true));
-        return;
-    }
-    newData = await all();
-
-    // update
-    var updatedBikePoints = cacheData.features.filter(row => {
-        var oldRow = newData.features.find(row2 => row2.properties.id === row.properties.id);
-        var tmpRow    = deepClone(row);
-        delete tmpRow.properties.last_update;
-        var tmpOldRow = deepClone(oldRow);
-        delete tmpOldRow.properties.last_update;
-
-        return oldRow && (JSON.stringify(tmpRow) !=  JSON.stringify(tmpOldRow));
-    });
-
-    if (updatedBikePoints.length) {
-        emitter.emit('data', {
-            type: 'update',
-            data: updatedBikePoints.map(compileStream)
-        });
-    }
-
-    // new
-    var newBikePoints = newData.features.filter(row => {
-        return !cacheData.features.find(row2 => row2.properties.id === row.properties.id);
-    });
-
-    if (newBikePoints.length) {
-        emitter.emit('data', {
-            type: 'new',
-            data: newBikePoints.map(compileStream)
-        });
-    }
-
-    // deleted
-    var deletedBikePoints = cacheData.features.filter(row => {
-        return !newData.features.find(row2 => row2.properties.id === row.properties.id);
-    });
-    if (deletedBikePoints.length) {
-        emitter.emit('data', {
-            type: 'delete',
-            data: deletedBikePoints.map(compileStream)
-        });
-    }
-
-    cacheData = newData;
-    setTimeout(cron, config('STREAM_TTL_BIKEPOINT', true));
-};
-
-
-export const compileStream = bikePoint => {
-    return {
-        id: bikePoint.properties.id,
-        data: bikePoint,
-    };
-};
+*/
