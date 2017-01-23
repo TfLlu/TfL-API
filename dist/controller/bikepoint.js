@@ -15,7 +15,6 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 const index = exports.index = (() => {
     var _ref = _asyncToGenerator(function* (ctx) {
-        console.log('client connected to /BikePoint');
         ctx.body = yield bikepoint.all();
     });
 
@@ -24,53 +23,63 @@ const index = exports.index = (() => {
     };
 })();
 
-const streamIndex = exports.streamIndex = ({ emit, disconnect }) => {
-    console.log('client connected to /stream/BikePoint');
-    var res = bikepoint.stream(data => {
-        emit(data);
+const streamIndex = exports.streamIndex = (() => {
+    var _ref2 = _asyncToGenerator(function* ({ emit, disconnect }) {
+        emit({
+            type: 'new',
+            data: (yield bikepoint.all()).features.map(bikepoint.compileStream)
+        });
+
+        var res = bikepoint.stream(function (data) {
+            emit(data);
+        });
+
+        disconnect(function () {
+            res.off();
+        });
     });
 
-    disconnect(() => {
-        res.off();
-    });
-};
-
-const get = exports.get = (() => {
-    var _ref2 = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield bikepoint.get(ctx.params.bikePoint);
-    });
-
-    return function get(_x2) {
+    return function streamIndex(_x2) {
         return _ref2.apply(this, arguments);
     };
 })();
 
-const around = exports.around = (() => {
+const get = exports.get = (() => {
     var _ref3 = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield bikepoint.around(parseFloat(ctx.params.lon), parseFloat(ctx.params.lat), ctx.params.radius);
+        ctx.body = yield bikepoint.get(ctx.params.bikePoint);
     });
 
-    return function around(_x3) {
+    return function get(_x3) {
         return _ref3.apply(this, arguments);
     };
 })();
 
-const box = exports.box = (() => {
+const around = exports.around = (() => {
     var _ref4 = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield bikepoint.box(parseFloat(ctx.params.swlon), parseFloat(ctx.params.swlat), parseFloat(ctx.params.nelon), parseFloat(ctx.params.nelat));
+        ctx.body = yield bikepoint.around(parseFloat(ctx.params.lon), parseFloat(ctx.params.lat), ctx.params.radius);
     });
 
-    return function box(_x4) {
+    return function around(_x4) {
         return _ref4.apply(this, arguments);
     };
 })();
 
-const search = exports.search = (() => {
+const box = exports.box = (() => {
     var _ref5 = _asyncToGenerator(function* (ctx) {
+        ctx.body = yield bikepoint.box(parseFloat(ctx.params.swlon), parseFloat(ctx.params.swlat), parseFloat(ctx.params.nelon), parseFloat(ctx.params.nelat));
+    });
+
+    return function box(_x5) {
+        return _ref5.apply(this, arguments);
+    };
+})();
+
+const search = exports.search = (() => {
+    var _ref6 = _asyncToGenerator(function* (ctx) {
         ctx.body = yield bikepoint.search(ctx.params.searchstring.toLowerCase());
     });
 
-    return function search(_x5) {
-        return _ref5.apply(this, arguments);
+    return function search(_x6) {
+        return _ref6.apply(this, arguments);
     };
 })();

@@ -5,6 +5,7 @@ import distance   from '../helper/distance';
 import inbox      from '../helper/inbox';
 import Events     from 'events';
 import config     from '../config';
+import deepClone  from 'deep-clone';
 
 var fuzzyOptions = {
     extract: function(obj) { return obj.properties.name + obj.properties.address + obj.properties.city; }
@@ -15,6 +16,7 @@ export const compileBikePoint = function(provider, bikePoint) {
     return bikePoint;
 };
 
+var cacheData;
 export const all = () => {
 
     const sources = {
@@ -121,11 +123,6 @@ export const stream = callback => {
     emitter.on('data', callback);
     if (emitter.listenerCount('data') === 1) {
         cron();
-    } else {
-        emitter.emit('data', {
-            type: 'new',
-            data: cacheData.features.map(compileStream)
-        });
     }
     return {
         off: function () {
@@ -135,7 +132,6 @@ export const stream = callback => {
 };
 
 var newData = [];
-var cacheData;
 
 export const cron = async () => {
     if (emitter.listenerCount('data') === 0) {
@@ -144,10 +140,6 @@ export const cron = async () => {
     }
     if (!cacheData) {
         cacheData = await all();
-        emitter.emit('data', {
-            type: 'new',
-            data: cacheData.features.map(compileStream)
-        });
         setTimeout(cron, config('STREAM_TTL_BIKEPOINT', true));
         return;
     }
@@ -156,7 +148,12 @@ export const cron = async () => {
     // update
     var updatedBikePoints = cacheData.features.filter(row => {
         var oldRow = newData.features.find(row2 => row2.properties.id === row.properties.id);
-        return oldRow && (JSON.stringify(row) !=  JSON.stringify(oldRow));
+        var tmpRow    = deepClone(row);
+        delete tmpRow.properties.last_update;
+        var tmpOldRow = deepClone(oldRow);
+        delete tmpOldRow.properties.last_update;
+
+        return oldRow && (JSON.stringify(tmpRow) !=  JSON.stringify(tmpOldRow));
     });
 
     if (updatedBikePoints.length) {
@@ -194,7 +191,7 @@ export const cron = async () => {
 };
 
 
-const compileStream = bikePoint => {
+export const compileStream = bikePoint => {
     return {
         id: bikePoint.properties.id,
         data: bikePoint,

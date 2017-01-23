@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.cron = exports.stream = exports.search = exports.box = exports.around = exports.get = exports.all = exports.compileBikePoint = undefined;
+exports.compileStream = exports.cron = exports.stream = exports.search = exports.box = exports.around = exports.get = exports.all = exports.compileBikePoint = undefined;
 
 var _velok = require('../source/bikepoint/velok');
 
@@ -33,6 +33,10 @@ var _config = require('../config');
 
 var _config2 = _interopRequireDefault(_config);
 
+var _deepClone = require('deep-clone');
+
+var _deepClone2 = _interopRequireDefault(_deepClone);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -50,6 +54,7 @@ const compileBikePoint = exports.compileBikePoint = function (provider, bikePoin
     return bikePoint;
 };
 
+var cacheData;
 const all = exports.all = () => {
 
     const sources = {
@@ -167,11 +172,6 @@ const stream = exports.stream = callback => {
     emitter.on('data', callback);
     if (emitter.listenerCount('data') === 1) {
         cron();
-    } else {
-        emitter.emit('data', {
-            type: 'new',
-            data: cacheData.features.map(compileStream)
-        });
     }
     return {
         off: function () {
@@ -181,7 +181,6 @@ const stream = exports.stream = callback => {
 };
 
 var newData = [];
-var cacheData;
 
 const cron = exports.cron = (() => {
     var _ref5 = _asyncToGenerator(function* () {
@@ -191,10 +190,6 @@ const cron = exports.cron = (() => {
         }
         if (!cacheData) {
             cacheData = yield all();
-            emitter.emit('data', {
-                type: 'new',
-                data: cacheData.features.map(compileStream)
-            });
             setTimeout(cron, (0, _config2.default)('STREAM_TTL_BIKEPOINT', true));
             return;
         }
@@ -205,7 +200,12 @@ const cron = exports.cron = (() => {
             var oldRow = newData.features.find(function (row2) {
                 return row2.properties.id === row.properties.id;
             });
-            return oldRow && JSON.stringify(row) != JSON.stringify(oldRow);
+            var tmpRow = (0, _deepClone2.default)(row);
+            delete tmpRow.properties.last_update;
+            var tmpOldRow = (0, _deepClone2.default)(oldRow);
+            delete tmpOldRow.properties.last_update;
+
+            return oldRow && JSON.stringify(tmpRow) != JSON.stringify(tmpOldRow);
         });
 
         if (updatedBikePoints.length) {
@@ -251,7 +251,7 @@ const cron = exports.cron = (() => {
     };
 })();
 
-const compileStream = bikePoint => {
+const compileStream = exports.compileStream = bikePoint => {
     return {
         id: bikePoint.properties.id,
         data: bikePoint
