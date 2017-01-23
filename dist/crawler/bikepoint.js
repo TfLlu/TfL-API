@@ -31,7 +31,6 @@ const crawl = (() => {
         if (!cache) {
             cache = yield bikepoint.load();
             yield _redis2.default.set((0, _config2.default)('NAME_VERSION', true) + '_cache_bikepoint', JSON.stringify(cache), 'EX', (0, _config2.default)('CACHE_TTL', true));
-            console.log('set   ', (0, _config2.default)('NAME_VERSION', true) + '_cache_bikepoint');
             setTimeout(crawl, (0, _config2.default)('CRAWL_TTL_BIKEPOINT', true));
             return;
         }
@@ -56,7 +55,6 @@ const crawl = (() => {
                 type: 'update',
                 data: updatedBikePoints.map(compileStream)
             }));
-            console.log('update', (0, _config2.default)('NAME_VERSION', true) + '_bikepoint');
         }
 
         // new
@@ -71,7 +69,6 @@ const crawl = (() => {
                 type: 'new',
                 data: newBikePoints.map(compileStream)
             }));
-            console.log('new   ', (0, _config2.default)('NAME_VERSION', true) + '_bikepoint');
         }
 
         // deleted
@@ -85,13 +82,11 @@ const crawl = (() => {
                 type: 'delete',
                 data: deletedBikePoints.map(compileStream)
             }));
-            console.log('delete', (0, _config2.default)('NAME_VERSION', true) + '_bikepoint');
         }
 
         cache = newData;
 
         yield _redis2.default.set((0, _config2.default)('NAME_VERSION', true) + '_cache_bikepoint', JSON.stringify(cache));
-        console.log('set   ', (0, _config2.default)('NAME_VERSION', true) + '_cache_bikepoint');
 
         var diffTime = new Date().getTime() - startTime;
         var timeOut = (0, _config2.default)('CRAWL_TTL_BIKEPOINT', true) - diffTime < 0 ? 0 : (0, _config2.default)('CRAWL_TTL_BIKEPOINT', true) - diffTime;

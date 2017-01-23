@@ -3,9 +3,7 @@ import * as veloh from '../source/bikepoint/veloh';
 import fuzzy      from 'fuzzy';
 import distance   from '../helper/distance';
 import inbox      from '../helper/inbox';
-//import Events     from 'events';
 import config     from '../config';
-//import deepClone  from 'deep-clone';
 import {redis, redisPubSub} from '../redis';
 
 const STREAM_NAME = config('NAME_VERSION', true) + '_bikepoint';

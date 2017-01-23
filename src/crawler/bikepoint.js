@@ -16,7 +16,6 @@ const crawl = async () => {
             'EX',
             config('CACHE_TTL', true)
         );
-        console.log('set   ', config('NAME_VERSION', true) + '_cache_bikepoint');
         setTimeout(crawl, config('CRAWL_TTL_BIKEPOINT', true));
         return;
     }
@@ -42,7 +41,6 @@ const crawl = async () => {
                 data: updatedBikePoints.map(compileStream)
             })
         );
-        console.log('update', config('NAME_VERSION', true) + '_bikepoint');
     }
 
     // new
@@ -58,7 +56,6 @@ const crawl = async () => {
                 data: newBikePoints.map(compileStream)
             })
         );
-        console.log('new   ', config('NAME_VERSION', true) + '_bikepoint');
     }
 
     // deleted
@@ -73,7 +70,6 @@ const crawl = async () => {
                 data: deletedBikePoints.map(compileStream)
             })
         );
-        console.log('delete', config('NAME_VERSION', true) + '_bikepoint');
     }
 
     cache = newData;
@@ -82,7 +78,6 @@ const crawl = async () => {
         config('NAME_VERSION', true) + '_cache_bikepoint',
         JSON.stringify(cache)
     );
-    console.log('set   ', config('NAME_VERSION', true) + '_cache_bikepoint');
 
     var diffTime = new Date().getTime() - startTime;
     var timeOut = config('CRAWL_TTL_BIKEPOINT', true) - diffTime < 0 ? 0 : config('CRAWL_TTL_BIKEPOINT', true) - diffTime;

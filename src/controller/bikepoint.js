@@ -7,7 +7,6 @@ export const index = async ctx => {
 
 export const streamIndex = async ({ emit, disconnect }) => {
     var res = bikepoint.stream(data => {
-        console.log(data);
         emit(data);
     });
 

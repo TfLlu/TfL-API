@@ -28,7 +28,6 @@ const index = exports.index = (() => {
 const streamIndex = exports.streamIndex = (() => {
     var _ref2 = _asyncToGenerator(function* ({ emit, disconnect }) {
         var res = bikepoint.stream(function (data) {
-            console.log(data);
             emit(data);
         });
 
