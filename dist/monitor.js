@@ -130,6 +130,7 @@ exports.default = () => {
                 onData(ctx.monitor);
                 throw err;
             }
+            onData(ctx.monitor);
         });
 
         return function (_x5, _x6) {

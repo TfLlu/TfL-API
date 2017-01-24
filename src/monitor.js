@@ -106,5 +106,6 @@ export default () => {
             onData(ctx.monitor);
             throw err;
         }
+        onData(ctx.monitor);
     };
 };
