@@ -13,7 +13,8 @@ var _monitor = require('./monitor');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const request = _axios2.default.create({
-    responseType: 'text'
+    responseType: 'text',
+    timeout: 5000
 });
 
 request.interceptors.request.use(config => {

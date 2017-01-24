@@ -2,7 +2,8 @@ import axios from 'axios';
 import { requestTime } from './monitor';
 
 const request = axios.create({
-    responseType: 'text'
+    responseType: 'text',
+    timeout: 5000
 });
 
 request.interceptors.request.use(config => {
