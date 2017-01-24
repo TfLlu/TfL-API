@@ -71,9 +71,6 @@ const crawl = async () => {
     stopPointsToCrawl = stopPointsToCrawl.map(item => {
         return item.properties.id;
     });
-
-    console.log(stopPointsToCrawl);
-
     await queueWorker();
 
 /*

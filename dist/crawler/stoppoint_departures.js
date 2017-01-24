@@ -85,9 +85,6 @@ const crawl = (() => {
         stopPointsToCrawl = stopPointsToCrawl.map(function (item) {
             return item.properties.id;
         });
-
-        console.log(stopPointsToCrawl);
-
         yield queueWorker();
 
         /*
