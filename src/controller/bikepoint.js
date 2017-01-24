@@ -1,5 +1,4 @@
 import * as bikepoint from '../service/bikepoint';
-//import {redis}        from '../redis';
 
 export const index = async ctx => {
     ctx.body = await bikepoint.all();

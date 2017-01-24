@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.stream = exports.search = exports.box = exports.around = exports.get = exports.load = exports.all = exports.compileBikePoint = undefined;
+exports.compileStream = exports.stream = exports.search = exports.box = exports.around = exports.get = exports.load = exports.all = exports.compileBikePoint = undefined;
 
 var _velok = require('../source/bikepoint/velok');
 
@@ -184,7 +184,7 @@ const stream = exports.stream = callback => {
     };
 };
 
-const compileStream = bikePoint => {
+const compileStream = exports.compileStream = bikePoint => {
     return {
         id: bikePoint.properties.id,
         data: bikePoint

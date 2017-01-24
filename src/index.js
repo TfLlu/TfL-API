@@ -22,6 +22,7 @@ router.get('/BikePoint/search/:searchstring',            controller.bikepoint.se
 router.get('/Occupancy/CarPark',                         controller.carpark.index);
 router.get('/Occupancy/CarPark/:carPark',                controller.carpark.get);
 router.get('/StopPoint',                                 controller.stoppoint.index);
+router.io ('/StopPoint',                                 controller.stoppoint.streamIndex);
 router.get('/StopPoint/:stopPoint',                      controller.stoppoint.get);
 router.get('/StopPoint/Departures/:stopPoint',           controller.stoppoint.departures);
 router.get('/StopPoint/Departures/:stopPoint/:limit',    controller.stoppoint.departures);
@@ -30,7 +31,6 @@ router.get('/StopPoint/box/:swlon/:swlat/:nelon/:nelat', controller.stoppoint.bo
 router.get('/StopPoint/search/:searchstring',            controller.stoppoint.search);
 router.get('/Journey/:from/to/:to',                      controller.journey.plan);
 router.get('/Weather',                                   controller.weather.current);
-router.io('/test/:value',                                controller.test.index);
 
 app.use(monitor())
    .use(middleware.responseTime())

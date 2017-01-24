@@ -142,7 +142,7 @@ export const stream = callback => {
     };
 };
 
-const compileStream = bikePoint => {
+export const compileStream = bikePoint => {
     return {
         id: bikePoint.properties.id,
         data: bikePoint,

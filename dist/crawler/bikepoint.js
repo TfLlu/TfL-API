@@ -59,7 +59,7 @@ const crawl = (() => {
         if (updatedBikePoints.length) {
             _redis.redis.publish(PUB_TABLE, JSON.stringify({
                 type: 'update',
-                data: updatedBikePoints.map(compileStream)
+                data: updatedBikePoints.map(bikepoint.compileStream)
             }));
         }
 
@@ -73,7 +73,7 @@ const crawl = (() => {
         if (newBikePoints.length) {
             _redis.redis.publish(PUB_TABLE, JSON.stringify({
                 type: 'new',
-                data: newBikePoints.map(compileStream)
+                data: newBikePoints.map(bikepoint.compileStream)
             }));
         }
 
@@ -86,7 +86,7 @@ const crawl = (() => {
         if (deletedBikePoints.length) {
             _redis.redis.publish(PUB_TABLE, JSON.stringify({
                 type: 'delete',
-                data: deletedBikePoints.map(compileStream)
+                data: deletedBikePoints.map(bikepoint.compileStream)
             }));
         }
 
@@ -103,13 +103,6 @@ const crawl = (() => {
         return _ref.apply(this, arguments);
     };
 })();
-
-const compileStream = bikePoint => {
-    return {
-        id: bikePoint.properties.id,
-        data: bikePoint
-    };
-};
 
 // Run crawler
 crawl();

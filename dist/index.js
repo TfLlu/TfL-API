@@ -47,6 +47,7 @@ router.get('/BikePoint/search/:searchstring', _controller2.default.bikepoint.sea
 router.get('/Occupancy/CarPark', _controller2.default.carpark.index);
 router.get('/Occupancy/CarPark/:carPark', _controller2.default.carpark.get);
 router.get('/StopPoint', _controller2.default.stoppoint.index);
+router.io('/StopPoint', _controller2.default.stoppoint.streamIndex);
 router.get('/StopPoint/:stopPoint', _controller2.default.stoppoint.get);
 router.get('/StopPoint/Departures/:stopPoint', _controller2.default.stoppoint.departures);
 router.get('/StopPoint/Departures/:stopPoint/:limit', _controller2.default.stoppoint.departures);
@@ -55,7 +56,6 @@ router.get('/StopPoint/box/:swlon/:swlat/:nelon/:nelat', _controller2.default.st
 router.get('/StopPoint/search/:searchstring', _controller2.default.stoppoint.search);
 router.get('/Journey/:from/to/:to', _controller2.default.journey.plan);
 router.get('/Weather', _controller2.default.weather.current);
-router.io('/test/:value', _controller2.default.test.index);
 
 app.use((0, _monitor2.default)()).use(_monitor.middleware.responseTime()).use(router.routes()).use(router.allowedMethods());
 

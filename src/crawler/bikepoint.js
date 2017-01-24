@@ -46,7 +46,7 @@ const crawl = async () => {
             PUB_TABLE,
             JSON.stringify({
                 type: 'update',
-                data: updatedBikePoints.map(compileStream)
+                data: updatedBikePoints.map(bikepoint.compileStream)
             })
         );
     }
@@ -61,7 +61,7 @@ const crawl = async () => {
             PUB_TABLE,
             JSON.stringify({
                 type: 'new',
-                data: newBikePoints.map(compileStream)
+                data: newBikePoints.map(bikepoint.compileStream)
             })
         );
     }
@@ -75,7 +75,7 @@ const crawl = async () => {
             PUB_TABLE,
             JSON.stringify({
                 type: 'delete',
-                data: deletedBikePoints.map(compileStream)
+                data: deletedBikePoints.map(bikepoint.compileStream)
             })
         );
     }
@@ -92,13 +92,6 @@ const crawl = async () => {
     var diffTime = new Date().getTime() - startTime;
     var timeOut = CRAWL_TTL - diffTime < 0 ? 0 : CRAWL_TTL - diffTime;
     setTimeout(crawl, timeOut);
-};
-
-const compileStream = bikePoint => {
-    return {
-        id: bikePoint.properties.id,
-        data: bikePoint,
-    };
 };
 
 // Run crawler
