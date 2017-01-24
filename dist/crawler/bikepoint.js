@@ -84,7 +84,7 @@ const crawl = (() => {
 
         cache = newData;
 
-        yield _redis.redis.set((0, _config2.default)('NAME_VERSION', true) + '_cache_bikepoint', JSON.stringify(cache));
+        yield _redis.redis.set((0, _config2.default)('NAME_VERSION', true) + '_cache_bikepoint', JSON.stringify(cache), 'EX', (0, _config2.default)('CACHE_TTL', true));
 
         var diffTime = new Date().getTime() - startTime;
         var timeOut = (0, _config2.default)('CRAWL_TTL_BIKEPOINT', true) - diffTime < 0 ? 0 : (0, _config2.default)('CRAWL_TTL_BIKEPOINT', true) - diffTime;

@@ -76,7 +76,9 @@ const crawl = async () => {
 
     await redis.set(
         config('NAME_VERSION', true) + '_cache_bikepoint',
-        JSON.stringify(cache)
+        JSON.stringify(cache),
+        'EX',
+        config('CACHE_TTL', true)
     );
 
     var diffTime = new Date().getTime() - startTime;

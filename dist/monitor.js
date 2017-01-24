@@ -71,7 +71,7 @@ const responseTime = () => {
                 status: ctx.response.status,
                 responseTime
             };
-            console.log(`Response Time: ${responseTime}ms`);
+            console.log(`Response Time: ${ responseTime }ms`);
         });
 
         return function (_x3, _x4) {
