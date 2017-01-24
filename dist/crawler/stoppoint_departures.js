@@ -55,7 +55,6 @@ const worker = () => {
         currentlyCrawling.push(stopPointID);
         stoppoint.departures(stopPointID, CRAWL_AMOUNT).then(res => {
             removeFromCrawlList(stopPointID);
-
             //TODO: do something with the result in
             //TODO: res
         }, err => {
@@ -75,9 +74,6 @@ const removeFromCrawlList = id => {
 
 const crawl = (() => {
     var _ref = _asyncToGenerator(function* () {
-        console.log('hello');
-        var startTime = new Date().getTime();
-
         var result = yield _redis.redis.get(CACHE_STOPPOINTS_TABLE);
         if (result && result !== '') {
             stopPointsToCrawl = JSON.parse(result).features;
@@ -90,9 +86,9 @@ const crawl = (() => {
             return item.properties.id;
         });
 
-        yield queueWorker();
+        console.log(stopPointsToCrawl);
 
-        console.log(new Date().getTime() - startTime);
+        yield queueWorker();
 
         /*
             Promise.all(promises)
