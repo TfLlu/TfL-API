@@ -1,42 +1,41 @@
-import * as mobiliteit from '../source/stoppoint/mobiliteit';
-import fuzzy     from 'fuzzy';
-import config    from '../config';
-import distance  from '../helper/distance';
-import inbox     from '../helper/inbox';
-import cron      from 'node-cron';
-import deepClone from 'deep-clone';
-import moment from 'moment';
+import * as mobiliteit      from '../source/stoppoint/mobiliteit';
+import fuzzy                from 'fuzzy';
+import config               from '../config';
+import distance             from '../helper/distance';
+import inbox                from '../helper/inbox';
+import deepClone            from 'deep-clone';
+import moment               from 'moment';
+import {redis, redisPubSub} from '../redis';
+
+const STREAM_NAME = config('NAME_VERSION', true) + '_stoppoint';
 
 var fuzzyOptions = {
     extract: function(obj) { return obj.properties.name; }
 };
 
-var stopPoints = [];
-
-cron.schedule(config('MOBILITEIT_REFRESH_CRON', true), function(){
-    loadStoppoints();
-});
-
-const loadStoppoints = async () => {
-    stopPoints = await mobiliteit.load();
-};
-
-const cache = async () => {
-    if (stopPoints.length === 0) {
-        await loadStoppoints();
-    }
-};
-
-export const all = async () => {
-    await cache();
+export const load = async () => {
     return {
         type: 'FeatureCollection',
-        features: stopPoints
+        features: await mobiliteit.load()
     };
+
+};
+
+export const all = () => {
+    return redis.get(config('NAME_VERSION', true) + '_cache_stoppoint')
+        .then(
+            function (result) {
+                if (result && result !== '') {
+                    return JSON.parse(result);
+                } else {
+                    throw new Error('no StopPoints in Redis');
+                }
+            }
+        );
 };
 
 export const get = async stopPoint => {
-    await cache();
+    var stopPoints = (await all()).features;
     for (var i = 0; i < stopPoints.length; i++) {
         if (stopPoints[i].properties.id == stopPoint) {
             return stopPoints[i];
@@ -45,7 +44,7 @@ export const get = async stopPoint => {
 };
 
 export const getByName = async name => {
-    await cache();
+    var stopPoints = (await all()).features;
     for (var i = 0; i < stopPoints.length; i++) {
         if (stopPoints[i].properties.name == name) {
             return stopPoints[i];
@@ -104,7 +103,7 @@ export const departures = async (stopPoint, limit) => {
 };
 
 export const around = async (lon, lat, radius) => {
-    await cache();
+    var stopPoints = (await all()).features;
     var dist = 0;
     var stopPointsAround = [];
 
@@ -129,7 +128,7 @@ export const around = async (lon, lat, radius) => {
 };
 
 export const box = async (swlon, swlat, nelon, nelat) => {
-    await cache();
+    var stopPoints = (await all()).features;
     var stopPointsInBox = stopPoints.filter(function(stopPoint) {
         return inbox(
             swlon, swlat, nelon, nelat,
@@ -144,13 +143,42 @@ export const box = async (swlon, swlat, nelon, nelat) => {
 };
 
 export const search = async searchString => {
-    await cache();
-
+    var stopPoints = (await all()).features;
     var results = fuzzy.filter(searchString, stopPoints, fuzzyOptions);
     var stopPointMatches = results.map(function(res) { return res.original; });
 
     return {
         type: 'FeatureCollection',
         features: stopPointMatches
+    };
+};
+
+redisPubSub.subscribe(STREAM_NAME);
+export const stream = callback => {
+    const messageCallback = (channel, message) => {
+        if (channel === STREAM_NAME) {
+            callback(JSON.parse(message));
+        }
+    };
+    all().then(data => {
+        callback({
+            type: 'new',
+            data: data.features.map(compileStream)
+        });
+    });
+
+    redisPubSub.on('message', messageCallback);
+
+    return {
+        off: function () {
+            redisPubSub.removeListener('message', messageCallback);
+        }
+    };
+};
+
+const compileStream = bikePoint => {
+    return {
+        id: bikePoint.properties.id,
+        data: bikePoint,
     };
 };

@@ -4,6 +4,16 @@ export const index = async ctx => {
     ctx.body = await stoppoint.all();
 };
 
+export const streamIndex = async ({ emit, disconnect }) => {
+    var res = stoppoint.stream(data => {
+        emit(data);
+    });
+
+    disconnect(() => {
+        res.off();
+    });
+};
+
 export const get = async ctx => {
     ctx.body = await stoppoint.get(
         parseInt(ctx.params.stopPoint)
