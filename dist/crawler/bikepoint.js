@@ -23,16 +23,21 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 var newData = [];
 var cache;
 
+const CACHE_TTL = (0, _config2.default)('CACHE_TTL_BIKEPOINT', true);
+const CRAWL_TTL = (0, _config2.default)('CRAWL_TTL_BIKEPOINT', true);
+const PUB_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_bikepoint';
+const CACHE_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_bikepoint';
+
 const crawl = (() => {
     var _ref = _asyncToGenerator(function* () {
         var startTime = new Date().getTime();
         if (!cache) {
             cache = yield bikepoint.load();
-            yield _redis.redis.set((0, _config2.default)('NAME_VERSION', true) + '_cache_bikepoint', JSON.stringify(cache), 'EX', (0, _config2.default)('CACHE_TTL', true));
+            yield _redis.redis.set(CACHE_TABLE, JSON.stringify(cache), 'EX', CACHE_TTL);
             if (process.env.TRAVIS) {
                 process.exit();
             }
-            setTimeout(crawl, (0, _config2.default)('CRAWL_TTL_BIKEPOINT', true));
+            setTimeout(crawl, CRAWL_TTL);
             return;
         }
         newData = yield bikepoint.load();
@@ -52,7 +57,7 @@ const crawl = (() => {
 
         // update
         if (updatedBikePoints.length) {
-            _redis.redis.publish((0, _config2.default)('NAME_VERSION', true) + '_bikepoint', JSON.stringify({
+            _redis.redis.publish(PUB_TABLE, JSON.stringify({
                 type: 'update',
                 data: updatedBikePoints.map(compileStream)
             }));
@@ -66,7 +71,7 @@ const crawl = (() => {
         });
 
         if (newBikePoints.length) {
-            _redis.redis.publish((0, _config2.default)('NAME_VERSION', true) + '_bikepoint', JSON.stringify({
+            _redis.redis.publish(PUB_TABLE, JSON.stringify({
                 type: 'new',
                 data: newBikePoints.map(compileStream)
             }));
@@ -79,7 +84,7 @@ const crawl = (() => {
             });
         });
         if (deletedBikePoints.length) {
-            _redis.redis.publish((0, _config2.default)('NAME_VERSION', true) + '_bikepoint', JSON.stringify({
+            _redis.redis.publish(PUB_TABLE, JSON.stringify({
                 type: 'delete',
                 data: deletedBikePoints.map(compileStream)
             }));
@@ -87,10 +92,10 @@ const crawl = (() => {
 
         cache = newData;
 
-        yield _redis.redis.set((0, _config2.default)('NAME_VERSION', true) + '_cache_bikepoint', JSON.stringify(cache), 'EX', (0, _config2.default)('CACHE_TTL', true));
+        yield _redis.redis.set(CACHE_TABLE, JSON.stringify(cache), 'EX', CACHE_TTL);
 
         var diffTime = new Date().getTime() - startTime;
-        var timeOut = (0, _config2.default)('CRAWL_TTL_BIKEPOINT', true) - diffTime < 0 ? 0 : (0, _config2.default)('CRAWL_TTL_BIKEPOINT', true) - diffTime;
+        var timeOut = CRAWL_TTL - diffTime < 0 ? 0 : CRAWL_TTL - diffTime;
         setTimeout(crawl, timeOut);
     });
 
