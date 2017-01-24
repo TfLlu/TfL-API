@@ -66,7 +66,6 @@ const responseTime = () => {
                 responseTime
             };
         };
-
         try {
             await next();
         } catch (err) {
@@ -107,5 +106,6 @@ export default () => {
             onData(ctx.monitor);
             throw err;
         }
+        onData(ctx.monitor);
     };
 };
