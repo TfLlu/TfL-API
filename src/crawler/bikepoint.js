@@ -16,6 +16,9 @@ const crawl = async () => {
             'EX',
             config('CACHE_TTL', true)
         );
+        if (process.env.TRAVIS) {
+            process.exit();
+        }
         setTimeout(crawl, config('CRAWL_TTL_BIKEPOINT', true));
         return;
     }

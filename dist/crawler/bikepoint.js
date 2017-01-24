@@ -29,6 +29,9 @@ const crawl = (() => {
         if (!cache) {
             cache = yield bikepoint.load();
             yield _redis.redis.set((0, _config2.default)('NAME_VERSION', true) + '_cache_bikepoint', JSON.stringify(cache), 'EX', (0, _config2.default)('CACHE_TTL', true));
+            if (process.env.TRAVIS) {
+                process.exit();
+            }
             setTimeout(crawl, (0, _config2.default)('CRAWL_TTL_BIKEPOINT', true));
             return;
         }
