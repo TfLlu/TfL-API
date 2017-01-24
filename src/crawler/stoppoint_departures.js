@@ -13,7 +13,7 @@ const CRAWL_AMOUNT           = config('CRAWL_TTL_STOPPOINT_DEPARTURE_AMOUNT', tr
 const PUB_TABLE              = config('NAME_VERSION', true) + '_stoppoint_departure_';
 const CACHE_TABLE            = config('NAME_VERSION', true) + '_cache_stoppoint_departure_';
 const CACHE_STOPPOINTS_TABLE = config('NAME_VERSION', true) + '_cache_stoppoint';
-const MAX_CONCURRENT_CRAWLS  = 10;
+const MAX_CONCURRENT_CRAWLS  = config('CRAWL_MAX_CONCURRENT_STOPPOINT_DEPARTURE', true);
 
 var currentlyCrawling = [];
 
