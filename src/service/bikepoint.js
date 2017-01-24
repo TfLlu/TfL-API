@@ -60,22 +60,16 @@ export const load = () => {
 };
 
 export const get = async bikePoint => {
-    var bikePointSplit = bikePoint.split(':');
-    switch (bikePointSplit[0]){
-    case 'veloh':
-        bikePoint = await veloh.get(bikePointSplit[1]);
-        break;
-    case 'velok':
-        bikePoint = await velok.get(bikePointSplit[1]);
-        break;
+    var bikePoints = (await all()).features;
+    for (var i = 0; i < bikePoints.length; i++) {
+        if (bikePoints[i].properties.id == bikePoint) {
+            return bikePoints[i];
+        }
     }
-    return compileBikePoint(bikePointSplit[0], bikePoint);
 };
 
 export const around = async (lon, lat, radius) => {
-    var bikePoints = await all();
-    bikePoints = bikePoints.features;
-
+    var bikePoints = (await all()).features;
     var dist = 0;
     var bikePointsAround = [];
 
@@ -101,8 +95,7 @@ export const around = async (lon, lat, radius) => {
 };
 
 export const box = async (swlon, swlat, nelon, nelat) => {
-    var bikePoints = await all();
-    bikePoints = bikePoints.features;
+    var bikePoints = (await all()).features;
     var bikePointsInBox = bikePoints.filter(function(bikePoint) {
         return inbox(
             swlon, swlat, nelon, nelat,
@@ -117,9 +110,7 @@ export const box = async (swlon, swlat, nelon, nelat) => {
 };
 
 export const search = async searchString => {
-    var bikePoints = await all();
-    bikePoints = bikePoints.features;
-
+    var bikePoints = (await all()).features;
     var results = fuzzy.filter(searchString, bikePoints, fuzzyOptions);
     results = results.map(function(res) { return res.original; });
     return {

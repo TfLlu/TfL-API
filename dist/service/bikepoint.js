@@ -87,16 +87,12 @@ const load = exports.load = () => {
 
 const get = exports.get = (() => {
     var _ref = _asyncToGenerator(function* (bikePoint) {
-        var bikePointSplit = bikePoint.split(':');
-        switch (bikePointSplit[0]) {
-            case 'veloh':
-                bikePoint = yield veloh.get(bikePointSplit[1]);
-                break;
-            case 'velok':
-                bikePoint = yield velok.get(bikePointSplit[1]);
-                break;
+        var bikePoints = (yield all()).features;
+        for (var i = 0; i < bikePoints.length; i++) {
+            if (bikePoints[i].properties.id == bikePoint) {
+                return bikePoints[i];
+            }
         }
-        return compileBikePoint(bikePointSplit[0], bikePoint);
     });
 
     return function get(_x) {
@@ -106,9 +102,7 @@ const get = exports.get = (() => {
 
 const around = exports.around = (() => {
     var _ref2 = _asyncToGenerator(function* (lon, lat, radius) {
-        var bikePoints = yield all();
-        bikePoints = bikePoints.features;
-
+        var bikePoints = (yield all()).features;
         var dist = 0;
         var bikePointsAround = [];
 
@@ -134,8 +128,7 @@ const around = exports.around = (() => {
 
 const box = exports.box = (() => {
     var _ref3 = _asyncToGenerator(function* (swlon, swlat, nelon, nelat) {
-        var bikePoints = yield all();
-        bikePoints = bikePoints.features;
+        var bikePoints = (yield all()).features;
         var bikePointsInBox = bikePoints.filter(function (bikePoint) {
             return (0, _inbox2.default)(swlon, swlat, nelon, nelat, bikePoint.geometry.coordinates[0], bikePoint.geometry.coordinates[1]);
         });
@@ -152,9 +145,7 @@ const box = exports.box = (() => {
 
 const search = exports.search = (() => {
     var _ref4 = _asyncToGenerator(function* (searchString) {
-        var bikePoints = yield all();
-        bikePoints = bikePoints.features;
-
+        var bikePoints = (yield all()).features;
         var results = _fuzzy2.default.filter(searchString, bikePoints, fuzzyOptions);
         results = results.map(function (res) {
             return res.original;
