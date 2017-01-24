@@ -129,15 +129,20 @@ const departures = exports.departures = (() => {
         if (rawDepartures) {
             for (var i = 0; i < rawDepartures.length; i++) {
                 var departure = {};
-                switch (rawDepartures[i].Product.operatorCode.toLowerCase()) {
-                    case 'cfl':
-                        departure.type = 'train';
-                        departure.trainId = rawDepartures[i].Product.name.replace(/ +/g, ' ');
-                        break;
-                    default:
-                        departure.type = 'bus';
-                        departure.trainId = null;
-                        break;
+                if (!rawDepartures[i].Product.operatorCode) {
+                    departure.type = 'bus';
+                    departure.trainId = null;
+                } else {
+                    switch (rawDepartures[i].Product.operatorCode.toLowerCase()) {
+                        case 'cfl':
+                            departure.type = 'train';
+                            departure.trainId = rawDepartures[i].Product.name.replace(/ +/g, ' ');
+                            break;
+                        default:
+                            departure.type = 'bus';
+                            departure.trainId = null;
+                            break;
+                    }
                 }
                 departure.line = rawDepartures[i].Product.line.trim();
                 departure.number = parseInt(rawDepartures[i].Product.num.trim(), 10);
