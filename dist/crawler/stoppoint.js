@@ -19,7 +19,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 var newData = [];
 var cache;
 
-const CACHE_TTL = (0, _config2.default)('CACHE_TTL_BIKEPOINT', true);
+const CACHE_TTL = (0, _config2.default)('CACHE_TTL_STOPPOINT', true);
 const CRAWL_TTL = (0, _config2.default)('CRAWL_TTL_STOPPOINT', true);
 const PUB_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_stoppoint';
 const CACHE_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_stoppoint';

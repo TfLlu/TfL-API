@@ -5,7 +5,7 @@ import {redis}        from '../redis';
 var newData = [];
 var cache;
 
-const CACHE_TTL   = config('CACHE_TTL_BIKEPOINT', true);
+const CACHE_TTL   = config('CACHE_TTL_STOPPOINT', true);
 const CRAWL_TTL   = config('CRAWL_TTL_STOPPOINT', true);
 const PUB_TABLE   = config('NAME_VERSION', true) + '_stoppoint';
 const CACHE_TABLE = config('NAME_VERSION', true) + '_cache_stoppoint';
