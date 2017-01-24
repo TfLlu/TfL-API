@@ -61,6 +61,7 @@ const removeFromCrawlList = id => {
 };
 
 const crawl = async () => {
+    console.log('hello');
     var startTime = new Date().getTime();
 
     var result = await redis.get(CACHE_STOPPOINTS_TABLE);

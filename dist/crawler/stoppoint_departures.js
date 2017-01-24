@@ -75,6 +75,7 @@ const removeFromCrawlList = id => {
 
 const crawl = (() => {
     var _ref = _asyncToGenerator(function* () {
+        console.log('hello');
         var startTime = new Date().getTime();
 
         var result = yield _redis.redis.get(CACHE_STOPPOINTS_TABLE);
