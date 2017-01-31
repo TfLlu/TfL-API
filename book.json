@@ -1,0 +1,10 @@
+{
+    "plugins": ["fontsettings"],
+    "pluginsConfig": {
+        "fontsettings": {
+            "theme": "white",
+            "family": "sans",
+            "size": 1
+        }
+    }
+}
