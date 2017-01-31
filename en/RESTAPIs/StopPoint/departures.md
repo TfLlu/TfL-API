@@ -1,3 +1,5 @@
+{% extends "/docs.md" %}
+{% block content %}
 # StopPoint/Departures
 The following [REST](https://en.wikipedia.org/wiki/Representational_state_transfer) API endpoints offer access to the data of train and bus departures flowing through Transport for Luxembourg.
 Currently we're providing data from the [Verkéiersverbond](https://data.public.lu/en/organizations/mobiliteitszentral/) only.
@@ -7,3 +9,4 @@ The data from [Verkéiersverbond](https://data.public.lu/en/organizations/mobili
 
 ## Available endpoints
 - [GET StopPoint/Departures/{id}](/RESTAPIs/StopPoint/Departures/id.md)
+{% endblock %}

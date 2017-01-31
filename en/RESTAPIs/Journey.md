@@ -1,3 +1,5 @@
+{% extends "/docs.md" %}
+{% block content %}
 # Journey
 The following [REST](https://en.wikipedia.org/wiki/Representational_state_transfer) API endpoints offer access to the journey planner from [OpenOV](http://openov.nl).
 
@@ -6,3 +8,4 @@ The data from [openOV](http://openov.nl) is like its source ([Verkéiersverbond]
 
 ## Available endpoints
 - [GET Journey/{from}/to/{to}](/RESTAPIs/Journey/planner.md)
+{% endblock %}
