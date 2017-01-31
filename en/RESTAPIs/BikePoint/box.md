@@ -1,7 +1,15 @@
 {% extends "/docs.md" %}
 {% block content %}
 # GET BikePoint/box/{swLon}/{swLat}/{neLon}/{neLat}
-Returns the current state of all shared bike points within a [minimum bounding box](https://en.wikipedia.org/wiki/Minimum_bounding_box). The minimum bounding box must be defined by 2 [GPS coordinates](https://en.wikipedia.org/wiki/Global_Positioning_System) South-West and North-East.
+Returns the current state of all shared bike points within a [minimum bounding box](https://en.wikipedia.org/wiki/Minimum_bounding_box). The minimum bounding box must be defined by 2 [GPS coordinates](https://en.wikipedia.org/wiki/Global_Positioning_System) south west and north east.
+
+## Parameters
+| Parameter         | Example value                   | Description |
+| ----------------- | ------------------------------- | ----------- |
+| **swLon** | `6.10` | GPS longitude `float` of south west [minimum bounding box](https://en.wikipedia.org/wiki/Minimum_bounding_box) location |
+| **swLat** | `49.5` | GPS latitude `float` of south west [minimum bounding box](https://en.wikipedia.org/wiki/Minimum_bounding_box) location |
+| **neLon** | `6.11` | GPS longitude `float` of north east [minimum bounding box](https://en.wikipedia.org/wiki/Minimum_bounding_box) location |
+| **neLat** | `49.55` | GPS latitude `float` of north east [minimum bounding box](https://en.wikipedia.org/wiki/Minimum_bounding_box) location |
 
 ## Resource URL
     https://api.tfl.lu/v1/BikePoint/box/{swLon}/{swLat}/{neLon}/{neLat}

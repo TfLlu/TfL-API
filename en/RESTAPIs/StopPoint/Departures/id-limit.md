@@ -3,6 +3,12 @@
 # GET StopPoint/Departures/{ID}/{limit}
 Returns the X next departures from a single bus and/or train stop requested by the ID parameter, _where X is equal to your requested {limit}_.
 
+## Parameters
+| Parameter         | Example value                   | Description |
+| ----------------- | ------------------------------- | ----------- |
+| **id** | `200405035` | Id `integer` of train and/or bus stop to get departures returned for |
+| **limit** | `3` | Amount of departures `integer` to get returned by the API |
+
 ## Resource URL
     https://api.tfl.lu/v1/StopPoint/Departures/{ID}/{limit}
 

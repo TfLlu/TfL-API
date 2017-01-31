@@ -3,6 +3,13 @@
 # GET StopPoint/around/{lon}/{lat}/{radius}
 Returns all train and bus stops within a given [radius](https://en.wikipedia.org/wiki/Radius) (in meters) around a [GPS coordinate](https://en.wikipedia.org/wiki/Global_Positioning_System).
 
+## Parameters
+| Parameter         | Example value                   | Description |
+| ----------------- | ------------------------------- | ----------- |
+| **lon** | `6.133646` | GPS longitude `float` of center |
+| **lat** | `49.60067` | GPS latitude `float` of center |
+| **radius** | `100` | Radius `float` (in meters) around center |
+
 ## Resource URL
     https://api.tfl.lu/v1/StopPoint/around/{lon}/{lat}/{radius}
 

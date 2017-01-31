@@ -3,6 +3,14 @@
 # GET StopPoint/box/{swLon}/{swLat}/{neLon}/{neLat}
 Returns all train and bus stops within a [minimum bounding box](https://en.wikipedia.org/wiki/Minimum_bounding_box). The minimum bounding box must be defined by 2 [GPS coordinates](https://en.wikipedia.org/wiki/Global_Positioning_System) South-West and North-East.
 
+## Parameters
+| Parameter         | Example value                   | Description |
+| ----------------- | ------------------------------- | ----------- |
+| **swLon** | `6.133052` | GPS longitude `float` of south west [minimum bounding box](https://en.wikipedia.org/wiki/Minimum_bounding_box) location |
+| **swLat** | `49.60067` | GPS latitude `float` of south west [minimum bounding box](https://en.wikipedia.org/wiki/Minimum_bounding_box) location |
+| **neLon** | `6.133646` | GPS longitude `float` of north east [minimum bounding box](https://en.wikipedia.org/wiki/Minimum_bounding_box) location |
+| **neLat** | `49.600814` | GPS latitude `float` of north east [minimum bounding box](https://en.wikipedia.org/wiki/Minimum_bounding_box) location |
+
 ## Resource URL
     https://api.tfl.lu/v1/StopPoint/box/{swLon}/{swLat}/{neLon}/{neLat}
 

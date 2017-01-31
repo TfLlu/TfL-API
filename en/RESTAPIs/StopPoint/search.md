@@ -3,6 +3,11 @@
 # GET StopPoint/Search/{query}
 Returns all train and bus stops matching the search query. The results are provided by [fuzzy](https://www.npmjs.com/package/fuzzy) returning matches based on the stop's name.
 
+## Parameters
+| Parameter         | Example value                   | Description |
+| ----------------- | ------------------------------- | ----------- |
+| **query** | `Schoenach` | Search query `string` to look for train and/or bus stops |
+
 ## Resource URL
     https://api.tfl.lu/v1/StopPoint/Search/{query}
 

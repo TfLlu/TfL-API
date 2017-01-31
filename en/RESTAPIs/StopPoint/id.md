@@ -3,6 +3,11 @@
 # GET StopPoint/{ID}
 Returns a single bus and/or train stop requested by the ID parameter.
 
+## Parameters
+| Parameter         | Example value                   | Description |
+| ----------------- | ------------------------------- | ----------- |
+| **id** | `200901011` | Id `integer` of train and/or bus stop as found in [`/StopPoint`](/RESTAPIs/StopPoint/index.md) |
+
 ## Resource URL
     https://api.tfl.lu/v1/StopPoint/{ID}
 

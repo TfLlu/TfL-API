@@ -3,6 +3,11 @@
 # GET BikePoint/Search/{query}
 Returns the current state of all shared bike points matching the search query. The results are provided by [fuzzy](https://www.npmjs.com/package/fuzzy) returning matches based on the station's name, address and city.
 
+## Parameters
+| Parameter         | Example value                   | Description |
+| ----------------- | ------------------------------- | ----------- |
+| **query** | `Coin Rue de lAlzette` | Search query `string` to look for shared bike points |
+
 ## Resource URL
     https://api.tfl.lu/v1/BikePoint/Search/{query}
 

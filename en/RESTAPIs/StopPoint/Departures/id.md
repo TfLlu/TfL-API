@@ -3,6 +3,11 @@
 # GET StopPoint/Departures/{ID}
 Returns the 10 next departures from a single bus and/or train stop requested by the ID parameter.
 
+## Parameters
+| Parameter         | Example value                   | Description |
+| ----------------- | ------------------------------- | ----------- |
+| **id** | `200405035` | Id `integer` of train and/or bus stop to get departures returned for |
+
 ## Resource URL
     https://api.tfl.lu/v1/StopPoint/Departures/{ID}
 

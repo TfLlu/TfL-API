@@ -3,6 +3,13 @@
 # GET BikePoint/around/{lon}/{lat}/{radius}
 Returns the current state of all shared bike points within a given [radius](https://en.wikipedia.org/wiki/Radius) (in meters) around a [GPS coordinate](https://en.wikipedia.org/wiki/Global_Positioning_System).
 
+## Parameters
+| Parameter         | Example value                   | Description |
+| ----------------- | ------------------------------- | ----------- |
+| **lon** | `6.133646` | GPS longitude `float` of center |
+| **lat** | `49.60067` | GPS latitude `float` of center |
+| **radius** | `300` | Radius `float` (in meters) around center |
+
 ## Resource URL
     https://api.tfl.lu/v1/BikePoint/around/{lon}/{lat}/{radius}
 

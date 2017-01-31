@@ -3,6 +3,11 @@
 # GET BikePoint/{ID}
 Returns the current state one single shared bike point requested by the ID parameter.
 
+## Parameters
+| Parameter         | Example value                   | Description |
+| ----------------- | ------------------------------- | ----------- |
+| **id** | `velok:1` | Id `string` of shared bike point as found in [`/BikePoint`](/RESTAPIs/BikePoint/index.md) |
+
 ## Resource URL
     https://api.tfl.lu/v1/BikePoint/{ID}
 

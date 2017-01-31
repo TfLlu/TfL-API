@@ -6,8 +6,8 @@ Returns the itinerary from `{from}` to `{to}` in the [OpenTripPlanner](http://ww
 ## Parameters
 | Parameter         | Example value                   | Description |
 | ----------------- | ------------------------------- | ----------- |
-| **from** | `49.59744,6.14077` | Latitude (_float_) and longitude (_float_) separated by a comma |
-| **to** | `49.542,6.19942` | Latitude (_float_) and longitude (_float_) separated by a comma |
+| **from** | `49.59744,6.14077` | GPS latitude `float` and longitude `float` separated by a comma |
+| **to** | `49.542,6.19942` | GPS latitude `float` and longitude `float` separated by a comma |
 
 ## Resource URL
     https://api.tfl.lu/v1/Journey/{from}/to/{to}
