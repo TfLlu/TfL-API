@@ -9,4 +9,5 @@ The data from [Verkéiersverbond](https://data.public.lu/en/organizations/mobili
 
 ## Available endpoints
 - [GET StopPoint/Departures/{id}](/RESTAPIs/StopPoint/Departures/id.md)
+- [GET StopPoint/Departures/{id}/{limit}](/RESTAPIs/StopPoint/Departures/id-limit.md)
 {% endblock %}
