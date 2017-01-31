@@ -17,6 +17,7 @@
         - [StopPoint/Departures](/RESTAPIs/StopPoint/Departures.md)
             - [GET StopPoint/Departures/{id}](/RESTAPIs/StopPoint/Departures/id.md)
             - [GET StopPoint/Departures/{id}/{limit}](/RESTAPIs/StopPoint/Departures/id-limit.md)
-    - [Journey](/RESTAPIs/StopPoint/Departures.md)
+    - [Journey](/RESTAPIs/Journey.md)
+        - [GET Journey/{from}/to/{to}](/RESTAPIs/Journey/planner.md)
     - [Occupancy](/RESTAPIs/Occupancy.md)
     - [Weather](/RESTAPIs/Weather.md)
