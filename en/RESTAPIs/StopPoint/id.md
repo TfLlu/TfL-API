@@ -1,21 +1,21 @@
 {% extends "/docs.md" %}
 {% block content %}
-## GET StopPoint/{ID}
+# GET StopPoint/{ID}
 Returns a single bus and/or train stop requested by the ID parameter.
 
-### Resource URL
+## Resource URL
     https://api.tfl.lu/v1/StopPoint/{ID}
 
-### Format
-The response will be formatted as a [GeoJSON](http://geojson.org/) [Feature](http://geojson.org/geojson-spec.html#feature-objects).
+## Format
+The response will be formatted as a [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) [Feature](http://geojson.org/geojson-spec.html#feature-objects).
 
-### Object properties
+## Object properties
 | Key          | Type      | Possible values | Description |
 | ------------ | --------- | --------------- | ----------- |
 | **id**       | `integer` | - `{id}`         | id of bus and/or train stop |
 | **name**     | `string`  | - `{name}`       | name of bus and/or train stop (used for search) |
 
-### Sample request & response
+## Sample request & response
 **GET** https://api.tfl.lu/v1/StopPoint/200901011
 ```json
 {
@@ -31,6 +31,6 @@ The response will be formatted as a [GeoJSON](http://geojson.org/) [Feature](htt
 }
 ```
 
-### License
+## License
 Please refer to [StopPoint](/RESTAPIs/StopPoint.md#license) for information about the train and bus stop data licensing.
 {% endblock %}

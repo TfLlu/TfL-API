@@ -1,15 +1,15 @@
 {% extends "/docs.md" %}
 {% block content %}
-## GET BikePoint/around/{lon}/{lat}/{radius}
+# GET BikePoint/around/{lon}/{lat}/{radius}
 Returns the current state of all shared bike points within a given [radius](https://en.wikipedia.org/wiki/Radius) (in meters) around a [GPS coordinate](https://en.wikipedia.org/wiki/Global_Positioning_System).
 
-### Resource URL
+## Resource URL
     https://api.tfl.lu/v1/BikePoint/around/{lon}/{lat}/{radius}
 
-### Format
-The response will be formatted as a [GeoJSON](http://geojson.org/) [Feature Collection](http://geojson.org/geojson-spec.html#feature-collection-objects).
+## Format
+The response will be formatted as a [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) [Feature Collection](http://geojson.org/geojson-spec.html#feature-collection-objects).
 
-### Object properties
+## Object properties
 | Key                       | Type          | Possible values                                | Description |
 | -------------             | ------------- | ---------------------------------------------- | --- |
 | **id**                    | `string`      | <nobr>- `{provider}:{number}`</nobr>           | id of the shared bike point (built from provider and id of provider) |
@@ -29,7 +29,7 @@ The response will be formatted as a [GeoJSON](http://geojson.org/) [Feature Coll
 | **distance**              | `float`       | - `{distance}`                                 | distance (in meters) from the GPS coordinate requested |
 
 
-### Sample request & response
+## Sample request & response
 **GET** https://api.tfl.lu/v1/BikePoint/around/6.113204/49.61028/100000
 ```json
 {
@@ -172,6 +172,6 @@ The response will be formatted as a [GeoJSON](http://geojson.org/) [Feature Coll
 }
 ```
 
-### License
+## License
 Please refer to [Bikepoint](/RESTAPIs/BikePoint.md#license) for information about the shared bike point data licensing.
 {% endblock %}

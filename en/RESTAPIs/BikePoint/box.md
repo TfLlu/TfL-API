@@ -1,15 +1,15 @@
 {% extends "/docs.md" %}
 {% block content %}
-## GET BikePoint/box/{swLon}/{swLat}/{neLon}/{neLat}
+# GET BikePoint/box/{swLon}/{swLat}/{neLon}/{neLat}
 Returns the current state of all shared bike points within a [minimum bounding box](https://en.wikipedia.org/wiki/Minimum_bounding_box). The minimum bounding box must be defined by 2 [GPS coordinates](https://en.wikipedia.org/wiki/Global_Positioning_System) South-West and North-East.
 
-### Resource URL
+## Resource URL
     https://api.tfl.lu/v1/BikePoint/box/{swLon}/{swLat}/{neLon}/{neLat}
 
-### Format
-The response will be formatted as a [GeoJSON](http://geojson.org/) [Feature Collection](http://geojson.org/geojson-spec.html#feature-collection-objects).
+## Format
+The response will be formatted as a [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) [Feature Collection](http://geojson.org/geojson-spec.html#feature-collection-objects).
 
-### Object properties
+## Object properties
 | Key                       | Type          | Possible values                                | Description |
 | -------------             | ------------- | ---------------------------------------------- | --- |
 | **id**                    | `string`      | <nobr>- `{provider}:{number}`</nobr>           | id of the shared bike point (built from provider and id of provider) |
@@ -28,7 +28,7 @@ The response will be formatted as a [GeoJSON](http://geojson.org/) [Feature Coll
 | **dock_status.bikeType**  | `string`      | - `'manual'`<br />- `'electric'`<br />- `NULL` | type of bike attached to dock, `NULL` if dock is free |
 | **distance**              | `float`       | - `{distance}`                                 | distance (in meters) from the GPS coordinate requested |
 
-### Sample request & response
+## Sample request & response
 **GET** https://api.tfl.lu/v1/BikePoint/box/6.10/49.5/6.11/49.55
 ```json
 {
@@ -112,6 +112,6 @@ The response will be formatted as a [GeoJSON](http://geojson.org/) [Feature Coll
 	}]
 }```
 
-### License
+## License
 Please refer to [Bikepoint](/RESTAPIs/BikePoint.md#license) for information about the shared bike point data licensing.
 {% endblock %}

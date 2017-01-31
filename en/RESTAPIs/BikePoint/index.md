@@ -1,15 +1,15 @@
 {% extends "/docs.md" %}
 {% block content %}
-## GET BikePoint
+# GET BikePoint
 Returns the current state of all shared bike points from Luxembourg integrated in Transport for Luxembourg.
 
-### Resource URL
+## Resource URL
     https://api.tfl.lu/v1/BikePoint
 
-### Format
-The response will be formatted as a [GeoJSON](http://geojson.org/) [Feature Collection](http://geojson.org/geojson-spec.html#feature-collection-objects).
+## Format
+The response will be formatted as a [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) [Feature Collection](http://geojson.org/geojson-spec.html#feature-collection-objects).
 
-### Object properties
+## Object properties
 | Key                       | Type          | Possible values                                | Description |
 | -------------             | ------------- | ---------------------------------------------- | --- |
 | **id**                    | `string`      | <nobr>- `{provider}:{number}`</nobr>           | id of the shared bike point (built from provider and id of provider) |
@@ -27,7 +27,7 @@ The response will be formatted as a [GeoJSON](http://geojson.org/) [Feature Coll
 | **dock_status.status**    | `string`      | - `'free'`<br />- `'occupied'`                 | status of specific dock, can be free or occupied |
 | **dock_status.bikeType**  | `string`      | - `'manual'`<br />- `'electric'`<br />- `NULL` | type of bike attached to dock, `NULL` if dock is free |
 
-### Sample request & response
+## Sample request & response
 **GET** https://api.tfl.lu/v1/BikePoint
 ```json
 {
@@ -123,6 +123,6 @@ The response will be formatted as a [GeoJSON](http://geojson.org/) [Feature Coll
 }
 ```
 
-### License
+## License
 Please refer to [Bikepoint](/RESTAPIs/BikePoint.md#license) for information about the shared bike point data licensing.
 {% endblock %}
