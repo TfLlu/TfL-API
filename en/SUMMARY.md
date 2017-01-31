@@ -21,3 +21,4 @@
         - [GET Journey/{from}/to/{to}](/RESTAPIs/Journey/planner.md)
     - [Occupancy](/RESTAPIs/Occupancy.md)
     - [Weather](/RESTAPIs/Weather.md)
+        - [GET Weather](/RESTAPIs/Weather/index.md)
