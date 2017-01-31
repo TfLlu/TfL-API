@@ -53,7 +53,8 @@ The response will be formatted as a [GeoJSON](https://en.wikipedia.org/wiki/GeoJ
 	}, {
         ...
     }]
-}```
+}
+```
 
 ## License
 Please refer to [StopPoint](/RESTAPIs/StopPoint.md#license) for information about the train and bus stop data licensing.

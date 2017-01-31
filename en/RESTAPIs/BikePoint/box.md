@@ -118,7 +118,8 @@ The response will be formatted as a [GeoJSON](https://en.wikipedia.org/wiki/GeoJ
 			}]
 		}
 	}]
-}```
+}
+```
 
 ## License
 Please refer to [Bikepoint](/RESTAPIs/BikePoint.md#license) for information about the shared bike point data licensing.
