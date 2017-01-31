@@ -13,4 +13,4 @@ The data from [Vel'ok](http://www.velok.lu/) is still unlicensed.
 - [GET BikePoint/{ID}](/RESTAPIs/BikePoint/id.md)
 - [GET BikePoint/box/{swLon}/{swLat}/{neLon}/{neLat}](/RESTAPIs/BikePoint/box.md)
 - [GET BikePoint/around/{lon}/{lat}/{radius}](/RESTAPIs/BikePoint/around.md)
-- [GET BikePoint/Search/{QUERY}](/RESTAPIs/BikePoint/search.md)
+- [GET BikePoint/Search/{query}](/RESTAPIs/BikePoint/search.md)

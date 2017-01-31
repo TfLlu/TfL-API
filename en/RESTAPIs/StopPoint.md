@@ -12,4 +12,4 @@ The data from [Verkéiersverbond](https://data.public.lu/en/organizations/mobili
 - [GET StopPoint/{ID}](/RESTAPIs/StopPoint/id.md)
 - [GET StopPoint/box/{swLon}/{swLat}/{neLon}/{neLat}](/RESTAPIs/StopPoint/box.md)
 - [GET StopPoint/around/{lon}/{lat}/{radius}](/RESTAPIs/StopPoint/around.md)
-- [GET StopPoint/Search/{QUERY}](/RESTAPIs/StopPoint/search.md)
+- [GET StopPoint/Search/{query}](/RESTAPIs/StopPoint/search.md)
