@@ -10,8 +10,8 @@ Below are some documents that will help you get going with the REST APIs as quic
 
 - [BikePoint](/RESTAPIs/BikePoint.md)
 - [StopPoint](/RESTAPIs/StopPoint.md)
-- [StopPoint/Departures](/RESTAPIs/StopPoint/Departures.md)
-- [Journey](/RESTAPIs/StopPoint/Departures.md)
+- [StopPoint/Departures](/RESTAPIs/StopPoint/departures.md)
+- [Journey](/RESTAPIs/Journey.md)
 - [Occupancy](/RESTAPIs/Occupancy.md)
 - [Weather](/RESTAPIs/Weather.md)
 
