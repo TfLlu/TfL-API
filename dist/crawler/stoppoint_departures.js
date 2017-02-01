@@ -131,9 +131,8 @@ const crawl = (() => {
             return item.properties.id;
         });
 
-        stopPointsToCrawl = stopPointsToCrawl.slice(0, 100);
-
         while (stopPointsToCrawl.length !== 0) {
+            console.log('jobs to do: ' + stopPointsToCrawl.length);
             if (stopPointsToCrawl.length > MAX_CONCURRENT_CRAWLS) {
                 JobsToAdd = MAX_CONCURRENT_CRAWLS - currentlyCrawling.length;
             } else {
