@@ -1,6 +1,10 @@
 import * as mobiliteit      from '../../source/stoppoint/mobiliteit';
 import * as stoppoint       from '../stoppoint';
+import config               from '../../config';
 import moment               from 'moment';
+import {redis, redisPubSub} from '../../redis';
+
+const STREAM_NAME = config('NAME_VERSION', true) + '_stoppoint_departures';
 
 export const get = async (stopPoint, limit) => {
     var departuresRaw = await mobiliteit.departures(stopPoint, limit);
@@ -50,5 +54,51 @@ export const get = async (stopPoint, limit) => {
             departures.push(departure);
         }
     }
+
+    departures.sort((a,b) => a.departure - b.departure);
+
     return departures;
+};
+
+export const all = () => {
+    return redis.get(STREAM_NAME)
+        .then(
+            function (result) {
+                if (result && result !== '') {
+                    return JSON.parse(result);
+                } else {
+                    throw new Error('no StopPoints in Redis');
+                }
+            }
+        );
+};
+
+redisPubSub.subscribe(STREAM_NAME);
+export const stream = callback => {
+    const messageCallback = (channel, message) => {
+        if (channel === STREAM_NAME) {
+            callback(JSON.parse(message));
+        }
+    };
+    all().then(data => {
+        callback({
+            type: 'new',
+            data: data.features.map(compileStream)
+        });
+    });
+
+    redisPubSub.on('message', messageCallback);
+
+    return {
+        off: function () {
+            redisPubSub.removeListener('message', messageCallback);
+        }
+    };
+};
+
+const compileStream = bikePoint => {
+    return {
+        id: bikePoint.properties.id,
+        data: bikePoint,
+    };
 };

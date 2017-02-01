@@ -6,3 +6,13 @@ export const get = async ctx => {
         parseInt(ctx.params.limit)
     );
 };
+
+export const streamIndex = async ({ emit, disconnect }) => {
+    var res = departures.stream(data => {
+        emit(data);
+    });
+
+    disconnect(() => {
+        res.off();
+    });
+};

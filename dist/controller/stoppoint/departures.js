@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.get = undefined;
+exports.streamIndex = exports.get = undefined;
 
 var _departures = require('../../service/stoppoint/departures');
 
@@ -20,5 +20,21 @@ const get = exports.get = (() => {
 
     return function get(_x) {
         return _ref.apply(this, arguments);
+    };
+})();
+
+const streamIndex = exports.streamIndex = (() => {
+    var _ref2 = _asyncToGenerator(function* ({ emit, disconnect }) {
+        var res = departures.stream(function (data) {
+            emit(data);
+        });
+
+        disconnect(function () {
+            res.off();
+        });
+    });
+
+    return function streamIndex(_x2) {
+        return _ref2.apply(this, arguments);
     };
 })();
