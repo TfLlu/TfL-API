@@ -27,7 +27,7 @@ The response will be formatted as a [JSON](https://en.wikipedia.org/wiki/JSON).
 | **live**          | `boolean` | - `true`<br />- `false`           | wether live data is available for the given train/bus or not |
 | **departureISO**  | `string`  | - `{departureISO}`                | calculated real life departure of train/bus in [ISO 8601 time](https://en.wikipedia.org/wiki/ISO_8601) |
 | **destination**   | `string`  | - `{destination}`                 | name of destination |
-| **destinationId** | `integer` | - `{destinationId}`<br />- `NULL` | id of destination as found on `/StopPoint/{id}` or `NULL` if unknown |
+| **destinationId** | `integer` | <nobr>- `{destinationId}`</nobr><br />- `NULL` | id of destination as found on `/StopPoint/{id}` or `NULL` if unknown |
 
 ## Sample request & response
 **GET** https://api.tfl.lu/v1/StopPoint/Departures/200405035/3
