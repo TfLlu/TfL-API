@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.stream = exports.search = exports.box = exports.around = exports.departures = exports.getByName = exports.get = exports.all = exports.load = undefined;
+exports.stream = exports.search = exports.box = exports.around = exports.getByName = exports.get = exports.all = exports.load = undefined;
 
 var _mobiliteit = require('../source/stoppoint/mobiliteit');
 
@@ -28,10 +28,6 @@ var _inbox2 = _interopRequireDefault(_inbox);
 var _deepClone = require('deep-clone');
 
 var _deepClone2 = _interopRequireDefault(_deepClone);
-
-var _moment = require('moment');
-
-var _moment2 = _interopRequireDefault(_moment);
 
 var _redis = require('../redis');
 
@@ -102,64 +98,8 @@ const getByName = exports.getByName = (() => {
     };
 })();
 
-const departures = exports.departures = (() => {
-    var _ref4 = _asyncToGenerator(function* (stopPoint, limit) {
-        var departuresRaw = yield mobiliteit.departures(stopPoint, limit);
-        var departures = [];
-        var rawDepartures = departuresRaw.Departure;
-        if (rawDepartures) {
-            for (var i = 0; i < rawDepartures.length; i++) {
-                var departure = {};
-                if (!rawDepartures[i].Product.operatorCode) {
-                    departure.type = 'bus';
-                    departure.trainId = null;
-                } else {
-                    switch (rawDepartures[i].Product.operatorCode.toLowerCase()) {
-                        case 'cfl':
-                            departure.type = 'train';
-                            departure.trainId = rawDepartures[i].Product.name.replace(/ +/g, ' ');
-                            break;
-                        default:
-                            departure.type = 'bus';
-                            departure.trainId = null;
-                            break;
-                    }
-                }
-                departure.line = rawDepartures[i].Product.line.trim();
-                departure.number = parseInt(rawDepartures[i].Product.num.trim(), 10);
-
-                var time = Math.round(Date.parse(rawDepartures[i].date + ' ' + rawDepartures[i].time) / 1000);
-                if (rawDepartures[i].rtDate) {
-                    var realTime = Math.round(Date.parse(rawDepartures[i].rtDate + ' ' + rawDepartures[i].rtTime) / 1000);
-                    departure.departure = realTime;
-                    departure.delay = realTime - time;
-                    departure.live = true;
-                } else {
-                    departure.departure = time;
-                    departure.delay = 0;
-                    departure.live = false;
-                }
-                departure.departureISO = _moment2.default.unix(departure.departure).format();
-                departure.destination = rawDepartures[i].direction;
-                var destination = yield getByName(departure.destination);
-                if (typeof destination !== 'undefined') {
-                    departure.destinationId = destination.properties.id;
-                } else {
-                    departure.destinationId = null;
-                }
-                departures.push(departure);
-            }
-        }
-        return departures;
-    });
-
-    return function departures(_x3, _x4) {
-        return _ref4.apply(this, arguments);
-    };
-})();
-
 const around = exports.around = (() => {
-    var _ref5 = _asyncToGenerator(function* (lon, lat, radius) {
+    var _ref4 = _asyncToGenerator(function* (lon, lat, radius) {
         var stopPoints = (yield all()).features;
         var dist = 0;
         var stopPointsAround = [];
@@ -179,13 +119,13 @@ const around = exports.around = (() => {
         };
     });
 
-    return function around(_x5, _x6, _x7) {
-        return _ref5.apply(this, arguments);
+    return function around(_x3, _x4, _x5) {
+        return _ref4.apply(this, arguments);
     };
 })();
 
 const box = exports.box = (() => {
-    var _ref6 = _asyncToGenerator(function* (swlon, swlat, nelon, nelat) {
+    var _ref5 = _asyncToGenerator(function* (swlon, swlat, nelon, nelat) {
         var stopPoints = (yield all()).features;
         var stopPointsInBox = stopPoints.filter(function (stopPoint) {
             return (0, _inbox2.default)(swlon, swlat, nelon, nelat, stopPoint.geometry.coordinates[0], stopPoint.geometry.coordinates[1]);
@@ -196,13 +136,13 @@ const box = exports.box = (() => {
         };
     });
 
-    return function box(_x8, _x9, _x10, _x11) {
-        return _ref6.apply(this, arguments);
+    return function box(_x6, _x7, _x8, _x9) {
+        return _ref5.apply(this, arguments);
     };
 })();
 
 const search = exports.search = (() => {
-    var _ref7 = _asyncToGenerator(function* (searchString) {
+    var _ref6 = _asyncToGenerator(function* (searchString) {
         var stopPoints = (yield all()).features;
         var results = _fuzzy2.default.filter(searchString, stopPoints, fuzzyOptions);
         var stopPointMatches = results.map(function (res) {
@@ -215,8 +155,8 @@ const search = exports.search = (() => {
         };
     });
 
-    return function search(_x12) {
-        return _ref7.apply(this, arguments);
+    return function search(_x10) {
+        return _ref6.apply(this, arguments);
     };
 })();
 

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.search = exports.box = exports.around = exports.departures = exports.get = exports.streamIndex = exports.index = undefined;
+exports.search = exports.box = exports.around = exports.get = exports.streamIndex = exports.index = undefined;
 
 var _stoppoint = require('../service/stoppoint');
 
@@ -49,42 +49,32 @@ const get = exports.get = (() => {
     };
 })();
 
-const departures = exports.departures = (() => {
+const around = exports.around = (() => {
     var _ref4 = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield stoppoint.departures(parseInt(ctx.params.stopPoint), parseInt(ctx.params.limit));
+        ctx.body = yield stoppoint.around(parseFloat(ctx.params.lon), parseFloat(ctx.params.lat), ctx.params.radius);
     });
 
-    return function departures(_x4) {
+    return function around(_x4) {
         return _ref4.apply(this, arguments);
     };
 })();
 
-const around = exports.around = (() => {
+const box = exports.box = (() => {
     var _ref5 = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield stoppoint.around(parseFloat(ctx.params.lon), parseFloat(ctx.params.lat), ctx.params.radius);
+        ctx.body = yield stoppoint.box(parseFloat(ctx.params.swlon), parseFloat(ctx.params.swlat), parseFloat(ctx.params.nelon), parseFloat(ctx.params.nelat));
     });
 
-    return function around(_x5) {
+    return function box(_x5) {
         return _ref5.apply(this, arguments);
     };
 })();
 
-const box = exports.box = (() => {
-    var _ref6 = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield stoppoint.box(parseFloat(ctx.params.swlon), parseFloat(ctx.params.swlat), parseFloat(ctx.params.nelon), parseFloat(ctx.params.nelat));
-    });
-
-    return function box(_x6) {
-        return _ref6.apply(this, arguments);
-    };
-})();
-
 const search = exports.search = (() => {
-    var _ref7 = _asyncToGenerator(function* (ctx) {
+    var _ref6 = _asyncToGenerator(function* (ctx) {
         ctx.body = yield stoppoint.search(ctx.params.searchstring.toLowerCase());
     });
 
-    return function search(_x7) {
-        return _ref7.apply(this, arguments);
+    return function search(_x6) {
+        return _ref6.apply(this, arguments);
     };
 })();

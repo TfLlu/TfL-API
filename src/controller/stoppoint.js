@@ -20,13 +20,6 @@ export const get = async ctx => {
     );
 };
 
-export const departures = async ctx => {
-    ctx.body = await stoppoint.departures(
-        parseInt(ctx.params.stopPoint),
-        parseInt(ctx.params.limit)
-    );
-};
-
 export const around = async ctx => {
     ctx.body = await stoppoint.around(
         parseFloat(ctx.params.lon),
