@@ -31,6 +31,7 @@ const get = exports.get = (() => {
         if (rawDepartures) {
             for (var i = 0; i < rawDepartures.length; i++) {
                 var departure = {};
+                departure.id = rawDepartures[i].JourneyDetailRef.ref;
                 if (!rawDepartures[i].Product.operatorCode) {
                     departure.type = 'bus';
                     departure.trainId = null;
