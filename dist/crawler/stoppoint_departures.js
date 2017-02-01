@@ -18,7 +18,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 const CACHE_TTL = (0, _config2.default)('CACHE_TTL_STOPPOINT_DEPARTURE', true);
 const CRAWL_TTL = (0, _config2.default)('CRAWL_TTL_STOPPOINT_DEPARTURE', true);
-const CRAWL_AMOUNT = (0, _config2.default)('CRAWL_TTL_STOPPOINT_DEPARTURE_AMOUNT', true);
+const CRAWL_AMOUNT = (0, _config2.default)('CRAWL_STOPPOINT_DEPARTURE_AMOUNT', true);
 const PUB_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_stoppoint_departures_';
 const CACHE_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_stoppoint_departures';
 const CACHE_STOPPOINTS_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_stoppoint';

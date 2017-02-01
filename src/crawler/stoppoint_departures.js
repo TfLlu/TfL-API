@@ -4,7 +4,7 @@ import {redis}         from '../redis';
 
 const CACHE_TTL              = config('CACHE_TTL_STOPPOINT_DEPARTURE', true);
 const CRAWL_TTL              = config('CRAWL_TTL_STOPPOINT_DEPARTURE', true);
-const CRAWL_AMOUNT           = config('CRAWL_TTL_STOPPOINT_DEPARTURE_AMOUNT', true);
+const CRAWL_AMOUNT           = config('CRAWL_STOPPOINT_DEPARTURE_AMOUNT', true);
 const PUB_TABLE              = config('NAME_VERSION', true) + '_stoppoint_departures_';
 const CACHE_TABLE            = config('NAME_VERSION', true) + '_cache_stoppoint_departures';
 const CACHE_STOPPOINTS_TABLE = config('NAME_VERSION', true) + '_cache_stoppoint';
