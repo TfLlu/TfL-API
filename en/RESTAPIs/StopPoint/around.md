@@ -19,9 +19,9 @@ The response will be formatted as a [GeoJSON](https://en.wikipedia.org/wiki/GeoJ
 ## Object properties
 | Key          | Type      | Possible values | Description |
 | ------------ | --------- | --------------- | ----------- |
-| **id**       | `integer` | - `{id}`         | id of bus and/or train stop |
-| **name**     | `string`  | - `{name}`       | name of bus and/or train stop (used for search) |
-| **distance** | `float`   | - `{distance}`   | distance (in meters) from the GPS coordinate requested |
+| **id**       | `integer` | `{id}`          | id of bus and/or train stop |
+| **name**     | `string`  | `{name}`        | name of bus and/or train stop (used for search) |
+| **distance** | `float`   | `{distance}`    | distance (in meters) from the GPS coordinate requested |
 
 ## Sample request & response
 **GET** https://api.tfl.lu/v1/StopPoint/around/6.133646/49.60067/100

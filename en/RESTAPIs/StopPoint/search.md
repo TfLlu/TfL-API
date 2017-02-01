@@ -17,8 +17,8 @@ The response will be formatted as a [GeoJSON](https://en.wikipedia.org/wiki/GeoJ
 ## Object properties
 | Key          | Type      | Possible values | Description |
 | ------------ | --------- | --------------- | ----------- |
-| **id**       | `integer` | - `{id}`         | id of bus and/or train stop |
-| **name**     | `string`  | - `{name}`       | name of bus and/or train stop (used for search) |
+| **id**       | `integer` | `{id}`          | id of bus and/or train stop |
+| **name**     | `string`  | `{name}`        | name of bus and/or train stop (used for search) |
 
 ## Sample request & response
 **GET** https://api.tfl.lu/v1/StopPoint/search/Schoenach
