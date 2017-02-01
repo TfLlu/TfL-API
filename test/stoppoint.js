@@ -72,7 +72,9 @@ describe('StopPoints', () => {
                         departure.delay.should.be.a('Number');
                         departure.live.should.be.a('Boolean');
                         departure.destination.should.be.a('String');
-                        departure.destinationId.should.be.a('Number');
+                        if (departure.destinationId !== null) {
+                            departure.destinationId.should.be.a('Number');
+                        }
                     }
                     done();
                 });

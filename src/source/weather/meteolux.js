@@ -49,6 +49,9 @@ export const compileSituation = situation => {
     case 'NO':
         windDirection = 315;
         break;
+    default:
+        windDirection = 360;
+        break;
     }
 
     var visibility = parseInt(situation.visibility);

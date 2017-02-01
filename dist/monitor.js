@@ -38,17 +38,27 @@ const routeAccess = router => {
     return (() => {
         var _ref = _asyncToGenerator(function* (ctx, next) {
             const startTime = Date.now();
-            yield next();
-            const endTime = Date.now();
-            const responseTime = endTime - startTime;
-            const matched = router.match(ctx.request.url, ctx.request.method);
-            const layer = matched.pathAndMethod[matched.pathAndMethod.length - 1];
 
-            const data = {
-                path: layer.path,
-                responseTime
+            const setMonitorData = function () {
+                const endTime = Date.now();
+                const responseTime = endTime - startTime;
+                const matched = router.match(ctx.request.url, ctx.request.method);
+                const layer = matched.pathAndMethod[matched.pathAndMethod.length - 1];
+
+                ctx.monitor.ROUTE_ACCESS = {
+                    path: layer.path,
+                    responseTime
+                };
             };
-            ctx.monitor.ROUTE_ACCESS = data;
+
+            try {
+                yield next();
+            } catch (err) {
+                setMonitorData();
+                throw err;
+            }
+
+            setMonitorData();
         });
 
         return function (_x, _x2) {
@@ -61,17 +71,26 @@ const responseTime = () => {
     return (() => {
         var _ref2 = _asyncToGenerator(function* (ctx, next) {
             const startTime = Date.now();
-            yield next();
-            const endTime = Date.now();
-            const responseTime = endTime - startTime;
 
-            ctx.monitor.RESPONSE_TIME = {
-                url: ctx.request.url,
-                method: ctx.request.method,
-                status: ctx.response.status,
-                responseTime
+            const setMonitorData = function (status) {
+                const endTime = Date.now();
+                const responseTime = endTime - startTime;
+
+                ctx.monitor.RESPONSE_TIME = {
+                    url: ctx.request.url,
+                    method: ctx.request.method,
+                    status: status || ctx.response.status,
+                    responseTime
+                };
             };
-            //console.log(`Response Time: ${responseTime}ms`);
+            try {
+                yield next();
+            } catch (err) {
+                setMonitorData(500);
+                throw err;
+            }
+
+            setMonitorData();
         });
 
         return function (_x3, _x4) {
@@ -105,7 +124,12 @@ exports.default = () => {
     return (() => {
         var _ref3 = _asyncToGenerator(function* (ctx, next) {
             ctx.monitor = {};
-            yield next();
+            try {
+                yield next();
+            } catch (err) {
+                onData(ctx.monitor);
+                throw err;
+            }
             onData(ctx.monitor);
         });
 

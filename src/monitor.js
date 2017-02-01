@@ -27,34 +27,53 @@ const onData = data => {
 const routeAccess = (router) => {
     return async (ctx, next) => {
         const startTime = Date.now();
-        await next();
-        const endTime = Date.now();
-        const responseTime = endTime - startTime;
-        const matched = router.match(ctx.request.url, ctx.request.method);
-        const layer = matched.pathAndMethod[matched.pathAndMethod.length - 1];
 
-        const data = {
-            path: layer.path,
-            responseTime
+        const setMonitorData = () => {
+            const endTime = Date.now();
+            const responseTime = endTime - startTime;
+            const matched = router.match(ctx.request.url, ctx.request.method);
+            const layer = matched.pathAndMethod[matched.pathAndMethod.length - 1];
+
+            ctx.monitor.ROUTE_ACCESS = {
+                path: layer.path,
+                responseTime
+            };
         };
-        ctx.monitor.ROUTE_ACCESS = data;
+
+        try {
+            await next();
+        } catch (err) {
+            setMonitorData();
+            throw err;
+        }
+
+        setMonitorData();
     };
 };
 
 const responseTime = () => {
     return async (ctx, next) => {
         const startTime = Date.now();
-        await next();
-        const endTime = Date.now();
-        const responseTime = endTime - startTime;
 
-        ctx.monitor.RESPONSE_TIME = {
-            url: ctx.request.url,
-            method: ctx.request.method,
-            status: ctx.response.status,
-            responseTime
+        const setMonitorData = (status) => {
+            const endTime = Date.now();
+            const responseTime = endTime - startTime;
+
+            ctx.monitor.RESPONSE_TIME = {
+                url: ctx.request.url,
+                method: ctx.request.method,
+                status: status || ctx.response.status,
+                responseTime
+            };
         };
-        //console.log(`Response Time: ${responseTime}ms`);
+        try {
+            await next();
+        } catch (err) {
+            setMonitorData(500);
+            throw err;
+        }
+
+        setMonitorData();
     };
 };
 
@@ -81,7 +100,12 @@ export { requestTime, middleware };
 export default () => {
     return async (ctx, next) => {
         ctx.monitor = {};
-        await next();
+        try {
+            await next();
+        } catch (err) {
+            onData(ctx.monitor);
+            throw err;
+        }
         onData(ctx.monitor);
     };
 };
