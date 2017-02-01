@@ -111,7 +111,7 @@ const removeFromCrawlList = id => {
 };
 
 const crawl = async () => {
-    var startTime = new Date().getTime();
+    //var startTime = new Date().getTime();
     var result = await redis.get(CACHE_STOPPOINTS_TABLE);
     if (result && result !== '') {
         stopPointsToCrawl = (JSON.parse(result)).features;
@@ -125,7 +125,6 @@ const crawl = async () => {
     });
 
     while (stopPointsToCrawl.length !== 0) {
-        console.log('jobs to do: ' + stopPointsToCrawl.length);
         if (stopPointsToCrawl.length > MAX_CONCURRENT_CRAWLS) {
             JobsToAdd = MAX_CONCURRENT_CRAWLS - currentlyCrawling.length;
         } else {
@@ -142,9 +141,10 @@ const crawl = async () => {
         continue;
     }
 
-    var diffTime = new Date().getTime() - startTime;
-    var timeOut = CRAWL_TTL - diffTime < 0 ? 0 : CRAWL_TTL - diffTime;
-    setTimeout(crawl, timeOut);
+    //var diffTime = new Date().getTime() - startTime;
+    //var timeOut = CRAWL_TTL - diffTime < 0 ? 0 : CRAWL_TTL - diffTime;
+    //setTimeout(crawl, timeOut);
+    crawl();
 };
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));

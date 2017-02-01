@@ -118,7 +118,7 @@ const removeFromCrawlList = id => {
 
 const crawl = (() => {
     var _ref2 = _asyncToGenerator(function* () {
-        var startTime = new Date().getTime();
+        //var startTime = new Date().getTime();
         var result = yield _redis.redis.get(CACHE_STOPPOINTS_TABLE);
         if (result && result !== '') {
             stopPointsToCrawl = JSON.parse(result).features;
@@ -132,7 +132,6 @@ const crawl = (() => {
         });
 
         while (stopPointsToCrawl.length !== 0) {
-            console.log('jobs to do: ' + stopPointsToCrawl.length);
             if (stopPointsToCrawl.length > MAX_CONCURRENT_CRAWLS) {
                 JobsToAdd = MAX_CONCURRENT_CRAWLS - currentlyCrawling.length;
             } else {
@@ -149,9 +148,10 @@ const crawl = (() => {
             continue;
         }
 
-        var diffTime = new Date().getTime() - startTime;
-        var timeOut = CRAWL_TTL - diffTime < 0 ? 0 : CRAWL_TTL - diffTime;
-        setTimeout(crawl, timeOut);
+        //var diffTime = new Date().getTime() - startTime;
+        //var timeOut = CRAWL_TTL - diffTime < 0 ? 0 : CRAWL_TTL - diffTime;
+        //setTimeout(crawl, timeOut);
+        crawl();
     });
 
     return function crawl() {
