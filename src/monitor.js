@@ -4,7 +4,7 @@ import Influx from 'influxdb-nodejs';
 
 var influxdb = false;
 if (config('INFLUXDB')) {
-    influxdb = new Influx(config('INFLUXDB'));
+    influxdb = new Influx(config('INFLUXDB') + config('NAME_VERSION'));
 }
 
 const onData = data => {

@@ -19,7 +19,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 var influxdb = false;
 if ((0, _config2.default)('INFLUXDB')) {
-    influxdb = new _influxdbNodejs2.default((0, _config2.default)('INFLUXDB'));
+    influxdb = new _influxdbNodejs2.default((0, _config2.default)('INFLUXDB') + (0, _config2.default)('NAME_VERSION'));
 }
 
 const onData = data => {
