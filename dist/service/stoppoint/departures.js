@@ -29,7 +29,8 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-const STREAM_NAME = (0, _config2.default)('NAME_VERSION', true) + '_stoppoint_departures';
+const STREAM_NAME = (0, _config2.default)('NAME_VERSION', true) + '_stoppoint_departures_*';
+const CACHE_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_stoppoint_departures';
 
 const get = exports.get = (() => {
     var _ref = _asyncToGenerator(function* (stopPoint, limit) {
@@ -94,7 +95,7 @@ const get = exports.get = (() => {
 })();
 
 const all = exports.all = () => {
-    return _redis.redis.get(STREAM_NAME).then(function (result) {
+    return _redis.redis.get(CACHE_TABLE).then(function (result) {
         if (result && result !== '') {
             return JSON.parse(result);
         } else {
@@ -103,32 +104,24 @@ const all = exports.all = () => {
     });
 };
 
-_redis.redisPubSub.subscribe(STREAM_NAME);
+_redis.redisPubSub.psubscribe(STREAM_NAME);
 const stream = exports.stream = callback => {
-    const messageCallback = (channel, message) => {
-        if (channel === STREAM_NAME) {
+    const messageCallback = (pattern, channel, message) => {
+        if (pattern === STREAM_NAME) {
             callback(JSON.parse(message));
         }
     };
     all().then(data => {
         callback({
             type: 'new',
-            data: data.features.map(compileStream)
+            data: data
         });
     });
-
-    _redis.redisPubSub.on('message', messageCallback);
+    _redis.redisPubSub.on('pmessage', messageCallback);
 
     return {
         off: function () {
             _redis.redisPubSub.removeListener('message', messageCallback);
         }
-    };
-};
-
-const compileStream = bikePoint => {
-    return {
-        id: bikePoint.properties.id,
-        data: bikePoint
     };
 };

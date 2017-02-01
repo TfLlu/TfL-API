@@ -4,7 +4,8 @@ import config               from '../../config';
 import moment               from 'moment';
 import {redis, redisPubSub} from '../../redis';
 
-const STREAM_NAME = config('NAME_VERSION', true) + '_stoppoint_departures';
+const STREAM_NAME = config('NAME_VERSION', true) + '_stoppoint_departures_*';
+const CACHE_TABLE = config('NAME_VERSION', true) + '_cache_stoppoint_departures';
 
 export const get = async (stopPoint, limit) => {
     var departuresRaw = await mobiliteit.departures(stopPoint, limit);
@@ -61,7 +62,7 @@ export const get = async (stopPoint, limit) => {
 };
 
 export const all = () => {
-    return redis.get(STREAM_NAME)
+    return redis.get(CACHE_TABLE)
         .then(
             function (result) {
                 if (result && result !== '') {
@@ -73,32 +74,24 @@ export const all = () => {
         );
 };
 
-redisPubSub.subscribe(STREAM_NAME);
+redisPubSub.psubscribe(STREAM_NAME);
 export const stream = callback => {
-    const messageCallback = (channel, message) => {
-        if (channel === STREAM_NAME) {
+    const messageCallback = (pattern, channel, message) => {
+        if (pattern === STREAM_NAME) {
             callback(JSON.parse(message));
         }
     };
     all().then(data => {
         callback({
             type: 'new',
-            data: data.features.map(compileStream)
+            data: data
         });
     });
-
-    redisPubSub.on('message', messageCallback);
+    redisPubSub.on('pmessage', messageCallback);
 
     return {
         off: function () {
             redisPubSub.removeListener('message', messageCallback);
         }
-    };
-};
-
-const compileStream = bikePoint => {
-    return {
-        id: bikePoint.properties.id,
-        data: bikePoint,
     };
 };
