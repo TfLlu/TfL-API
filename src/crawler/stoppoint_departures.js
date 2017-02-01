@@ -39,28 +39,21 @@ const worker = async () => {
                 }
                 newData = departures;
 
-                var data = {
-                    stopPoint: stopPointID,
-                    new: null,
-                    update: null,
-                    delete: null
-                };
-
                 // update
                 var updatedDepartures = cache[stopPointID].filter(row => {
                     var oldRow = newData.find(row2 => row2.id === row.id);
                     return oldRow && (JSON.stringify(row) !=  JSON.stringify(oldRow));
                 });
                 if (updatedDepartures.length) {
-                    data.update = updatedDepartures;
-                }
-
-                // new
-                var newDepartures = newData.filter(row => {
-                    return !cache[stopPointID].find(row2 => row2.id === row.id);
-                });
-                if (newDepartures.length) {
-                    data.new = newDepartures;
+                    redis.publish(
+                        PUB_TABLE + stopPointID,
+                        JSON.stringify({
+                            type: 'update',
+                            data: {
+                                [stopPointID]: updatedDepartures
+                            }
+                        })
+                    );
                 }
 
                 // deleted
@@ -68,13 +61,30 @@ const worker = async () => {
                     return !newData.find(row2 => row2.id === row.id);
                 });
                 if (deletedDepartures.length) {
-                    data.delete = deletedDepartures;
-                }
-
-                if (data.update || data.new || data.delete) {
                     redis.publish(
                         PUB_TABLE + stopPointID,
-                        JSON.stringify(data)
+                        JSON.stringify({
+                            type: 'delete',
+                            data: {
+                                [stopPointID]: deletedDepartures
+                            }
+                        })
+                    );
+                }
+
+                // new
+                var newDepartures = newData.filter(row => {
+                    return !cache[stopPointID].find(row2 => row2.id === row.id);
+                });
+                if (newDepartures.length) {
+                    redis.publish(
+                        PUB_TABLE + stopPointID,
+                        JSON.stringify({
+                            type: 'new',
+                            data: {
+                                [stopPointID]: newDepartures
+                            }
+                        })
                     );
                 }
 

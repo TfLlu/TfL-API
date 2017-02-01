@@ -48,13 +48,6 @@ const worker = (() => {
                 }
                 newData = departures;
 
-                var data = {
-                    stopPoint: stopPointID,
-                    new: null,
-                    update: null,
-                    delete: null
-                };
-
                 // update
                 var updatedDepartures = cache[stopPointID].filter(function (row) {
                     var oldRow = newData.find(function (row2) {
@@ -63,17 +56,12 @@ const worker = (() => {
                     return oldRow && JSON.stringify(row) != JSON.stringify(oldRow);
                 });
                 if (updatedDepartures.length) {
-                    data.update = updatedDepartures;
-                }
-
-                // new
-                var newDepartures = newData.filter(function (row) {
-                    return !cache[stopPointID].find(function (row2) {
-                        return row2.id === row.id;
-                    });
-                });
-                if (newDepartures.length) {
-                    data.new = newDepartures;
+                    _redis.redis.publish(PUB_TABLE + stopPointID, JSON.stringify({
+                        type: 'update',
+                        data: {
+                            [stopPointID]: updatedDepartures
+                        }
+                    }));
                 }
 
                 // deleted
@@ -83,11 +71,27 @@ const worker = (() => {
                     });
                 });
                 if (deletedDepartures.length) {
-                    data.delete = deletedDepartures;
+                    _redis.redis.publish(PUB_TABLE + stopPointID, JSON.stringify({
+                        type: 'delete',
+                        data: {
+                            [stopPointID]: deletedDepartures
+                        }
+                    }));
                 }
 
-                if (data.update || data.new || data.delete) {
-                    _redis.redis.publish(PUB_TABLE + stopPointID, JSON.stringify(data));
+                // new
+                var newDepartures = newData.filter(function (row) {
+                    return !cache[stopPointID].find(function (row2) {
+                        return row2.id === row.id;
+                    });
+                });
+                if (newDepartures.length) {
+                    _redis.redis.publish(PUB_TABLE + stopPointID, JSON.stringify({
+                        type: 'new',
+                        data: {
+                            [stopPointID]: newDepartures
+                        }
+                    }));
                 }
 
                 cache[stopPointID] = newData;
