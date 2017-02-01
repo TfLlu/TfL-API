@@ -21,7 +21,7 @@ The response will be formatted as a [GeoJSON](https://en.wikipedia.org/wiki/GeoJ
 | **name**  | `string`  | `{name}`                                           | name of the car park (often a [POI](https://en.wikipedia.org/wiki/Point_of_interest) next to it or the street name) |
 | **total** | `integer` | <nobr>- `{total}`</nobr><br /><nobr>- `NULL`</nobr>                          | total amount of parking spots at this car park, _can be null_ |
 | **free**  | `integer` | - `{free}`<br />- `NULL`                           | amount of free parking spots at this car park, _can be null_ |
-| **trend** | `string`  | <nobr>- `down`</nobr><br /><nobr>- `stable`</nobr><br /><nobr>- `up`</nobr><br /><nobr>- `NULL`</nobr> | trend of parking spots in use (up means fewer free spaces than previously [the timing of this is not known]), _can be null_ |
+| **trend** | `string`  | <nobr>- `'down'`</nobr><br /><nobr>- `'stable'`</nobr><br /><nobr>- `'up'`</nobr><br /><nobr>- `NULL`</nobr> | trend of parking spots in use (up means fewer free spaces than previously [the timing of this is not known]), _can be null_ |
 | **meta**  | `object`  | - `object`<br />- `NULL`                           | meta data about the carpark (the reason for putting stuff here is to have a global occupancy endpoint that returns the same values wether it's a car park, a bus or anything else), _can be null_ |
 
 ### Meta properties (carPark)

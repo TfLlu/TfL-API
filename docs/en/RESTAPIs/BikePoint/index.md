@@ -1,23 +1,18 @@
 {% extends "/docs.md" %}
 {% block content %}
-# GET BikePoint/{ID}
-Returns the current state one single shared bike point requested by the ID parameter.
-
-## Parameters
-| Parameter         | Example value                   | Description |
-| ----------------- | ------------------------------- | ----------- |
-| **id** | `velok:1` | Id `string` of shared bike point as found in [`/BikePoint`](/RESTAPIs/BikePoint/index.md) |
+# GET BikePoint
+Returns the current state of all shared bike points from Luxembourg integrated in Transport for Luxembourg.
 
 ## Resource URL
-    https://api.tfl.lu/v1/BikePoint/{ID}
+    https://api.tfl.lu/v1/BikePoint
 
 ## Format
-The response will be formatted as a [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) [Feature](http://geojson.org/geojson-spec.html#feature-objects).
+The response will be formatted as a [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) [Feature Collection](http://geojson.org/geojson-spec.html#feature-collection-objects).
 
 ## Object properties
 | Key                       | Type          | Possible values                                | Description                                                              |
 | -------------             | ------------- | ---------------------------------------------- | ------------------------------------------------------------------------ |
-| **id**                    | `string`      | <nobr>- `{provider}:{number}`</nobr>           | id of the shared bike point (built from provider and id of provider)     |
+| **id**                    | `string`      | <nobr>`{provider}:{number}`</nobr>             | id of the shared bike point (built from provider and id of provider)     |
 | **open**                  | `boolean`     | - `true`<br />- `false`                        | status of the shared bike point (open or closed)                         |
 | **name**                  | `string`      | `{name}`                                       | name of the shared bike point (often a [POI](https://en.wikipedia.org/wiki/Point_of_interest) next to the station or the street name) |
 | **city**                  | `string`      | - `{city}`<br />- `NULL`                       | city in which shared bike point is located (can be null if not provided) |
@@ -33,49 +28,98 @@ The response will be formatted as a [GeoJSON](https://en.wikipedia.org/wiki/GeoJ
 | **dock_status.bikeType**  | `string`      | - `'manual'`<br />- `'electric'`<br />- `NULL` | type of bike attached to dock, `NULL` if dock is free                    |
 
 ## Sample request & response
-**GET** https://api.tfl.lu/v1/BikePoint/velok:1
+**GET** https://api.tfl.lu/v1/BikePoint
 ```json
 {
-    "type": "Feature",
-    "geometry": {
-        "type": "Point",
-        "coordinates": [5.98276, 49.49473]
-    },
-    "properties": {
-        "id": "velok:1",
-        "open": true,
-        "name": "Avenue de la Gare",
-        "city": "Esch-sur-Alzette",
-        "address": "Coin Rue de l’Alzette",
-        "photo": "https://webservice.velok.lu/images/photos/1.jpg",
-        "docks": 7,
-        "available_bikes": 4,
-        "available_ebikes": 0,
-        "available_docks": 3,
-        "last_update": null,
-        "dock_status": [{
-            "status": "occupied",
-            "bikeType": "manual"
-        }, {
-            "status": "free",
-            "bikeType": null
-        }, {
-            "status": "occupied",
-            "bikeType": "manual"
-        }, {
-            "status": "free",
-            "bikeType": null
-        }, {
-            "status": "occupied",
-            "bikeType": "manual"
-        }, {
-            "status": "free",
-            "bikeType": null
-        }, {
-            "status": "occupied",
-            "bikeType": "manual"
-        }]
-    }
+	"type": "FeatureCollection",
+	"features": [{
+		"type": "Feature",
+		"geometry": {
+			"type": "Point",
+			"coordinates": [5.98276, 49.49473]
+		},
+		"properties": {
+			"id": "velok:1",
+			"open": true,
+			"name": "Avenue de la Gare",
+			"city": "Esch-sur-Alzette",
+			"address": "Coin Rue de l’Alzette",
+			"photo": "https://webservice.velok.lu/images/photos/1.jpg",
+			"docks": 7,
+			"available_bikes": 4,
+			"available_ebikes": 0,
+			"available_docks": 3,
+			"last_update": null,
+			"dock_status": [{
+				"status": "occupied",
+				"bikeType": "manual"
+			}, {
+				"status": "free",
+				"bikeType": null
+			}, {
+				"status": "occupied",
+				"bikeType": "manual"
+			}, {
+				"status": "free",
+				"bikeType": null
+			}, {
+				"status": "occupied",
+				"bikeType": "manual"
+			}, {
+				"status": "free",
+				"bikeType": null
+			}, {
+				"status": "occupied",
+				"bikeType": "manual"
+			}]
+		}
+	}, {
+		"type": "Feature",
+		"geometry": {
+			"type": "Point",
+			"coordinates": [5.977421, 49.494626]
+		},
+		"properties": {
+			"id": "velok:2",
+			"open": true,
+			"name": "Rue du Canal",
+			"city": "Esch-sur-Alzette",
+			"address": "Coin Rue Dicks",
+			"photo": "https://webservice.velok.lu/images/photos/2.jpg",
+			"docks": 8,
+			"available_bikes": 1,
+			"available_ebikes": 0,
+			"available_docks": 7,
+			"last_update": null,
+			"dock_status": [{
+				"status": "free",
+				"bikeType": null
+			}, {
+				"status": "free",
+				"bikeType": null
+			}, {
+				"status": "free",
+				"bikeType": null
+			}, {
+				"status": "free",
+				"bikeType": null
+			}, {
+				"status": "free",
+				"bikeType": null
+			}, {
+				"status": "occupied",
+				"bikeType": "manual"
+			}, {
+				"status": "free",
+				"bikeType": null
+			}, {
+				"status": "free",
+				"bikeType": null
+			}]
+		}
+	}, {
+        ...
+    }]
 }
 ```
 

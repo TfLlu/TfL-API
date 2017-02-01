@@ -17,7 +17,7 @@ The response will be formatted as a [GeoJSON](https://en.wikipedia.org/wiki/GeoJ
 ## Object properties
 | Key                       | Type          | Possible values                                | Description                                                              |
 | -------------             | ------------- | ---------------------------------------------- | ------------------------------------------------------------------------ |
-| **id**                    | `string`      | <nobr>- `{provider}:{number}`</nobr>           | id of the shared bike point (built from provider and id of provider)     |
+| **id**                    | `string`      | <nobr>`{provider}:{number}`</nobr>             | id of the shared bike point (built from provider and id of provider)     |
 | **open**                  | `boolean`     | - `true`<br />- `false`                        | status of the shared bike point (open or closed)                         |
 | **name**                  | `string`      | `{name}`                                       | name of the shared bike point (often a [POI](https://en.wikipedia.org/wiki/Point_of_interest) next to the station or the street name) |
 | **city**                  | `string`      | - `{city}`<br />- `NULL`                       | city in which shared bike point is located (can be null if not provided) |
