@@ -23,7 +23,7 @@ The response will be formatted as a [JSON](https://en.wikipedia.org/wiki/JSON).
 | **line**          | `string`  | - `{line}`<br />- `NULL`          | bus or train line (currently null for all trains as info is missing on [Verkéiersverbond](https://data.public.lu/en/organizations/mobiliteitszentral/) API) |
 | **number**        | `integer` | - `{number}`                      | number given by [Verkéiersverbond](https://data.public.lu/en/organizations/mobiliteitszentral/). _Do not trust it to be unique_ |
 | **departure**     | `integer` | - `{departure}`                   | calculated real life departure of train/bus in [Unix time](https://en.wikipedia.org/wiki/Unix_time) |
-| **delay**         | `integer` | - `{delay}`                       | offset from `{departure}` to scheduled departure in seconds |
+| **delay**         | `integer` | - `{delay}`                       | offset between `{departure}` and scheduled departure in seconds |
 | **live**          | `boolean` | - `true`<br />- `false`           | wether live data is available for the given train/bus or not |
 | **departureISO**  | `string`  | - `{departureISO}`                | calculated real life departure of train/bus in [ISO 8601 time](https://en.wikipedia.org/wiki/ISO_8601) |
 | **destination**   | `string`  | - `{destination}`                 | name of destination |
