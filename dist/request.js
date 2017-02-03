@@ -14,7 +14,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 const request = _axios2.default.create({
     responseType: 'text',
-    timeout: 5000
+    timeout: 1000 // 5000
 });
 
 request.interceptors.request.use(config => {

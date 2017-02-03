@@ -10,22 +10,27 @@ const CACHE_TABLE            = config('NAME_VERSION', true) + '_cache_stoppoint_
 const CACHE_STOPPOINTS_TABLE = config('NAME_VERSION', true) + '_cache_stoppoint';
 const MAX_CONCURRENT_CRAWLS  = config('CRAWL_MAX_CONCURRENT_STOPPOINT_DEPARTURE', true);
 
-var newData = [];
 var cache = {};
 var JobsToAdd;
 var stopPointsToCrawl = [];
 var currentlyCrawling = [];
 
-const worker = async () => {
-    try {
-        var stopPointID = stopPointsToCrawl.shift();
-        currentlyCrawling.push(stopPointID);
-        await departures.get(stopPointID, CRAWL_AMOUNT)
-            .then(departures => {
+const worker = async count => {
+    var stopPointID = stopPointsToCrawl.shift();
+    currentlyCrawling.push(stopPointID);
+
+    while(count) {
+        count--;
+        try {
+
+            try {
+
+                var newData = await departures.get(stopPointID, CRAWL_AMOUNT);
+
                 removeFromCrawlList(stopPointID);
 
                 if (!cache[stopPointID]) {
-                    cache[stopPointID] = departures;
+                    cache[stopPointID] = newData;
                     redis.set(
                         CACHE_TABLE,
                         JSON.stringify(cache),
@@ -37,7 +42,6 @@ const worker = async () => {
                     }
                     return;
                 }
-                newData = departures;
 
                 // update
                 var updatedDepartures = cache[stopPointID].filter(row => {
@@ -95,11 +99,32 @@ const worker = async () => {
                     'EX',
                     CACHE_TTL
                 );
-            }, err => {
+
+            } catch (err) {
                 removeFromCrawlList(stopPointID);
-            });
-    } catch (err) {
-        removeFromCrawlList(stopPointID);
+                var code = 'UNKNOWN';
+                if (err.code) {
+                    code = err.code;
+                } else {
+                    if (err.response) {
+                        if (err.response.status) {
+                            code = err.response.status;
+                        }
+                    }
+                }
+                err.code = code;
+                throw err;
+            }
+
+        } catch (err) {
+            if (err.code === 400) {
+                return;
+            }
+            if (count === 0) {
+                console.log('error', err.code, err.message, currentlyCrawling.length);
+                console.log(err.config.url);
+            }
+        }
     }
 };
 
@@ -125,27 +150,28 @@ const crawl = async () => {
     });
 
     while (stopPointsToCrawl.length !== 0) {
-        if (stopPointsToCrawl.length > MAX_CONCURRENT_CRAWLS) {
-            JobsToAdd = MAX_CONCURRENT_CRAWLS - currentlyCrawling.length;
-        } else {
-            JobsToAdd = stopPointsToCrawl.length - currentlyCrawling.length;
-        }
+        JobsToAdd = Math.min(MAX_CONCURRENT_CRAWLS, stopPointsToCrawl.length) - currentlyCrawling.length;
+
         if (JobsToAdd <= 0) {
-            await sleep(100);
+            await sleep();
             continue;
         }
         for (var i = 1; i <= JobsToAdd; i++) {
-            worker();
+            worker(10);
         }
-        await sleep(100);
-        continue;
+        await sleep();
     }
 
     //var diffTime = new Date().getTime() - startTime;
     //var timeOut = CRAWL_TTL - diffTime < 0 ? 0 : CRAWL_TTL - diffTime;
     //setTimeout(crawl, timeOut);
-    crawl();
+    //setTimeout(crawl);
+    process.exit();
 };
+
+setInterval(function() {
+    console.log('queue', stopPointsToCrawl.length);
+}, 5000);
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 

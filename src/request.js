@@ -3,7 +3,7 @@ import { requestTime } from './monitor';
 
 const request = axios.create({
     responseType: 'text',
-    timeout: 5000
+    timeout: 1000 // 5000
 });
 
 request.interceptors.request.use(config => {

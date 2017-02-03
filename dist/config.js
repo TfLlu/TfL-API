@@ -17,7 +17,7 @@ exports.default = (key, required) => {
         return process.env[key];
     }
     if (required) {
-        throw `Missing "${key}" config`;
+        throw `Missing "${ key }" config`;
     }
     return null;
 };
