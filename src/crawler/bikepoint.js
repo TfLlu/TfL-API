@@ -40,8 +40,14 @@ const crawl = async () => {
         return oldRow && (JSON.stringify(tmpRow) !=  JSON.stringify(tmpOldRow));
     });
 
+    var logText = '';
+
     // update
     if (updatedBikePoints.length) {
+        for (var i = 0; i < updatedBikePoints.length; i++) {
+            logText = logText + updatedBikePoints[i].properties.id + ', ';
+        }
+        console.log('BikePoint [update] ' + logText);
         redis.publish(
             PUB_TABLE,
             JSON.stringify({
@@ -51,12 +57,18 @@ const crawl = async () => {
         );
     }
 
+    logText = '';
+
     // new
     var newBikePoints = newData.features.filter(row => {
         return !cache.features.find(row2 => row2.properties.id === row.properties.id);
     });
 
     if (newBikePoints.length) {
+        for (var i = 0; i < newBikePoints.length; i++) {
+            logText = logText + newBikePoints[i].properties.id + ', ';
+        }
+        console.log('BikePoint [new   ] ' + logText);
         redis.publish(
             PUB_TABLE,
             JSON.stringify({
@@ -66,11 +78,17 @@ const crawl = async () => {
         );
     }
 
+    logText = '';
+
     // deleted
     var deletedBikePoints = cache.features.filter(row => {
         return !newData.features.find(row2 => row2.properties.id === row.properties.id);
     });
     if (deletedBikePoints.length) {
+        for (var i = 0; i < deletedBikePoints.length; i++) {
+            logText = logText + deletedBikePoints[i].properties.id + ', ';
+        }
+        console.log('BikePoint [delete] ' + logText);
         redis.publish(
             PUB_TABLE,
             JSON.stringify({
@@ -78,6 +96,10 @@ const crawl = async () => {
                 data: deletedBikePoints.map(bikepoint.compileStream)
             })
         );
+    }
+
+    if (!updatedBikePoints.length && !newBikePoints.length && !deletedBikePoints.length) {
+        console.log('no update');
     }
 
     cache = newData;

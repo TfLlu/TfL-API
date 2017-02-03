@@ -55,13 +55,21 @@ const crawl = (() => {
             return oldRow && JSON.stringify(tmpRow) != JSON.stringify(tmpOldRow);
         });
 
+        var logText = '';
+
         // update
         if (updatedBikePoints.length) {
+            for (var i = 0; i < updatedBikePoints.length; i++) {
+                logText = logText + updatedBikePoints[i].properties.id + ', ';
+            }
+            console.log('BikePoint [update] ' + logText);
             _redis.redis.publish(PUB_TABLE, JSON.stringify({
                 type: 'update',
                 data: updatedBikePoints.map(bikepoint.compileStream)
             }));
         }
+
+        logText = '';
 
         // new
         var newBikePoints = newData.features.filter(function (row) {
@@ -71,11 +79,17 @@ const crawl = (() => {
         });
 
         if (newBikePoints.length) {
+            for (var i = 0; i < newBikePoints.length; i++) {
+                logText = logText + newBikePoints[i].properties.id + ', ';
+            }
+            console.log('BikePoint [new   ] ' + logText);
             _redis.redis.publish(PUB_TABLE, JSON.stringify({
                 type: 'new',
                 data: newBikePoints.map(bikepoint.compileStream)
             }));
         }
+
+        logText = '';
 
         // deleted
         var deletedBikePoints = cache.features.filter(function (row) {
@@ -84,10 +98,18 @@ const crawl = (() => {
             });
         });
         if (deletedBikePoints.length) {
+            for (var i = 0; i < deletedBikePoints.length; i++) {
+                logText = logText + deletedBikePoints[i].properties.id + ', ';
+            }
+            console.log('BikePoint [delete] ' + logText);
             _redis.redis.publish(PUB_TABLE, JSON.stringify({
                 type: 'delete',
                 data: deletedBikePoints.map(bikepoint.compileStream)
             }));
+        }
+
+        if (!updatedBikePoints.length && !newBikePoints.length && !deletedBikePoints.length) {
+            console.log('no update');
         }
 
         cache = newData;
