@@ -55,6 +55,7 @@ const worker = (() => {
                 if (retry === 0) {
                     removeFromCrawlList(stopPointID);
                     console.log('error', err.code, err.message);
+                    return;
                 }
             }
         }
