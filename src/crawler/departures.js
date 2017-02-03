@@ -15,117 +15,107 @@ var JobsToAdd;
 var stopPointsToCrawl = [];
 var currentlyCrawling = [];
 
-const worker = async count => {
+const worker = async retry => {
+    retry = retry || 10;
     var stopPointID = stopPointsToCrawl.shift();
     currentlyCrawling.push(stopPointID);
 
-    while(count) {
-        count--;
+    while(retry) {
+        retry--;
         try {
-
-            try {
-
-                var newData = await departures.get(stopPointID, CRAWL_AMOUNT);
-
-                removeFromCrawlList(stopPointID);
-
-                if (!cache[stopPointID]) {
-                    cache[stopPointID] = newData;
-                    redis.set(
-                        CACHE_TABLE,
-                        JSON.stringify(cache),
-                        'EX',
-                        CACHE_TTL
-                    );
-                    if (process.env.TRAVIS) {
-                        process.exit();
-                    }
-                    return;
-                }
-
-                // update
-                var updatedDepartures = cache[stopPointID].filter(row => {
-                    var oldRow = newData.find(row2 => row2.id === row.id);
-                    return oldRow && (JSON.stringify(row) !=  JSON.stringify(oldRow));
-                });
-                if (updatedDepartures.length) {
-                    redis.publish(
-                        PUB_TABLE + stopPointID,
-                        JSON.stringify({
-                            type: 'update',
-                            data: {
-                                [stopPointID]: updatedDepartures
-                            }
-                        })
-                    );
-                }
-
-                // deleted
-                var deletedDepartures = cache[stopPointID].filter(row => {
-                    return !newData.find(row2 => row2.id === row.id);
-                });
-                if (deletedDepartures.length) {
-                    redis.publish(
-                        PUB_TABLE + stopPointID,
-                        JSON.stringify({
-                            type: 'delete',
-                            data: {
-                                [stopPointID]: deletedDepartures
-                            }
-                        })
-                    );
-                }
-
-                // new
-                var newDepartures = newData.filter(row => {
-                    return !cache[stopPointID].find(row2 => row2.id === row.id);
-                });
-                if (newDepartures.length) {
-                    redis.publish(
-                        PUB_TABLE + stopPointID,
-                        JSON.stringify({
-                            type: 'new',
-                            data: {
-                                [stopPointID]: newDepartures
-                            }
-                        })
-                    );
-                }
-
-                cache[stopPointID] = newData;
-                redis.set(
-                    CACHE_TABLE,
-                    JSON.stringify(cache),
-                    'EX',
-                    CACHE_TTL
-                );
-
-            } catch (err) {
-                removeFromCrawlList(stopPointID);
-                var code = 'UNKNOWN';
-                if (err.code) {
-                    code = err.code;
-                } else {
-                    if (err.response) {
-                        if (err.response.status) {
-                            code = err.response.status;
-                        }
-                    }
-                }
-                err.code = code;
-                throw err;
-            }
-
+            var newData = await departures.get(stopPointID, CRAWL_AMOUNT);
+            break;
         } catch (err) {
+            if (!err.code) {
+                if (err.response) {
+                    if (err.response.status) {
+                        err.code = err.response.status;
+                    }
+                }
+            }
             if (err.code === 400) {
+                removeFromCrawlList(stopPointID);
                 return;
             }
-            if (count === 0) {
-                console.log('error', err.code, err.message, currentlyCrawling.length);
-                console.log(err.config.url);
+            if (retry === 0) {
+                removeFromCrawlList(stopPointID);
+                console.log('error', err.code, err.message);
             }
         }
     }
+
+    removeFromCrawlList(stopPointID);
+
+    if (!cache[stopPointID]) {
+        cache[stopPointID] = newData;
+        await redis.set(
+            CACHE_TABLE,
+            JSON.stringify(cache),
+            'EX',
+            CACHE_TTL
+        );
+        if (process.env.TRAVIS) {
+            process.exit();
+        }
+        return;
+    }
+
+    // update
+    var updatedDepartures = cache[stopPointID].filter(row => {
+        var oldRow = newData.find(row2 => row2.id === row.id);
+        return oldRow && (JSON.stringify(row) !=  JSON.stringify(oldRow));
+    });
+    if (updatedDepartures.length) {
+        await redis.publish(
+            PUB_TABLE + stopPointID,
+            JSON.stringify({
+                type: 'update',
+                data: {
+                    [stopPointID]: updatedDepartures
+                }
+            })
+        );
+    }
+
+    // deleted
+    var deletedDepartures = cache[stopPointID].filter(row => {
+        return !newData.find(row2 => row2.id === row.id);
+    });
+    if (deletedDepartures.length) {
+        await redis.publish(
+            PUB_TABLE + stopPointID,
+            JSON.stringify({
+                type: 'delete',
+                data: {
+                    [stopPointID]: deletedDepartures
+                }
+            })
+        );
+    }
+
+    // new
+    var newDepartures = newData.filter(row => {
+        return !cache[stopPointID].find(row2 => row2.id === row.id);
+    });
+    if (newDepartures.length) {
+        await redis.publish(
+            PUB_TABLE + stopPointID,
+            JSON.stringify({
+                type: 'new',
+                data: {
+                    [stopPointID]: newDepartures
+                }
+            })
+        );
+    }
+
+    cache[stopPointID] = newData;
+    await redis.set(
+        CACHE_TABLE,
+        JSON.stringify(cache),
+        'EX',
+        CACHE_TTL
+    );
 };
 
 const removeFromCrawlList = id => {
@@ -157,7 +147,7 @@ const crawl = async () => {
             continue;
         }
         for (var i = 1; i <= JobsToAdd; i++) {
-            worker(10);
+            worker();
         }
         await sleep();
     }

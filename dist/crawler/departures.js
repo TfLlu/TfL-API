@@ -30,102 +30,94 @@ var stopPointsToCrawl = [];
 var currentlyCrawling = [];
 
 const worker = (() => {
-    var _ref = _asyncToGenerator(function* (count) {
+    var _ref = _asyncToGenerator(function* (retry) {
+        retry = retry || 10;
         var stopPointID = stopPointsToCrawl.shift();
         currentlyCrawling.push(stopPointID);
 
-        while (count) {
-            count--;
+        while (retry) {
+            retry--;
             try {
-
-                try {
-
-                    var newData = yield departures.get(stopPointID, CRAWL_AMOUNT);
-
-                    removeFromCrawlList(stopPointID);
-
-                    if (!cache[stopPointID]) {
-                        cache[stopPointID] = newData;
-                        _redis.redis.set(CACHE_TABLE, JSON.stringify(cache), 'EX', CACHE_TTL);
-                        if (process.env.TRAVIS) {
-                            process.exit();
-                        }
-                        return;
-                    }
-
-                    // update
-                    var updatedDepartures = cache[stopPointID].filter(function (row) {
-                        var oldRow = newData.find(function (row2) {
-                            return row2.id === row.id;
-                        });
-                        return oldRow && JSON.stringify(row) != JSON.stringify(oldRow);
-                    });
-                    if (updatedDepartures.length) {
-                        _redis.redis.publish(PUB_TABLE + stopPointID, JSON.stringify({
-                            type: 'update',
-                            data: {
-                                [stopPointID]: updatedDepartures
-                            }
-                        }));
-                    }
-
-                    // deleted
-                    var deletedDepartures = cache[stopPointID].filter(function (row) {
-                        return !newData.find(function (row2) {
-                            return row2.id === row.id;
-                        });
-                    });
-                    if (deletedDepartures.length) {
-                        _redis.redis.publish(PUB_TABLE + stopPointID, JSON.stringify({
-                            type: 'delete',
-                            data: {
-                                [stopPointID]: deletedDepartures
-                            }
-                        }));
-                    }
-
-                    // new
-                    var newDepartures = newData.filter(function (row) {
-                        return !cache[stopPointID].find(function (row2) {
-                            return row2.id === row.id;
-                        });
-                    });
-                    if (newDepartures.length) {
-                        _redis.redis.publish(PUB_TABLE + stopPointID, JSON.stringify({
-                            type: 'new',
-                            data: {
-                                [stopPointID]: newDepartures
-                            }
-                        }));
-                    }
-
-                    cache[stopPointID] = newData;
-                    _redis.redis.set(CACHE_TABLE, JSON.stringify(cache), 'EX', CACHE_TTL);
-                } catch (err) {
-                    removeFromCrawlList(stopPointID);
-                    var code = 'UNKNOWN';
-                    if (err.code) {
-                        code = err.code;
-                    } else {
-                        if (err.response) {
-                            if (err.response.status) {
-                                code = err.response.status;
-                            }
-                        }
-                    }
-                    err.code = code;
-                    throw err;
-                }
+                var newData = yield departures.get(stopPointID, CRAWL_AMOUNT);
+                break;
             } catch (err) {
+                if (!err.code) {
+                    if (err.response) {
+                        if (err.response.status) {
+                            err.code = err.response.status;
+                        }
+                    }
+                }
                 if (err.code === 400) {
+                    removeFromCrawlList(stopPointID);
                     return;
                 }
-                if (count === 0) {
-                    console.log('error', err.code, err.message, currentlyCrawling.length);
-                    console.log(err.config.url);
+                if (retry === 0) {
+                    removeFromCrawlList(stopPointID);
+                    console.log('error', err.code, err.message);
                 }
             }
         }
+
+        removeFromCrawlList(stopPointID);
+
+        if (!cache[stopPointID]) {
+            cache[stopPointID] = newData;
+            yield _redis.redis.set(CACHE_TABLE, JSON.stringify(cache), 'EX', CACHE_TTL);
+            if (process.env.TRAVIS) {
+                process.exit();
+            }
+            return;
+        }
+
+        // update
+        var updatedDepartures = cache[stopPointID].filter(function (row) {
+            var oldRow = newData.find(function (row2) {
+                return row2.id === row.id;
+            });
+            return oldRow && JSON.stringify(row) != JSON.stringify(oldRow);
+        });
+        if (updatedDepartures.length) {
+            yield _redis.redis.publish(PUB_TABLE + stopPointID, JSON.stringify({
+                type: 'update',
+                data: {
+                    [stopPointID]: updatedDepartures
+                }
+            }));
+        }
+
+        // deleted
+        var deletedDepartures = cache[stopPointID].filter(function (row) {
+            return !newData.find(function (row2) {
+                return row2.id === row.id;
+            });
+        });
+        if (deletedDepartures.length) {
+            yield _redis.redis.publish(PUB_TABLE + stopPointID, JSON.stringify({
+                type: 'delete',
+                data: {
+                    [stopPointID]: deletedDepartures
+                }
+            }));
+        }
+
+        // new
+        var newDepartures = newData.filter(function (row) {
+            return !cache[stopPointID].find(function (row2) {
+                return row2.id === row.id;
+            });
+        });
+        if (newDepartures.length) {
+            yield _redis.redis.publish(PUB_TABLE + stopPointID, JSON.stringify({
+                type: 'new',
+                data: {
+                    [stopPointID]: newDepartures
+                }
+            }));
+        }
+
+        cache[stopPointID] = newData;
+        yield _redis.redis.set(CACHE_TABLE, JSON.stringify(cache), 'EX', CACHE_TTL);
     });
 
     return function worker(_x) {
@@ -163,7 +155,7 @@ const crawl = (() => {
                 continue;
             }
             for (var i = 1; i <= JobsToAdd; i++) {
-                worker(10);
+                worker();
             }
             yield sleep();
         }
