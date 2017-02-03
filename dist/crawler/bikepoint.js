@@ -14,6 +14,10 @@ var _deepClone2 = _interopRequireDefault(_deepClone);
 
 var _redis = require('../redis');
 
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -62,7 +66,7 @@ const crawl = (() => {
             for (var i = 0; i < updatedBikePoints.length; i++) {
                 logText = logText + updatedBikePoints[i].properties.id + ', ';
             }
-            console.log('BikePoint [update] ' + logText);
+            console.log((0, _moment2.default)().format('YYYY-MM-DD HH:mm:ss') + ' [update] ' + logText);
             _redis.redis.publish(PUB_TABLE, JSON.stringify({
                 type: 'update',
                 data: updatedBikePoints.map(bikepoint.compileStream)
@@ -82,7 +86,7 @@ const crawl = (() => {
             for (var i = 0; i < newBikePoints.length; i++) {
                 logText = logText + newBikePoints[i].properties.id + ', ';
             }
-            console.log('BikePoint [new   ] ' + logText);
+            console.log((0, _moment2.default)().format('YYYY-MM-DD HH:mm:ss') + ' [new   ] ' + logText);
             _redis.redis.publish(PUB_TABLE, JSON.stringify({
                 type: 'new',
                 data: newBikePoints.map(bikepoint.compileStream)
@@ -101,15 +105,11 @@ const crawl = (() => {
             for (var i = 0; i < deletedBikePoints.length; i++) {
                 logText = logText + deletedBikePoints[i].properties.id + ', ';
             }
-            console.log('BikePoint [delete] ' + logText);
+            console.log((0, _moment2.default)().format('YYYY-MM-DD HH:mm:ss') + ' [delete] ' + logText);
             _redis.redis.publish(PUB_TABLE, JSON.stringify({
                 type: 'delete',
                 data: deletedBikePoints.map(bikepoint.compileStream)
             }));
-        }
-
-        if (!updatedBikePoints.length && !newBikePoints.length && !deletedBikePoints.length) {
-            console.log('no update');
         }
 
         cache = newData;

@@ -2,6 +2,7 @@ import * as bikepoint from '../service/bikepoint';
 import config         from '../config';
 import deepClone      from 'deep-clone';
 import {redis}        from '../redis';
+import moment         from 'moment';
 
 var newData = [];
 var cache;
@@ -47,7 +48,7 @@ const crawl = async () => {
         for (var i = 0; i < updatedBikePoints.length; i++) {
             logText = logText + updatedBikePoints[i].properties.id + ', ';
         }
-        console.log('BikePoint [update] ' + logText);
+        console.log(moment().format('YYYY-MM-DD HH:mm:ss') + ' [update] ' + logText);
         redis.publish(
             PUB_TABLE,
             JSON.stringify({
@@ -68,7 +69,7 @@ const crawl = async () => {
         for (var i = 0; i < newBikePoints.length; i++) {
             logText = logText + newBikePoints[i].properties.id + ', ';
         }
-        console.log('BikePoint [new   ] ' + logText);
+        console.log(moment().format('YYYY-MM-DD HH:mm:ss') + ' [new   ] ' + logText);
         redis.publish(
             PUB_TABLE,
             JSON.stringify({
@@ -88,7 +89,7 @@ const crawl = async () => {
         for (var i = 0; i < deletedBikePoints.length; i++) {
             logText = logText + deletedBikePoints[i].properties.id + ', ';
         }
-        console.log('BikePoint [delete] ' + logText);
+        console.log(moment().format('YYYY-MM-DD HH:mm:ss') + ' [delete] ' + logText);
         redis.publish(
             PUB_TABLE,
             JSON.stringify({
@@ -96,10 +97,6 @@ const crawl = async () => {
                 data: deletedBikePoints.map(bikepoint.compileStream)
             })
         );
-    }
-
-    if (!updatedBikePoints.length && !newBikePoints.length && !deletedBikePoints.length) {
-        console.log('no update');
     }
 
     cache = newData;
