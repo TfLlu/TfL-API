@@ -116,8 +116,8 @@ describe('BikePoints', () => {
                     if (props.dock_status[0].bikeType !== null) {
                         props.dock_status[0].bikeType.should.be.a('String');
                     }
-                    props.name.should.be.equal('Kulturfabrik');
-                    props.id.should.be.equal('velok:29');
+                    props.name.should.be.equal('LEON XIII');
+                    props.id.should.be.equal('veloh:1');
                     done();
                 });
         });
