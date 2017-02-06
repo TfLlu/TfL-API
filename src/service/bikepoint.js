@@ -25,7 +25,7 @@ export const all = () => {
                 if (result && result !== '') {
                     return JSON.parse(result);
                 } else {
-                    throw new Boom.serverUnavailable('Service temporarily unavailable');
+                    throw new Boom.serverUnavailable('all /BikePoints endpoints are temporarily unavailable');
                 }
             }
         );
@@ -59,7 +59,7 @@ export const load = () => {
         };
     }, err => {
         console.error(err);
-        throw new Boom.serverUnavailable('Service temporarily unavailable');
+        throw new Boom.serverUnavailable('all /BikePoints endpoints are temporarily unavailable');
     });
 };
 
