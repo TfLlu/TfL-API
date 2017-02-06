@@ -83,12 +83,12 @@ const streamCountToInflux = () => {
         endpoint: '/bikepoint',
         count: _controller2.default.bikepoint.streamCount()
     }).then();
-    setInterval(streamCountToInflux, 10000);
+    return;
 };
 
 if ((0, _config2.default)('INFLUXDB')) {
     influxdb = new _influxdbNodejs2.default((0, _config2.default)('INFLUXDB') + (0, _config2.default)('NAME_VERSION'));
-    streamCountToInflux();
+    setInterval(streamCountToInflux, 10000);
 }
 
 exports.default = server;

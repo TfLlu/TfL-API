@@ -62,12 +62,12 @@ const streamCountToInflux = () => {
             count: controller.bikepoint.streamCount()
         })
         .then();
-    setInterval(streamCountToInflux, 10000);
+    return;
 };
 
 if (config('INFLUXDB')) {
     influxdb = new Influx(config('INFLUXDB') + config('NAME_VERSION'));
-    streamCountToInflux();
+    setInterval(streamCountToInflux, 10000);
 }
 
 export default server;
