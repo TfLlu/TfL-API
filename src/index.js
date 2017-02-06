@@ -29,7 +29,7 @@ router.get('/StopPoint/box/:swlon/:swlat/:nelon/:nelat', controller.stoppoint.bo
 router.get('/StopPoint/search/:searchstring',            controller.stoppoint.search);
 router.io ('/StopPoint/Departures',                      controller.departures.streamIndex);
 router.get('/StopPoint/Departures/:stopPoint',           controller.departures.get);
-router.get('/StopPoint/Departures/:stopPoint/:limit',    controller.departures.get);
+router.get('/StopPoint/Departures/:stopPoint/:limit',    controller.departures.getFromSource);
 router.get('/Journey/:from/to/:to',                      controller.journey.plan);
 router.get('/Weather',                                   controller.weather.current);
 

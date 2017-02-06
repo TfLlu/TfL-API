@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.streamIndex = exports.get = undefined;
+exports.streamIndex = exports.getFromSource = exports.get = undefined;
 
 var _departures = require('../../service/stoppoint/departures');
 
@@ -15,7 +15,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 const get = exports.get = (() => {
     var _ref = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield departures.get(parseInt(ctx.params.stopPoint), parseInt(ctx.params.limit));
+        ctx.body = yield departures.get(parseInt(ctx.params.stopPoint));
     });
 
     return function get(_x) {
@@ -23,8 +23,18 @@ const get = exports.get = (() => {
     };
 })();
 
+const getFromSource = exports.getFromSource = (() => {
+    var _ref2 = _asyncToGenerator(function* (ctx) {
+        ctx.body = yield departures.getFromSource(parseInt(ctx.params.stopPoint), parseInt(ctx.params.limit));
+    });
+
+    return function getFromSource(_x2) {
+        return _ref2.apply(this, arguments);
+    };
+})();
+
 const streamIndex = exports.streamIndex = (() => {
-    var _ref2 = _asyncToGenerator(function* ({ emit, disconnect }) {
+    var _ref3 = _asyncToGenerator(function* ({ emit, disconnect }) {
         var res = departures.stream(function (data) {
             emit(data);
         });
@@ -34,7 +44,7 @@ const streamIndex = exports.streamIndex = (() => {
         });
     });
 
-    return function streamIndex(_x2) {
-        return _ref2.apply(this, arguments);
+    return function streamIndex(_x3) {
+        return _ref3.apply(this, arguments);
     };
 })();

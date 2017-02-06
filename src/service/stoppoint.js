@@ -20,7 +20,6 @@ export const load = async () => {
 
 };
 
-
 const getStopPointsFromRedisCache = () => {
     return redis.get(config('NAME_VERSION', true) + '_cache_stoppoint')
         .then(

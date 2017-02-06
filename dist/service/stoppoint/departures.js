@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.stream = exports.all = exports.get = undefined;
+exports.stream = exports.all = exports.getFromSource = exports.get = undefined;
 
 var _mobiliteit = require('../../source/stoppoint/mobiliteit');
 
@@ -33,7 +33,23 @@ const STREAM_NAME = (0, _config2.default)('NAME_VERSION', true) + '_stoppoint_de
 const CACHE_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_stoppoint_departures';
 
 const get = exports.get = (() => {
-    var _ref = _asyncToGenerator(function* (stopPoint, limit) {
+    var _ref = _asyncToGenerator(function* (stopPoint) {
+        return _redis.redis.get(CACHE_TABLE).then(function (result) {
+            if (result && result !== '') {
+                return JSON.parse(result)[stopPoint];
+            } else {
+                throw new Error('no Bikepoints in Redis');
+            }
+        });
+    });
+
+    return function get(_x) {
+        return _ref.apply(this, arguments);
+    };
+})();
+
+const getFromSource = exports.getFromSource = (() => {
+    var _ref2 = _asyncToGenerator(function* (stopPoint, limit) {
         var departuresRaw = yield mobiliteit.departures(stopPoint, limit);
         var departures = [];
         var rawDepartures = departuresRaw.Departure;
@@ -89,8 +105,8 @@ const get = exports.get = (() => {
         return departures;
     });
 
-    return function get(_x, _x2) {
-        return _ref.apply(this, arguments);
+    return function getFromSource(_x2, _x3) {
+        return _ref2.apply(this, arguments);
     };
 })();
 

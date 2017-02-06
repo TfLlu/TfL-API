@@ -23,7 +23,7 @@ const worker = async retry => {
     while(retry) {
         retry--;
         try {
-            var newData = await departures.get(stopPointID, CRAWL_AMOUNT);
+            var newData = await departures.getFromSource(stopPointID, CRAWL_AMOUNT);
             break;
         } catch (err) {
             if (!err.code) {

@@ -38,7 +38,7 @@ const worker = (() => {
         while (retry) {
             retry--;
             try {
-                var newData = yield departures.get(stopPointID, CRAWL_AMOUNT);
+                var newData = yield departures.getFromSource(stopPointID, CRAWL_AMOUNT);
                 break;
             } catch (err) {
                 if (!err.code) {

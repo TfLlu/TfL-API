@@ -7,7 +7,20 @@ import {redis, redisPubSub} from '../../redis';
 const STREAM_NAME = config('NAME_VERSION', true) + '_stoppoint_departures_*';
 const CACHE_TABLE = config('NAME_VERSION', true) + '_cache_stoppoint_departures';
 
-export const get = async (stopPoint, limit) => {
+export const get = async stopPoint => {
+    return redis.get(CACHE_TABLE)
+        .then(
+            function (result) {
+                if (result && result !== '') {
+                    return JSON.parse(result)[stopPoint];
+                } else {
+                    throw new Error('no Bikepoints in Redis');
+                }
+            }
+        );
+};
+
+export const getFromSource = async (stopPoint, limit) => {
     var departuresRaw = await mobiliteit.departures(stopPoint, limit);
     var departures = [];
     var rawDepartures = departuresRaw.Departure;
