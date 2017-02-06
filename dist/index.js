@@ -1,7 +1,7 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-   value: true
+    value: true
 });
 
 var _http = require('http');
@@ -29,6 +29,10 @@ var _monitor2 = _interopRequireDefault(_monitor);
 var _config = require('./config');
 
 var _config2 = _interopRequireDefault(_config);
+
+var _influxdbNodejs = require('influxdb-nodejs');
+
+var _influxdbNodejs2 = _interopRequireDefault(_influxdbNodejs);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -65,7 +69,26 @@ _stream2.default.bind(server, router);
 
 const PORT = (0, _config2.default)('SERVER_PORT', true);
 if (PORT) {
-   server.listen(PORT);
+    server.listen(PORT);
+}
+
+var influxdb = false;
+
+const streamCountToInflux = () => {
+    influxdb.write('streamConnections').field({
+        endpoint: '/departures',
+        count: _controller2.default.departures.streamCount()
+    }).then();
+    influxdb.write('streamConnections').field({
+        endpoint: '/bikepoint',
+        count: _controller2.default.bikepoint.streamCount()
+    }).then();
+    setInterval(streamCountToInflux, 10000);
+};
+
+if ((0, _config2.default)('INFLUXDB')) {
+    influxdb = new _influxdbNodejs2.default((0, _config2.default)('INFLUXDB') + (0, _config2.default)('NAME_VERSION'));
+    streamCountToInflux();
 }
 
 exports.default = server;

@@ -1,5 +1,7 @@
 import * as bikepoint from '../service/bikepoint';
 
+var streamClients = 0;
+
 export const index = async ctx => {
     try {
         ctx.body = await bikepoint.all();
@@ -9,12 +11,16 @@ export const index = async ctx => {
     }
 };
 
+export const streamCount = () => streamClients;
+
 export const streamIndex = async ({ emit, disconnect }) => {
+    streamClients++;
     var res = bikepoint.stream(data => {
         emit(data);
     });
 
     disconnect(() => {
+        streamClients--;
         res.off();
     });
 };
