@@ -52,14 +52,8 @@ var influxdb = false;
 const streamCountToInflux = () => {
     influxdb.write('streamConnections')
         .field({
-            endpoint: '/departures',
-            count: controller.departures.streamCount()
-        })
-        .then();
-    influxdb.write('streamConnections')
-        .field({
-            endpoint: '/bikepoint',
-            count: controller.bikepoint.streamCount()
+            departures: controller.departures.streamCount(),
+            bikepoint:  controller.bikepoint.streamCount()
         })
         .then();
     return;
