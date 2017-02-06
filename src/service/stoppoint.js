@@ -5,6 +5,7 @@ import distance             from '../helper/distance';
 import inbox                from '../helper/inbox';
 import deepClone            from 'deep-clone';
 import {redis, redisPubSub} from '../redis';
+import Boom                 from 'boom';
 
 const STREAM_NAME = config('NAME_VERSION', true) + '_stoppoint';
 
@@ -27,7 +28,7 @@ const getStopPointsFromRedisCache = () => {
                 if (result && result !== '') {
                     return JSON.parse(result);
                 } else {
-                    throw new Error('no StopPoints in Redis');
+                    throw new Boom.serverUnavailable('Service temporarily unavailable');
                 }
             }
         );
@@ -51,6 +52,7 @@ export const get = async stopPoint => {
             return stopPoints[i];
         }
     }
+    throw new Boom.notFound('Stop point [' + stopPoint + '] not found');
 };
 
 export const getByName = async name => {
