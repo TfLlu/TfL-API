@@ -20,7 +20,7 @@ export const get = async stopPoint => {
         );
 };
 
-export const getFromSource = async (stopPoint, limit) => {
+export const load = async (stopPoint, limit) => {
     var departuresRaw = await mobiliteit.departures(stopPoint, limit);
     var departures = [];
     var rawDepartures = departuresRaw.Departure;

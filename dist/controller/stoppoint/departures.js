@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.streamIndex = exports.getFromSource = exports.get = undefined;
+exports.streamIndex = exports.load = exports.get = undefined;
 
 var _departures = require('../../service/stoppoint/departures');
 
@@ -23,12 +23,12 @@ const get = exports.get = (() => {
     };
 })();
 
-const getFromSource = exports.getFromSource = (() => {
+const load = exports.load = (() => {
     var _ref2 = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield departures.getFromSource(parseInt(ctx.params.stopPoint), parseInt(ctx.params.limit));
+        ctx.body = yield departures.load(parseInt(ctx.params.stopPoint), parseInt(ctx.params.limit));
     });
 
-    return function getFromSource(_x2) {
+    return function load(_x2) {
         return _ref2.apply(this, arguments);
     };
 })();

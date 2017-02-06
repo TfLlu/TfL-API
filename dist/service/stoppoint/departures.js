@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.stream = exports.all = exports.getFromSource = exports.get = undefined;
+exports.stream = exports.all = exports.load = exports.get = undefined;
 
 var _mobiliteit = require('../../source/stoppoint/mobiliteit');
 
@@ -48,7 +48,7 @@ const get = exports.get = (() => {
     };
 })();
 
-const getFromSource = exports.getFromSource = (() => {
+const load = exports.load = (() => {
     var _ref2 = _asyncToGenerator(function* (stopPoint, limit) {
         var departuresRaw = yield mobiliteit.departures(stopPoint, limit);
         var departures = [];
@@ -105,7 +105,7 @@ const getFromSource = exports.getFromSource = (() => {
         return departures;
     });
 
-    return function getFromSource(_x2, _x3) {
+    return function load(_x2, _x3) {
         return _ref2.apply(this, arguments);
     };
 })();

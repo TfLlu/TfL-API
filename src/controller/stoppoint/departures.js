@@ -6,8 +6,8 @@ export const get = async ctx => {
     );
 };
 
-export const getFromSource = async ctx => {
-    ctx.body = await departures.getFromSource(
+export const load = async ctx => {
+    ctx.body = await departures.load(
         parseInt(ctx.params.stopPoint),
         parseInt(ctx.params.limit)
     );
