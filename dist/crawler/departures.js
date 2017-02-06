@@ -135,7 +135,6 @@ const removeFromCrawlList = id => {
 
 const crawl = (() => {
     var _ref2 = _asyncToGenerator(function* () {
-        //var startTime = new Date().getTime();
         var result = yield _redis.redis.get(CACHE_STOPPOINTS_TABLE);
         if (result && result !== '') {
             stopPointsToCrawl = JSON.parse(result).features;
@@ -160,22 +159,13 @@ const crawl = (() => {
             }
             yield sleep();
         }
-
-        //var diffTime = new Date().getTime() - startTime;
-        //var timeOut = CRAWL_TTL - diffTime < 0 ? 0 : CRAWL_TTL - diffTime;
-        //setTimeout(crawl, timeOut);
-        //setTimeout(crawl);
-        process.exit();
+        setTimeout(crawl);
     });
 
     return function crawl() {
         return _ref2.apply(this, arguments);
     };
 })();
-
-setInterval(function () {
-    console.log('queue', stopPointsToCrawl.length);
-}, 5000);
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
