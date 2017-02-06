@@ -53,7 +53,6 @@ describe('BikePoints', () => {
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.should.be.json;
-                    //res.should.have.header('Access-Control-Allow-Origin', '*');
                     res.body.should.be.a('object');
                     geojsonValidation.isFeature(res.body).should.be.equal(true);
                     var props = res.body.properties;
@@ -85,6 +84,44 @@ describe('BikePoints', () => {
                 });
         });
     });
+    describe('GET /BikePoint/veloh:1', () => {
+        it('should get bikepoint 1 from veloh provider as geojson', (done) => {
+            chai.request(server)
+                .get('/BikePoint/veloh:1')
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.should.be.json;
+                    res.body.should.be.a('object');
+                    geojsonValidation.isFeature(res.body).should.be.equal(true);
+                    var props = res.body.properties;
+                    props.id.should.be.a('String');
+                    props.open.should.be.a('Boolean');
+                    props.name.should.be.a('String');
+                    if (props.city !== null) {
+                        props.city.should.be.a('String');
+                    }
+                    props.address.should.be.a('String');
+                    if (props.photo !== null) {
+                        props.photo.should.be.a('String');
+                    }
+                    props.docks.should.be.a('Number');
+                    props.available_bikes.should.be.a('Number');
+                    props.available_ebikes.should.be.a('Number');
+                    props.available_docks.should.be.a('Number');
+                    if (props.last_update !== null) {
+                        props.last_update.should.be.a('Number');
+                    }
+                    props.dock_status.should.be.a('array');
+                    props.dock_status[0].status.should.be.a('String');
+                    if (props.dock_status[0].bikeType !== null) {
+                        props.dock_status[0].bikeType.should.be.a('String');
+                    }
+                    props.name.should.be.equal('LEON XIII');
+                    props.id.should.be.equal('veloh:1');
+                    done();
+                });
+        });
+    });
     describe('GET /BikePoint/box/6.10/49.5/6.11/49.55', () => {
         it('should get bikepoints in bounding box as geojson', (done) => {
             chai.request(server)
@@ -92,7 +129,6 @@ describe('BikePoints', () => {
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.should.be.json;
-                    //res.should.have.header('Access-Control-Allow-Origin', '*');
                     res.body.should.be.a('object');
                     geojsonValidation.isFeatureCollection(res.body).should.be.equal(true);
                     res.body.features.length.should.be.within(2,5);
@@ -132,7 +168,6 @@ describe('BikePoints', () => {
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.should.be.json;
-                    //res.should.have.header('Access-Control-Allow-Origin', '*');
                     res.body.should.be.a('object');
                     geojsonValidation.isFeatureCollection(res.body).should.be.equal(true);
                     res.body.features.length.should.be.within(1,10);
@@ -172,7 +207,6 @@ describe('BikePoints', () => {
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.should.be.json;
-                    //res.should.have.header('Access-Control-Allow-Origin', '*');
                     res.body.should.be.a('object');
                     geojsonValidation.isFeatureCollection(res.body).should.be.equal(true);
                     res.body.features.length.should.be.within(1,10);
