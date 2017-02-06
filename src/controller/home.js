@@ -1,3 +1,3 @@
 export const index = ctx => {
-    ctx.body = '<h1>TFL API</h1>';
+    ctx.redirect('https://docs.api.tfl.lu');
 };
