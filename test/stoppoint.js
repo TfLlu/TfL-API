@@ -7,13 +7,6 @@ let geojsonValidation = require('geojson-validation');
 
 chai.use(chaiHttp);
 
-function random(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-var randomLimit = random(25, 200);
-
 describe('StopPoints', () => {
     describe('GET /Stoppoint', () => {
         it('should get all the stoppoints as geojson', (done) => {
