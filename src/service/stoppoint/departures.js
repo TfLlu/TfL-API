@@ -14,7 +14,7 @@ export const get = async stopPoint => {
                 if (result && result !== '') {
                     return JSON.parse(result)[stopPoint];
                 } else {
-                    throw new Error('no Bikepoints in Redis');
+                    throw new Error('no departures in Redis');
                 }
             }
         );

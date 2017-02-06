@@ -5,6 +5,7 @@ before_script:
   - touch .env
   - node dist/crawler/bikepoint.js
   - node dist/crawler/stoppoint.js
+  - node dist/crawler/departure.js
 services:
   - redis-server
 script: npm test
