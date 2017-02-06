@@ -65,9 +65,6 @@ const worker = (() => {
         if (!cache[stopPointID]) {
             cache[stopPointID] = newData;
             yield _redis.redis.set(CACHE_TABLE, JSON.stringify(cache), 'EX', CACHE_TTL);
-            if (process.env.TRAVIS) {
-                process.exit();
-            }
             return;
         }
 
@@ -158,6 +155,9 @@ const crawl = (() => {
                 worker();
             }
             yield sleep();
+        }
+        if (process.env.TRAVIS) {
+            process.exit();
         }
         setTimeout(crawl);
     });

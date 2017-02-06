@@ -55,9 +55,6 @@ const worker = async retry => {
             'EX',
             CACHE_TTL
         );
-        if (process.env.TRAVIS) {
-            process.exit();
-        }
         return;
     }
 
@@ -150,6 +147,9 @@ const crawl = async () => {
             worker();
         }
         await sleep();
+    }
+    if (process.env.TRAVIS) {
+        process.exit();
     }
     setTimeout(crawl);
 };
