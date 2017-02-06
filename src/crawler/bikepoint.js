@@ -15,7 +15,12 @@ const CACHE_TABLE = config('NAME_VERSION', true) + '_cache_bikepoint';
 const crawl = async () => {
     var startTime = new Date().getTime();
     if (!cache) {
-        cache = await bikepoint.load();
+        try {
+            cache = await bikepoint.load();
+        } catch (err) {
+            setTimeout(crawl, CRAWL_TTL);
+            return;
+        }
         await redis.set(
             CACHE_TABLE,
             JSON.stringify(cache),

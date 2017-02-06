@@ -19,6 +19,7 @@
   "homepage": "https://github.com/TfLlu/TfL-API#readme",
   "dependencies": {
     "axios": "^0.15.3",
+    "boom": "^4.2.0",
     "deep-clone": "^3.0.2",
     "dotenv": "^2.0.0",
     "fuzzy": "^0.1.3",

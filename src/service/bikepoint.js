@@ -5,6 +5,7 @@ import distance             from '../helper/distance';
 import inbox                from '../helper/inbox';
 import config               from '../config';
 import {redis, redisPubSub} from '../redis';
+import Boom                 from 'boom';
 
 const STREAM_NAME = config('NAME_VERSION', true) + '_bikepoint';
 
@@ -24,7 +25,7 @@ export const all = () => {
                 if (result && result !== '') {
                     return JSON.parse(result);
                 } else {
-                    throw new Error('no Bikepoints in Redis');
+                    throw new Boom.serverUnavailable('Service temporarily unavailable');
                 }
             }
         );
@@ -56,6 +57,9 @@ export const load = () => {
             type: 'FeatureCollection',
             features: bikePoints
         };
+    }, err => {
+        console.error(err);
+        throw new Boom.serverUnavailable('Service temporarily unavailable');
     });
 };
 
@@ -66,6 +70,7 @@ export const get = async bikePoint => {
             return bikePoints[i];
         }
     }
+    throw new Boom.notFound('Bike point [' + bikePoint + '] not found');
 };
 
 export const around = async (lon, lat, radius) => {

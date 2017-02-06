@@ -36,7 +36,12 @@ const crawl = (() => {
     var _ref = _asyncToGenerator(function* () {
         var startTime = new Date().getTime();
         if (!cache) {
-            cache = yield bikepoint.load();
+            try {
+                cache = yield bikepoint.load();
+            } catch (err) {
+                setTimeout(crawl, CRAWL_TTL);
+                return;
+            }
             yield _redis.redis.set(CACHE_TABLE, JSON.stringify(cache), 'EX', CACHE_TTL);
             if (process.env.TRAVIS) {
                 process.exit();
