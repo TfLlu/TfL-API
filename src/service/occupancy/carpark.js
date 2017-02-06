@@ -1,4 +1,5 @@
 import * as vdl from '../../source/occupancy/carpark/vdl';
+import Boom     from 'boom';
 
 export const all = () => {
     const sources = {
@@ -20,21 +21,26 @@ export const all = () => {
             type: 'FeatureCollection',
             features: items
         };
+    }, () => {
+        throw new Boom.serverUnavailable('all /Occupancy/Carpark endpoints are temporarily unavailable');
     });
 };
 
 export const get = async carPark => {
-    var carParkSplit = carPark.split(':');
-    var provider = carParkSplit[0];
-    switch (provider){
-    case 'vdl':
-        carPark = await vdl.get(carParkSplit[1]);
-        break;
-    default:
-        //TODO: implement not found
-        return false;
+    try {
+        var carParkSplit = carPark.split(':');
+        var provider = carParkSplit[0];
+        switch (provider){
+        case 'vdl':
+            carPark = await vdl.get(carParkSplit[1]);
+            break;
+        default:
+            throw new Error('not found');
+        }
+        return compileCarPark(provider, carPark);
+    } catch (err) {
+        throw new Boom.notFound('Carpark [' + carPark + '] not found or unavailable');
     }
-    return compileCarPark(provider, carPark);
 };
 
 export const compileCarPark = function(provider, item) {

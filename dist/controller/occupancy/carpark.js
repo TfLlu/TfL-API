@@ -15,7 +15,12 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 const index = exports.index = (() => {
     var _ref = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield carpark.all();
+        try {
+            ctx.body = yield carpark.all();
+        } catch (boom) {
+            ctx.body = boom.output.payload;
+            ctx.status = boom.output.statusCode;
+        }
     });
 
     return function index(_x) {
@@ -25,7 +30,12 @@ const index = exports.index = (() => {
 
 const get = exports.get = (() => {
     var _ref2 = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield carpark.get(ctx.params.carPark);
+        try {
+            ctx.body = yield carpark.get(ctx.params.carPark);
+        } catch (boom) {
+            ctx.body = boom.output.payload;
+            ctx.status = boom.output.statusCode;
+        }
     });
 
     return function get(_x2) {
