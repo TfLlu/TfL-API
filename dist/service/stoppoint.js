@@ -58,7 +58,7 @@ const load = exports.load = (() => {
     };
 })();
 
-const all = exports.all = () => {
+const getStopPointsFromRedisCache = () => {
     return _redis.redis.get((0, _config2.default)('NAME_VERSION', true) + '_cache_stoppoint').then(function (result) {
         if (result && result !== '') {
             return JSON.parse(result);
@@ -66,6 +66,16 @@ const all = exports.all = () => {
             throw new Error('no StopPoints in Redis');
         }
     });
+};
+var stopPointLoadTime = null;
+var stopPointsInMemory = null;
+
+const all = exports.all = () => {
+    if (!stopPointsInMemory || stopPointLoadTime < Date.now() - 10 * 60 * 1000) {
+        stopPointsInMemory = getStopPointsFromRedisCache();
+        stopPointLoadTime = Date.now();
+    }
+    return stopPointsInMemory;
 };
 
 const get = exports.get = (() => {

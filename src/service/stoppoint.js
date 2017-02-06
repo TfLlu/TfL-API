@@ -20,7 +20,8 @@ export const load = async () => {
 
 };
 
-export const all = () => {
+
+const getStopPointsFromRedisCache = () => {
     return redis.get(config('NAME_VERSION', true) + '_cache_stoppoint')
         .then(
             function (result) {
@@ -31,6 +32,16 @@ export const all = () => {
                 }
             }
         );
+};
+var stopPointLoadTime = null;
+var stopPointsInMemory = null;
+
+export const all = () => {
+    if (!stopPointsInMemory || stopPointLoadTime < Date.now() - (10 * 60 * 1000)) {
+        stopPointsInMemory = getStopPointsFromRedisCache();
+        stopPointLoadTime = Date.now();
+    }
+    return stopPointsInMemory;
 };
 
 export const get = async stopPoint => {
