@@ -30,7 +30,9 @@ const onData = data => {
         }
         influxdb.write('responses').field(data.RESPONSE_TIME).then();
     } else if (data.REQUEST_TIME) {
-        influxdb.write('requests').field(data.REQUEST_TIME).then();
+        /*influxdb.write('requests')
+            .field(data.REQUEST_TIME)
+            .then();*/
     }
 };
 
