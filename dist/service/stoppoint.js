@@ -71,6 +71,7 @@ var stopPointLoadTime = null;
 var stopPointsInMemory = null;
 
 const all = exports.all = () => {
+    // every ten minutes
     if (!stopPointsInMemory || stopPointLoadTime < Date.now() - 10 * 60 * 1000) {
         stopPointsInMemory = getStopPointsFromRedisCache();
         stopPointLoadTime = Date.now();
