@@ -17,9 +17,9 @@ const onData = data => {
             .field(data.RESPONSE_TIME)
             .then();
     } else if (data.REQUEST_TIME) {
-        /*influxdb.write('requests')
+        influxdb.write('requests')
             .field(data.REQUEST_TIME)
-            .then();*/
+            .then();
     }
 };
 
