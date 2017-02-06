@@ -3,6 +3,7 @@ import * as stoppoint       from '../stoppoint';
 import config               from '../../config';
 import moment               from 'moment';
 import {redis, redisPubSub} from '../../redis';
+import Boom                 from 'boom';
 
 const STREAM_NAME = config('NAME_VERSION', true) + '_stoppoint_departures_*';
 const CACHE_TABLE = config('NAME_VERSION', true) + '_cache_stoppoint_departures';
@@ -12,9 +13,13 @@ export const get = async stopPoint => {
         .then(
             function (result) {
                 if (result && result !== '') {
-                    return JSON.parse(result)[stopPoint];
+                    var departures = JSON.parse(result)[stopPoint];
+                    if (!departures) {
+                        throw new Boom.notFound('No departures from stoppoint [' + stopPoint + '] found');
+                    }
+                    return departures;
                 } else {
-                    throw new Error('no departures in Redis');
+                    throw new Boom.serverUnavailable('Departures from stoppoint [' + stopPoint + '] are temporarily unavailable');
                 }
             }
         );
@@ -81,7 +86,7 @@ export const all = () => {
                 if (result && result !== '') {
                     return JSON.parse(result);
                 } else {
-                    throw new Error('no StopPoints in Redis');
+                    throw new Boom.serverUnavailable('all /StopPoint/Departures endpoints are temporarily unavailable');
                 }
             }
         );

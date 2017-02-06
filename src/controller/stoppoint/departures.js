@@ -1,16 +1,26 @@
 import * as departures from '../../service/stoppoint/departures';
 
 export const get = async ctx => {
-    ctx.body = await departures.get(
-        parseInt(ctx.params.stopPoint)
-    );
+    try {
+        ctx.body = await departures.get(
+            parseInt(ctx.params.stopPoint)
+        );
+    } catch (boom) {
+        ctx.body = boom.output.payload;
+        ctx.status = boom.output.statusCode;
+    }
 };
 
 export const load = async ctx => {
-    ctx.body = await departures.load(
-        parseInt(ctx.params.stopPoint),
-        parseInt(ctx.params.limit)
-    );
+    try {
+        ctx.body = await departures.load(
+            parseInt(ctx.params.stopPoint),
+            parseInt(ctx.params.limit)
+        );
+    } catch (boom) {
+        ctx.body = boom.output.payload;
+        ctx.status = boom.output.statusCode;
+    }
 };
 
 export const streamIndex = async ({ emit, disconnect }) => {

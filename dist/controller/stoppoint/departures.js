@@ -15,7 +15,12 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 const get = exports.get = (() => {
     var _ref = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield departures.get(parseInt(ctx.params.stopPoint));
+        try {
+            ctx.body = yield departures.get(parseInt(ctx.params.stopPoint));
+        } catch (boom) {
+            ctx.body = boom.output.payload;
+            ctx.status = boom.output.statusCode;
+        }
     });
 
     return function get(_x) {
@@ -25,7 +30,12 @@ const get = exports.get = (() => {
 
 const load = exports.load = (() => {
     var _ref2 = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield departures.load(parseInt(ctx.params.stopPoint), parseInt(ctx.params.limit));
+        try {
+            ctx.body = yield departures.load(parseInt(ctx.params.stopPoint), parseInt(ctx.params.limit));
+        } catch (boom) {
+            ctx.body = boom.output.payload;
+            ctx.status = boom.output.statusCode;
+        }
     });
 
     return function load(_x2) {

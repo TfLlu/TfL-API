@@ -23,6 +23,10 @@ var _moment2 = _interopRequireDefault(_moment);
 
 var _redis = require('../../redis');
 
+var _boom = require('boom');
+
+var _boom2 = _interopRequireDefault(_boom);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -36,9 +40,13 @@ const get = exports.get = (() => {
     var _ref = _asyncToGenerator(function* (stopPoint) {
         return _redis.redis.get(CACHE_TABLE).then(function (result) {
             if (result && result !== '') {
-                return JSON.parse(result)[stopPoint];
+                var departures = JSON.parse(result)[stopPoint];
+                if (!departures) {
+                    throw new _boom2.default.notFound('No departures from stoppoint [' + stopPoint + '] found');
+                }
+                return departures;
             } else {
-                throw new Error('no departures in Redis');
+                throw new _boom2.default.serverUnavailable('Departures from stoppoint [' + stopPoint + '] are temporarily unavailable');
             }
         });
     });
@@ -115,7 +123,7 @@ const all = exports.all = () => {
         if (result && result !== '') {
             return JSON.parse(result);
         } else {
-            throw new Error('no StopPoints in Redis');
+            throw new _boom2.default.serverUnavailable('all /StopPoint/Departures endpoints are temporarily unavailable');
         }
     });
 };
