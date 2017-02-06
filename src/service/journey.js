@@ -1,5 +1,10 @@
 import * as openOV from '../source/journey/openov';
+import Boom        from 'boom';
 
 export const plan = async (from, to) => {
-    return await openOV.plan(from, to);
+    try {
+        return await openOV.plan(from, to);
+    } catch (boom) {
+        throw new Boom.serverUnavailable('The Journey planner is temporarily unavailable');
+    }
 };
