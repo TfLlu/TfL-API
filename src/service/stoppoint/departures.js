@@ -5,7 +5,7 @@ import moment               from 'moment';
 import {redis, redisPubSub} from '../../redis';
 import Boom                 from 'boom';
 
-const STREAM_NAME = config('NAME_VERSION', true) + '_stoppoint_departures_*';
+const STREAM_NAME = config('NAME_VERSION', true) + '_stoppoint_departures_';
 const CACHE_TABLE = config('NAME_VERSION', true) + '_cache_stoppoint_departures';
 
 export const get = async stopPoint => {
@@ -92,10 +92,10 @@ export const all = () => {
         );
 };
 
-redisPubSub.psubscribe(STREAM_NAME);
+redisPubSub.psubscribe(STREAM_NAME + '*');
 export const stream = callback => {
     const messageCallback = (pattern, channel, message) => {
-        if (pattern === STREAM_NAME) {
+        if (pattern === STREAM_NAME + '*') {
             callback(JSON.parse(message));
         }
     };
@@ -109,7 +109,35 @@ export const stream = callback => {
 
     return {
         off: function () {
-            redisPubSub.removeListener('message', messageCallback);
+            redisPubSub.removeListener('pmessage', messageCallback);
+        }
+    };
+};
+
+export const streamSingle = (stopPoint, callback) => {
+    console.log(stopPoint);
+    const messageCallback = (pattern, channel, message) => {
+        if (channel === STREAM_NAME + stopPoint) {
+            callback(JSON.parse(message));
+        }
+    };
+    all().then(data => {
+        for (var key in data) {
+            if (key == stopPoint) {
+                callback({
+                    type: 'new',
+                    data: {
+                        [key]: data[key]
+                    }
+                });
+            }
+        }
+    });
+    redisPubSub.on('pmessage', messageCallback);
+
+    return {
+        off: function () {
+            redisPubSub.removeListener('pmessage', messageCallback);
         }
     };
 };

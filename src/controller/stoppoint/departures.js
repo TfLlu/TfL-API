@@ -38,3 +38,15 @@ export const streamIndex = async ({ emit, disconnect }) => {
         res.off();
     });
 };
+
+export const streamSingle = async ({ emit, disconnect, params }) => {
+    streamClients++;
+    var res = departures.streamSingle(params.stopPoint, data => {
+        emit(data);
+    });
+
+    disconnect(() => {
+        streamClients--;
+        res.off();
+    });
+};

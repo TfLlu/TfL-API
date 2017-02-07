@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.streamIndex = exports.streamCount = exports.load = exports.get = undefined;
+exports.streamSingle = exports.streamIndex = exports.streamCount = exports.load = exports.get = undefined;
 
 var _departures = require('../../service/stoppoint/departures');
 
@@ -62,5 +62,23 @@ const streamIndex = exports.streamIndex = (() => {
 
     return function streamIndex(_x3) {
         return _ref3.apply(this, arguments);
+    };
+})();
+
+const streamSingle = exports.streamSingle = (() => {
+    var _ref4 = _asyncToGenerator(function* ({ emit, disconnect, params }) {
+        streamClients++;
+        var res = departures.streamSingle(params.stopPoint, function (data) {
+            emit(data);
+        });
+
+        disconnect(function () {
+            streamClients--;
+            res.off();
+        });
+    });
+
+    return function streamSingle(_x4) {
+        return _ref4.apply(this, arguments);
     };
 })();

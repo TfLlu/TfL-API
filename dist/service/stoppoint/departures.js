@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.stream = exports.all = exports.load = exports.get = undefined;
+exports.streamSingle = exports.stream = exports.all = exports.load = exports.get = undefined;
 
 var _mobiliteit = require('../../source/stoppoint/mobiliteit');
 
@@ -33,7 +33,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-const STREAM_NAME = (0, _config2.default)('NAME_VERSION', true) + '_stoppoint_departures_*';
+const STREAM_NAME = (0, _config2.default)('NAME_VERSION', true) + '_stoppoint_departures_';
 const CACHE_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_stoppoint_departures';
 
 const get = exports.get = (() => {
@@ -128,10 +128,10 @@ const all = exports.all = () => {
     });
 };
 
-_redis.redisPubSub.psubscribe(STREAM_NAME);
+_redis.redisPubSub.psubscribe(STREAM_NAME + '*');
 const stream = exports.stream = callback => {
     const messageCallback = (pattern, channel, message) => {
-        if (pattern === STREAM_NAME) {
+        if (pattern === STREAM_NAME + '*') {
             callback(JSON.parse(message));
         }
     };
@@ -145,7 +145,35 @@ const stream = exports.stream = callback => {
 
     return {
         off: function () {
-            _redis.redisPubSub.removeListener('message', messageCallback);
+            _redis.redisPubSub.removeListener('pmessage', messageCallback);
+        }
+    };
+};
+
+const streamSingle = exports.streamSingle = (stopPoint, callback) => {
+    console.log(stopPoint);
+    const messageCallback = (pattern, channel, message) => {
+        if (channel === STREAM_NAME + stopPoint) {
+            callback(JSON.parse(message));
+        }
+    };
+    all().then(data => {
+        for (var key in data) {
+            if (key == stopPoint) {
+                callback({
+                    type: 'new',
+                    data: {
+                        [key]: data[key]
+                    }
+                });
+            }
+        }
+    });
+    _redis.redisPubSub.on('pmessage', messageCallback);
+
+    return {
+        off: function () {
+            _redis.redisPubSub.removeListener('pmessage', messageCallback);
         }
     };
 };
