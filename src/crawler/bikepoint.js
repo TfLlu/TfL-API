@@ -2,7 +2,6 @@ import * as bikepoint from '../service/bikepoint';
 import config         from '../config';
 import deepClone      from 'deep-clone';
 import {redis}        from '../redis';
-import moment         from 'moment';
 
 var newData = [];
 var cache;

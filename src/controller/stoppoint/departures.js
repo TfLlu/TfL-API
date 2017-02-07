@@ -27,9 +27,9 @@ export const load = async ctx => {
 
 export const streamCount = () => streamClients;
 
-export const streamIndex = async ({ emit, disconnect }) => {
+export const fireHose = async ({ emit, disconnect }) => {
     streamClients++;
-    var res = departures.stream(data => {
+    var res = departures.fireHose(data => {
         emit(data);
     });
 
@@ -41,7 +41,7 @@ export const streamIndex = async ({ emit, disconnect }) => {
 
 export const streamSingle = async ({ emit, disconnect, params }) => {
     streamClients++;
-    var res = departures.streamSingle(params.stopPoint, data => {
+    var res = departures.streamSingle(parseInt(params.stopPoint), data => {
         emit(data);
     });
 

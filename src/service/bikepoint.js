@@ -7,6 +7,7 @@ import config               from '../config';
 import {redis, redisPubSub} from '../redis';
 import Boom                 from 'boom';
 
+const CACHE_NAME  = config('NAME_VERSION', true) + '_cache_bikepoint';
 const STREAM_NAME = config('NAME_VERSION', true) + '_bikepoint';
 
 var fuzzyOptions = {
@@ -19,7 +20,7 @@ export const compileBikePoint = function(provider, bikePoint) {
 };
 
 export const all = () => {
-    return redis.get(config('NAME_VERSION', true) + '_cache_bikepoint')
+    return redis.get(CACHE_NAME)
         .then(
             function (result) {
                 if (result && result !== '') {
@@ -125,7 +126,7 @@ export const search = async searchString => {
 };
 
 redisPubSub.subscribe(STREAM_NAME);
-export const stream = callback => {
+export const fireHose = callback => {
     const messageCallback = (channel, message) => {
         if (channel === STREAM_NAME) {
             callback(JSON.parse(message));
@@ -138,6 +139,39 @@ export const stream = callback => {
         });
     });
 
+    redisPubSub.on('message', messageCallback);
+
+    return {
+        off: function () {
+            redisPubSub.removeListener('message', messageCallback);
+        }
+    };
+};
+
+export const streamSingle = (bikePoint, callback) => {
+    const messageCallback = (channel, message) => {
+        if (channel === STREAM_NAME) {
+            message = JSON.parse(message);
+            for (var i = 0; i < message.data.length; i++) {
+                if (message.data[i].id == bikePoint) {
+                    callback({
+                        type: 'update',
+                        data: [compileStream(message.data[i].data)]
+                    });
+                }
+            }
+        }
+    };
+    all().then(data => {
+        for (var key in data.features) {
+            if (data.features[key].properties.id == bikePoint) {
+                callback({
+                    type: 'new',
+                    data: [compileStream(data.features[key])]
+                });
+            }
+        }
+    });
     redisPubSub.on('message', messageCallback);
 
     return {

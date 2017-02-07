@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.search = exports.box = exports.around = exports.get = exports.streamIndex = exports.streamCount = exports.index = undefined;
+exports.search = exports.box = exports.around = exports.get = exports.streamSingle = exports.fireHose = exports.streamCount = exports.index = undefined;
 
 var _bikepoint = require('../service/bikepoint');
 
@@ -32,10 +32,10 @@ const index = exports.index = (() => {
 
 const streamCount = exports.streamCount = () => streamClients;
 
-const streamIndex = exports.streamIndex = (() => {
+const fireHose = exports.fireHose = (() => {
     var _ref2 = _asyncToGenerator(function* ({ emit, disconnect }) {
         streamClients++;
-        var res = bikepoint.stream(function (data) {
+        var res = bikepoint.fireHose(function (data) {
             emit(data);
         });
 
@@ -45,13 +45,31 @@ const streamIndex = exports.streamIndex = (() => {
         });
     });
 
-    return function streamIndex(_x2) {
+    return function fireHose(_x2) {
         return _ref2.apply(this, arguments);
     };
 })();
 
+const streamSingle = exports.streamSingle = (() => {
+    var _ref3 = _asyncToGenerator(function* ({ emit, disconnect, params }) {
+        streamClients++;
+        var res = bikepoint.streamSingle(params.bikePoint, function (data) {
+            emit(data);
+        });
+
+        disconnect(function () {
+            streamClients--;
+            res.off();
+        });
+    });
+
+    return function streamSingle(_x3) {
+        return _ref3.apply(this, arguments);
+    };
+})();
+
 const get = exports.get = (() => {
-    var _ref3 = _asyncToGenerator(function* (ctx) {
+    var _ref4 = _asyncToGenerator(function* (ctx) {
         try {
             ctx.body = yield bikepoint.get(ctx.params.bikePoint);
         } catch (boom) {
@@ -60,13 +78,13 @@ const get = exports.get = (() => {
         }
     });
 
-    return function get(_x3) {
-        return _ref3.apply(this, arguments);
+    return function get(_x4) {
+        return _ref4.apply(this, arguments);
     };
 })();
 
 const around = exports.around = (() => {
-    var _ref4 = _asyncToGenerator(function* (ctx) {
+    var _ref5 = _asyncToGenerator(function* (ctx) {
         try {
             ctx.body = yield bikepoint.around(parseFloat(ctx.params.lon), parseFloat(ctx.params.lat), ctx.params.radius);
         } catch (boom) {
@@ -75,13 +93,13 @@ const around = exports.around = (() => {
         }
     });
 
-    return function around(_x4) {
-        return _ref4.apply(this, arguments);
+    return function around(_x5) {
+        return _ref5.apply(this, arguments);
     };
 })();
 
 const box = exports.box = (() => {
-    var _ref5 = _asyncToGenerator(function* (ctx) {
+    var _ref6 = _asyncToGenerator(function* (ctx) {
         try {
             ctx.body = yield bikepoint.box(parseFloat(ctx.params.swlon), parseFloat(ctx.params.swlat), parseFloat(ctx.params.nelon), parseFloat(ctx.params.nelat));
         } catch (boom) {
@@ -90,13 +108,13 @@ const box = exports.box = (() => {
         }
     });
 
-    return function box(_x5) {
-        return _ref5.apply(this, arguments);
+    return function box(_x6) {
+        return _ref6.apply(this, arguments);
     };
 })();
 
 const search = exports.search = (() => {
-    var _ref6 = _asyncToGenerator(function* (ctx) {
+    var _ref7 = _asyncToGenerator(function* (ctx) {
         try {
             ctx.body = yield bikepoint.search(ctx.params.searchstring.toLowerCase());
         } catch (boom) {
@@ -105,7 +123,7 @@ const search = exports.search = (() => {
         }
     });
 
-    return function search(_x6) {
-        return _ref6.apply(this, arguments);
+    return function search(_x7) {
+        return _ref7.apply(this, arguments);
     };
 })();

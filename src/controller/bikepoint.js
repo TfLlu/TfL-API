@@ -13,9 +13,21 @@ export const index = async ctx => {
 
 export const streamCount = () => streamClients;
 
-export const streamIndex = async ({ emit, disconnect }) => {
+export const fireHose = async ({ emit, disconnect }) => {
     streamClients++;
-    var res = bikepoint.stream(data => {
+    var res = bikepoint.fireHose(data => {
+        emit(data);
+    });
+
+    disconnect(() => {
+        streamClients--;
+        res.off();
+    });
+};
+
+export const streamSingle = async ({ emit, disconnect, params }) => {
+    streamClients++;
+    var res = bikepoint.streamSingle(params.bikePoint, data => {
         emit(data);
     });
 

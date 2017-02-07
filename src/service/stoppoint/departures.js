@@ -93,7 +93,7 @@ export const all = () => {
 };
 
 redisPubSub.psubscribe(STREAM_NAME + '*');
-export const stream = callback => {
+export const fireHose = callback => {
     const messageCallback = (pattern, channel, message) => {
         callback(JSON.parse(message));
     };
@@ -113,7 +113,6 @@ export const stream = callback => {
 };
 
 export const streamSingle = (stopPoint, callback) => {
-    console.log(stopPoint);
     const messageCallback = (pattern, channel, message) => {
         if (channel === STREAM_NAME + stopPoint) {
             callback(JSON.parse(message));

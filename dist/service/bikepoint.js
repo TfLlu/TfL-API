@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.compileStream = exports.stream = exports.search = exports.box = exports.around = exports.get = exports.load = exports.all = exports.compileBikePoint = undefined;
+exports.compileStream = exports.streamSingle = exports.fireHose = exports.search = exports.box = exports.around = exports.get = exports.load = exports.all = exports.compileBikePoint = undefined;
 
 var _velok = require('../source/bikepoint/velok');
 
@@ -41,6 +41,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
+const CACHE_NAME = (0, _config2.default)('NAME_VERSION', true) + '_cache_bikepoint';
 const STREAM_NAME = (0, _config2.default)('NAME_VERSION', true) + '_bikepoint';
 
 var fuzzyOptions = {
@@ -55,7 +56,7 @@ const compileBikePoint = exports.compileBikePoint = function (provider, bikePoin
 };
 
 const all = exports.all = () => {
-    return _redis.redis.get((0, _config2.default)('NAME_VERSION', true) + '_cache_bikepoint').then(function (result) {
+    return _redis.redis.get(CACHE_NAME).then(function (result) {
         if (result && result !== '') {
             return JSON.parse(result);
         } else {
@@ -170,7 +171,7 @@ const search = exports.search = (() => {
 })();
 
 _redis.redisPubSub.subscribe(STREAM_NAME);
-const stream = exports.stream = callback => {
+const fireHose = exports.fireHose = callback => {
     const messageCallback = (channel, message) => {
         if (channel === STREAM_NAME) {
             callback(JSON.parse(message));
@@ -183,6 +184,39 @@ const stream = exports.stream = callback => {
         });
     });
 
+    _redis.redisPubSub.on('message', messageCallback);
+
+    return {
+        off: function () {
+            _redis.redisPubSub.removeListener('message', messageCallback);
+        }
+    };
+};
+
+const streamSingle = exports.streamSingle = (bikePoint, callback) => {
+    const messageCallback = (channel, message) => {
+        if (channel === STREAM_NAME) {
+            message = JSON.parse(message);
+            for (var i = 0; i < message.data.length; i++) {
+                if (message.data[i].id == bikePoint) {
+                    callback({
+                        type: 'update',
+                        data: [compileStream(message.data[i].data)]
+                    });
+                }
+            }
+        }
+    };
+    all().then(data => {
+        for (var key in data.features) {
+            if (data.features[key].properties.id == bikePoint) {
+                callback({
+                    type: 'new',
+                    data: [compileStream(data.features[key])]
+                });
+            }
+        }
+    });
     _redis.redisPubSub.on('message', messageCallback);
 
     return {
