@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.search = exports.box = exports.around = exports.get = exports.streamIndex = exports.index = undefined;
+exports.search = exports.box = exports.around = exports.get = exports.streamSingle = exports.fireHose = exports.streamCount = exports.index = undefined;
 
 var _bikepoint = require('../service/bikepoint');
 
@@ -13,9 +13,16 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
+var streamClients = 0;
+
 const index = exports.index = (() => {
     var _ref = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield bikepoint.all();
+        try {
+            ctx.body = yield bikepoint.all();
+        } catch (boom) {
+            ctx.body = boom.output.payload;
+            ctx.status = boom.output.statusCode;
+        }
     });
 
     return function index(_x) {
@@ -23,63 +30,100 @@ const index = exports.index = (() => {
     };
 })();
 
-const streamIndex = exports.streamIndex = (() => {
-    var _ref2 = _asyncToGenerator(function* ({ emit, disconnect }) {
-        emit({
-            type: 'new',
-            data: (yield bikepoint.all()).features.map(bikepoint.compileStream)
-        });
+const streamCount = exports.streamCount = () => streamClients;
 
-        var res = bikepoint.stream(function (data) {
+const fireHose = exports.fireHose = (() => {
+    var _ref2 = _asyncToGenerator(function* ({ emit, disconnect }) {
+        streamClients++;
+        var res = bikepoint.fireHose(function (data) {
             emit(data);
         });
 
         disconnect(function () {
+            streamClients--;
             res.off();
         });
     });
 
-    return function streamIndex(_x2) {
+    return function fireHose(_x2) {
         return _ref2.apply(this, arguments);
     };
 })();
 
-const get = exports.get = (() => {
-    var _ref3 = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield bikepoint.get(ctx.params.bikePoint);
+const streamSingle = exports.streamSingle = (() => {
+    var _ref3 = _asyncToGenerator(function* ({ emit, disconnect, params }) {
+        streamClients++;
+        var res = bikepoint.streamSingle(params.bikePoint, function (data) {
+            emit(data);
+        });
+
+        disconnect(function () {
+            streamClients--;
+            res.off();
+        });
     });
 
-    return function get(_x3) {
+    return function streamSingle(_x3) {
         return _ref3.apply(this, arguments);
     };
 })();
 
-const around = exports.around = (() => {
+const get = exports.get = (() => {
     var _ref4 = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield bikepoint.around(parseFloat(ctx.params.lon), parseFloat(ctx.params.lat), ctx.params.radius);
+        try {
+            ctx.body = yield bikepoint.get(ctx.params.bikePoint);
+        } catch (boom) {
+            ctx.body = boom.output.payload;
+            ctx.status = boom.output.statusCode;
+        }
     });
 
-    return function around(_x4) {
+    return function get(_x4) {
         return _ref4.apply(this, arguments);
     };
 })();
 
-const box = exports.box = (() => {
+const around = exports.around = (() => {
     var _ref5 = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield bikepoint.box(parseFloat(ctx.params.swlon), parseFloat(ctx.params.swlat), parseFloat(ctx.params.nelon), parseFloat(ctx.params.nelat));
+        try {
+            ctx.body = yield bikepoint.around(parseFloat(ctx.params.lon), parseFloat(ctx.params.lat), ctx.params.radius);
+        } catch (boom) {
+            ctx.body = boom.output.payload;
+            ctx.status = boom.output.statusCode;
+        }
     });
 
-    return function box(_x5) {
+    return function around(_x5) {
         return _ref5.apply(this, arguments);
     };
 })();
 
-const search = exports.search = (() => {
+const box = exports.box = (() => {
     var _ref6 = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield bikepoint.search(ctx.params.searchstring.toLowerCase());
+        try {
+            ctx.body = yield bikepoint.box(parseFloat(ctx.params.swlon), parseFloat(ctx.params.swlat), parseFloat(ctx.params.nelon), parseFloat(ctx.params.nelat));
+        } catch (boom) {
+            ctx.body = boom.output.payload;
+            ctx.status = boom.output.statusCode;
+        }
     });
 
-    return function search(_x6) {
+    return function box(_x6) {
         return _ref6.apply(this, arguments);
+    };
+})();
+
+const search = exports.search = (() => {
+    var _ref7 = _asyncToGenerator(function* (ctx) {
+        try {
+            ctx.body = yield bikepoint.search(ctx.params.searchstring.toLowerCase());
+        } catch (boom) {
+            ctx.body = boom.output.payload;
+            ctx.status = boom.output.statusCode;
+        }
+    });
+
+    return function search(_x7) {
+        return _ref7.apply(this, arguments);
     };
 })();

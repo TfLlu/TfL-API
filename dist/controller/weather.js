@@ -15,7 +15,12 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 const current = exports.current = (() => {
     var _ref = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield weather.current();
+        try {
+            ctx.body = yield weather.current();
+        } catch (boom) {
+            ctx.body = boom.output.payload;
+            ctx.status = boom.output.statusCode;
+        }
     });
 
     return function current(_x) {

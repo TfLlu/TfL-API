@@ -1,11 +1,14 @@
-import * as velok from '../source/bikepoint/velok';
-import * as veloh from '../source/bikepoint/veloh';
-import fuzzy      from 'fuzzy';
-import distance   from '../helper/distance';
-import inbox      from '../helper/inbox';
-import Events     from 'events';
-import config     from '../config';
-import deepClone  from 'deep-clone';
+import * as velok           from '../source/bikepoint/velok';
+import * as veloh           from '../source/bikepoint/veloh';
+import fuzzy                from 'fuzzy';
+import distance             from '../helper/distance';
+import inbox                from '../helper/inbox';
+import config               from '../config';
+import {redis, redisPubSub} from '../redis';
+import Boom                 from 'boom';
+
+const CACHE_NAME  = config('NAME_VERSION', true) + '_cache_bikepoint';
+const STREAM_NAME = config('NAME_VERSION', true) + '_bikepoint';
 
 var fuzzyOptions = {
     extract: function(obj) { return obj.properties.name + obj.properties.address + obj.properties.city; }
@@ -16,9 +19,20 @@ export const compileBikePoint = function(provider, bikePoint) {
     return bikePoint;
 };
 
-var cacheData;
 export const all = () => {
+    return redis.get(CACHE_NAME)
+        .then(
+            function (result) {
+                if (result && result !== '') {
+                    return JSON.parse(result);
+                } else {
+                    throw new Boom.serverUnavailable('all /BikePoints endpoints are temporarily unavailable');
+                }
+            }
+        );
+};
 
+export const load = () => {
     const sources = {
         'velok': velok.all(),
         'veloh': veloh.all()
@@ -44,27 +58,24 @@ export const all = () => {
             type: 'FeatureCollection',
             features: bikePoints
         };
+    }, err => {
+        console.error(err);
+        throw new Boom.serverUnavailable('all /BikePoints endpoints are temporarily unavailable');
     });
-
 };
 
 export const get = async bikePoint => {
-    var bikePointSplit = bikePoint.split(':');
-    switch (bikePointSplit[0]){
-    case 'veloh':
-        bikePoint = await veloh.get(bikePointSplit[1]);
-        break;
-    case 'velok':
-        bikePoint = await velok.get(bikePointSplit[1]);
-        break;
+    var bikePoints = (await all()).features;
+    for (var i = 0; i < bikePoints.length; i++) {
+        if (bikePoints[i].properties.id == bikePoint) {
+            return bikePoints[i];
+        }
     }
-    return compileBikePoint(bikePointSplit[0], bikePoint);
+    throw new Boom.notFound('Bike point [' + bikePoint + '] not found');
 };
 
 export const around = async (lon, lat, radius) => {
-    var bikePoints = await all();
-    bikePoints = bikePoints.features;
-
+    var bikePoints = (await all()).features;
     var dist = 0;
     var bikePointsAround = [];
 
@@ -90,8 +101,7 @@ export const around = async (lon, lat, radius) => {
 };
 
 export const box = async (swlon, swlat, nelon, nelat) => {
-    var bikePoints = await all();
-    bikePoints = bikePoints.features;
+    var bikePoints = (await all()).features;
     var bikePointsInBox = bikePoints.filter(function(bikePoint) {
         return inbox(
             swlon, swlat, nelon, nelat,
@@ -106,9 +116,7 @@ export const box = async (swlon, swlat, nelon, nelat) => {
 };
 
 export const search = async searchString => {
-    var bikePoints = await all();
-    bikePoints = bikePoints.features;
-
+    var bikePoints = (await all()).features;
     var results = fuzzy.filter(searchString, bikePoints, fuzzyOptions);
     results = results.map(function(res) { return res.original; });
     return {
@@ -117,79 +125,61 @@ export const search = async searchString => {
     };
 };
 
-const emitter = new Events();
+redisPubSub.subscribe(STREAM_NAME);
+export const fireHose = callback => {
+    const messageCallback = (channel, message) => {
+        if (channel === STREAM_NAME) {
+            callback(JSON.parse(message));
+        }
+    };
+    all().then(data => {
+        callback({
+            type: 'new',
+            data: data.features.map(compileStream)
+        });
+    });
 
-export const stream = callback => {
-    emitter.on('data', callback);
-    if (emitter.listenerCount('data') === 1) {
-        cron();
-    }
+    redisPubSub.on('message', messageCallback);
+
     return {
         off: function () {
-            emitter.removeListener('data', callback);
+            redisPubSub.removeListener('message', messageCallback);
         }
     };
 };
 
-var newData = [];
-
-export const cron = async () => {
-    if (emitter.listenerCount('data') === 0) {
-        cacheData = null;
-        return;
-    }
-    if (!cacheData) {
-        cacheData = await all();
-        setTimeout(cron, config('STREAM_TTL_BIKEPOINT', true));
-        return;
-    }
-    newData = await all();
-
-    // update
-    var updatedBikePoints = cacheData.features.filter(row => {
-        var oldRow = newData.features.find(row2 => row2.properties.id === row.properties.id);
-        var tmpRow    = deepClone(row);
-        delete tmpRow.properties.last_update;
-        var tmpOldRow = deepClone(oldRow);
-        delete tmpOldRow.properties.last_update;
-
-        return oldRow && (JSON.stringify(tmpRow) !=  JSON.stringify(tmpOldRow));
+export const streamSingle = (bikePoint, callback) => {
+    const messageCallback = (channel, message) => {
+        if (channel === STREAM_NAME) {
+            message = JSON.parse(message);
+            for (var i = 0; i < message.data.length; i++) {
+                if (message.data[i].id == bikePoint) {
+                    callback({
+                        type: 'update',
+                        data: [compileStream(message.data[i].data)]
+                    });
+                }
+            }
+        }
+    };
+    all().then(data => {
+        for (var key in data.features) {
+            if (data.features[key].properties.id == bikePoint) {
+                callback({
+                    type: 'new',
+                    data: [compileStream(data.features[key])]
+                });
+            }
+        }
     });
+    redisPubSub.on('message', messageCallback);
 
-    if (updatedBikePoints.length) {
-        emitter.emit('data', {
-            type: 'update',
-            data: updatedBikePoints.map(compileStream)
-        });
-    }
-
-    // new
-    var newBikePoints = newData.features.filter(row => {
-        return !cacheData.features.find(row2 => row2.properties.id === row.properties.id);
-    });
-
-    if (newBikePoints.length) {
-        emitter.emit('data', {
-            type: 'new',
-            data: newBikePoints.map(compileStream)
-        });
-    }
-
-    // deleted
-    var deletedBikePoints = cacheData.features.filter(row => {
-        return !newData.features.find(row2 => row2.properties.id === row.properties.id);
-    });
-    if (deletedBikePoints.length) {
-        emitter.emit('data', {
-            type: 'delete',
-            data: deletedBikePoints.map(compileStream)
-        });
-    }
-
-    cacheData = newData;
-    setTimeout(cron, config('STREAM_TTL_BIKEPOINT', true));
+    return {
+        off: function () {
+            redisPubSub.removeListener('message', messageCallback);
+        }
+    };
 };
-
 
 export const compileStream = bikePoint => {
     return {

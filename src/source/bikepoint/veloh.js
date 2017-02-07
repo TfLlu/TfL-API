@@ -1,6 +1,6 @@
 import { veloh }  from '../../requests';
 
-export const loadBikePoints = () => veloh();
+export const loadBikePoints = (bikePoint) => veloh(bikePoint);
 
 export const all = async () => {
     var bikePoints = await loadBikePoints();
