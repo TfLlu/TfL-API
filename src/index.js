@@ -29,7 +29,7 @@ router.get('/StopPoint/:stopPoint',                      controller.stoppoint.ge
 router.get('/StopPoint/around/:lon/:lat/:radius',        controller.stoppoint.around);
 router.get('/StopPoint/box/:swlon/:swlat/:nelon/:nelat', controller.stoppoint.box);
 router.get('/StopPoint/search/:searchstring',            controller.stoppoint.search);
-router.io ('/StopPoint/Departures',                      controller.departures.streamIndex);
+router.io ('/StopPoint/Departures',                      controller.departures.fireHose);
 router.get('/StopPoint/Departures/:stopPoint',           controller.departures.get);
 router.io ('/StopPoint/Departures/:stopPoint',           controller.departures.streamSingle);
 router.get('/StopPoint/Departures/:stopPoint/:limit',    controller.departures.load);

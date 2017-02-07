@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.streamSingle = exports.stream = exports.all = exports.load = exports.get = undefined;
+exports.streamSingle = exports.fireHose = exports.all = exports.load = exports.get = undefined;
 
 var _mobiliteit = require('../../source/stoppoint/mobiliteit');
 
@@ -129,7 +129,7 @@ const all = exports.all = () => {
 };
 
 _redis.redisPubSub.psubscribe(STREAM_NAME + '*');
-const stream = exports.stream = callback => {
+const fireHose = exports.fireHose = callback => {
     const messageCallback = (pattern, channel, message) => {
         callback(JSON.parse(message));
     };
@@ -149,7 +149,6 @@ const stream = exports.stream = callback => {
 };
 
 const streamSingle = exports.streamSingle = (stopPoint, callback) => {
-    console.log(stopPoint);
     const messageCallback = (pattern, channel, message) => {
         if (channel === STREAM_NAME + stopPoint) {
             callback(JSON.parse(message));

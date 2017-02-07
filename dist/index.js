@@ -57,7 +57,7 @@ router.get('/StopPoint/:stopPoint', _controller2.default.stoppoint.get);
 router.get('/StopPoint/around/:lon/:lat/:radius', _controller2.default.stoppoint.around);
 router.get('/StopPoint/box/:swlon/:swlat/:nelon/:nelat', _controller2.default.stoppoint.box);
 router.get('/StopPoint/search/:searchstring', _controller2.default.stoppoint.search);
-router.io('/StopPoint/Departures', _controller2.default.departures.streamIndex);
+router.io('/StopPoint/Departures', _controller2.default.departures.fireHose);
 router.get('/StopPoint/Departures/:stopPoint', _controller2.default.departures.get);
 router.io('/StopPoint/Departures/:stopPoint', _controller2.default.departures.streamSingle);
 router.get('/StopPoint/Departures/:stopPoint/:limit', _controller2.default.departures.load);
