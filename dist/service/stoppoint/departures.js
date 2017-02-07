@@ -131,9 +131,7 @@ const all = exports.all = () => {
 _redis.redisPubSub.psubscribe(STREAM_NAME + '*');
 const stream = exports.stream = callback => {
     const messageCallback = (pattern, channel, message) => {
-        if (pattern === STREAM_NAME + '*') {
-            callback(JSON.parse(message));
-        }
+        callback(JSON.parse(message));
     };
     all().then(data => {
         callback({

@@ -95,9 +95,7 @@ export const all = () => {
 redisPubSub.psubscribe(STREAM_NAME + '*');
 export const stream = callback => {
     const messageCallback = (pattern, channel, message) => {
-        if (pattern === STREAM_NAME + '*') {
-            callback(JSON.parse(message));
-        }
+        callback(JSON.parse(message));
     };
     all().then(data => {
         callback({
