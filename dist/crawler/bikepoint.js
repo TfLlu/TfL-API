@@ -64,21 +64,13 @@ const crawl = (() => {
             return oldRow && JSON.stringify(tmpRow) != JSON.stringify(tmpOldRow);
         });
 
-        var logText = '';
-
         // update
         if (updatedBikePoints.length) {
-            for (var i = 0; i < updatedBikePoints.length; i++) {
-                logText = logText + updatedBikePoints[i].properties.id + ', ';
-            }
-            console.log((0, _moment2.default)().format('YYYY-MM-DD HH:mm:ss') + ' [update] ' + logText);
             _redis.redis.publish(PUB_TABLE, JSON.stringify({
                 type: 'update',
                 data: updatedBikePoints.map(bikepoint.compileStream)
             }));
         }
-
-        logText = '';
 
         // new
         var newBikePoints = newData.features.filter(function (row) {
@@ -88,17 +80,11 @@ const crawl = (() => {
         });
 
         if (newBikePoints.length) {
-            for (var i = 0; i < newBikePoints.length; i++) {
-                logText = logText + newBikePoints[i].properties.id + ', ';
-            }
-            console.log((0, _moment2.default)().format('YYYY-MM-DD HH:mm:ss') + ' [new   ] ' + logText);
             _redis.redis.publish(PUB_TABLE, JSON.stringify({
                 type: 'new',
                 data: newBikePoints.map(bikepoint.compileStream)
             }));
         }
-
-        logText = '';
 
         // deleted
         var deletedBikePoints = cache.features.filter(function (row) {
@@ -107,10 +93,6 @@ const crawl = (() => {
             });
         });
         if (deletedBikePoints.length) {
-            for (var i = 0; i < deletedBikePoints.length; i++) {
-                logText = logText + deletedBikePoints[i].properties.id + ', ';
-            }
-            console.log((0, _moment2.default)().format('YYYY-MM-DD HH:mm:ss') + ' [delete] ' + logText);
             _redis.redis.publish(PUB_TABLE, JSON.stringify({
                 type: 'delete',
                 data: deletedBikePoints.map(bikepoint.compileStream)
