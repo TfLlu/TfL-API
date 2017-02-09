@@ -22,7 +22,9 @@ router.get('/BikePoint/around/:lon/:lat/:radius',        controller.bikepoint.ar
 router.get('/BikePoint/box/:swlon/:swlat/:nelon/:nelat', controller.bikepoint.box);
 router.get('/BikePoint/search/:searchstring',            controller.bikepoint.search);
 router.get('/Occupancy/CarPark',                         controller.carpark.index);
+router.io ('/Occupancy/CarPark',                         controller.carpark.fireHose);
 router.get('/Occupancy/CarPark/:carPark',                controller.carpark.get);
+router.io ('/Occupancy/CarPark/:carPark',                controller.carpark.streamSingle);
 router.get('/StopPoint',                                 controller.stoppoint.index);
 router.io ('/StopPoint',                                 controller.stoppoint.streamIndex);
 router.get('/StopPoint/:stopPoint',                      controller.stoppoint.get);

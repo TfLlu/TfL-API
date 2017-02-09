@@ -3,11 +3,17 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.compileCarPark = exports.get = exports.all = undefined;
+exports.compileCarPark = exports.compileStream = exports.streamSingle = exports.fireHose = exports.get = exports.load = exports.all = undefined;
 
 var _vdl = require('../../source/occupancy/carpark/vdl');
 
 var vdl = _interopRequireWildcard(_vdl);
+
+var _config = require('../../config');
+
+var _config2 = _interopRequireDefault(_config);
+
+var _redis = require('../../redis');
 
 var _boom = require('boom');
 
@@ -19,7 +25,20 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
+const CACHE_NAME = (0, _config2.default)('NAME_VERSION', true) + '_cache_occupancy_carpark';
+const STREAM_NAME = (0, _config2.default)('NAME_VERSION', true) + '_occupancy_carpark';
+
 const all = exports.all = () => {
+    return _redis.redis.get(CACHE_NAME).then(function (result) {
+        if (result && result !== '') {
+            return JSON.parse(result);
+        } else {
+            throw new _boom2.default.serverUnavailable('all /Occupancy/CarPark endpoints are temporarily unavailable');
+        }
+    });
+};
+
+const load = exports.load = () => {
     const sources = {
         'vdl': vdl.all()
     };
@@ -62,6 +81,69 @@ const get = exports.get = (() => {
         return _ref.apply(this, arguments);
     };
 })();
+
+_redis.redisPubSub.subscribe(STREAM_NAME);
+const fireHose = exports.fireHose = callback => {
+    const messageCallback = (channel, message) => {
+        if (channel === STREAM_NAME) {
+            callback(JSON.parse(message));
+        }
+    };
+    all().then(data => {
+        callback({
+            type: 'new',
+            data: data.features.map(compileStream)
+        });
+    });
+
+    _redis.redisPubSub.on('message', messageCallback);
+
+    return {
+        off: function () {
+            _redis.redisPubSub.removeListener('message', messageCallback);
+        }
+    };
+};
+
+const streamSingle = exports.streamSingle = (carPark, callback) => {
+    const messageCallback = (channel, message) => {
+        if (channel === STREAM_NAME) {
+            message = JSON.parse(message);
+            for (var i = 0; i < message.data.length; i++) {
+                if (message.data[i].id == carPark) {
+                    callback({
+                        type: 'update',
+                        data: [compileStream(message.data[i].data)]
+                    });
+                }
+            }
+        }
+    };
+    all().then(data => {
+        for (var key in data.features) {
+            if (data.features[key].properties.id == carPark) {
+                callback({
+                    type: 'new',
+                    data: [compileStream(data.features[key])]
+                });
+            }
+        }
+    });
+    _redis.redisPubSub.on('message', messageCallback);
+
+    return {
+        off: function () {
+            _redis.redisPubSub.removeListener('message', messageCallback);
+        }
+    };
+};
+
+const compileStream = exports.compileStream = carpark => {
+    return {
+        id: carpark.properties.id,
+        data: carpark
+    };
+};
 
 const compileCarPark = exports.compileCarPark = function (provider, item) {
     item.properties.id = provider + ':' + item.properties.id;

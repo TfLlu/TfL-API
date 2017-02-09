@@ -50,7 +50,9 @@ router.get('/BikePoint/around/:lon/:lat/:radius', _controller2.default.bikepoint
 router.get('/BikePoint/box/:swlon/:swlat/:nelon/:nelat', _controller2.default.bikepoint.box);
 router.get('/BikePoint/search/:searchstring', _controller2.default.bikepoint.search);
 router.get('/Occupancy/CarPark', _controller2.default.carpark.index);
+router.io('/Occupancy/CarPark', _controller2.default.carpark.fireHose);
 router.get('/Occupancy/CarPark/:carPark', _controller2.default.carpark.get);
+router.io('/Occupancy/CarPark/:carPark', _controller2.default.carpark.streamSingle);
 router.get('/StopPoint', _controller2.default.stoppoint.index);
 router.io('/StopPoint', _controller2.default.stoppoint.streamIndex);
 router.get('/StopPoint/:stopPoint', _controller2.default.stoppoint.get);
