@@ -34,11 +34,11 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 const STREAM_NAME = (0, _config2.default)('NAME_VERSION', true) + '_stoppoint_departures_';
-const CACHE_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_stoppoint_departures_';
+const CACHE_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_stoppoint_departures';
 
 const get = exports.get = (() => {
     var _ref = _asyncToGenerator(function* (stopPoint) {
-        return _redis.redis.get(CACHE_TABLE + stopPoint).then(function (result) {
+        return _redis.redis.get(CACHE_TABLE + '_' + stopPoint).then(function (result) {
             if (result && result !== '') {
                 return result;
             } else {
@@ -150,17 +150,13 @@ const streamSingle = exports.streamSingle = (stopPoint, callback) => {
             callback(JSON.parse(message));
         }
     };
-    all().then(data => {
-        for (var key in data) {
-            if (key == stopPoint) {
-                callback({
-                    type: 'new',
-                    data: {
-                        [key]: data[key]
-                    }
-                });
+    get(stopPoint).then(data => {
+        callback({
+            type: 'new',
+            data: {
+                [stopPoint]: JSON.parse(data)
             }
-        }
+        });
     });
     _redis.redisPubSub.on('pmessage', messageCallback);
 

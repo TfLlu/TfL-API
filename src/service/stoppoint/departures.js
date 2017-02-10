@@ -5,11 +5,11 @@ import moment               from 'moment';
 import {redis, redisPubSub} from '../../redis';
 import Boom                 from 'boom';
 
-const STREAM_NAME = config('NAME_VERSION', true) + '_stoppoint_departures_';
-const CACHE_TABLE = config('NAME_VERSION', true) + '_cache_stoppoint_departures_';
+const STREAM_NAME     = config('NAME_VERSION', true) + '_stoppoint_departures_';
+const CACHE_TABLE     = config('NAME_VERSION', true) + '_cache_stoppoint_departures';
 
 export const get = async stopPoint => {
-    return redis.get(CACHE_TABLE + stopPoint)
+    return redis.get(CACHE_TABLE + '_' + stopPoint)
         .then(
             function (result) {
                 if (result && result !== '') {
@@ -114,17 +114,13 @@ export const streamSingle = (stopPoint, callback) => {
             callback(JSON.parse(message));
         }
     };
-    all().then(data => {
-        for (var key in data) {
-            if (key == stopPoint) {
-                callback({
-                    type: 'new',
-                    data: {
-                        [key]: data[key]
-                    }
-                });
+    get(stopPoint).then(data => {
+        callback({
+            type: 'new',
+            data: {
+                [stopPoint]: JSON.parse(data)
             }
-        }
+        });
     });
     redisPubSub.on('pmessage', messageCallback);
 
