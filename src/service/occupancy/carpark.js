@@ -11,7 +11,7 @@ export const all = () => {
         .then(
             function (result) {
                 if (result && result !== '') {
-                    return JSON.parse(result);
+                    return result;
                 } else {
                     throw new Boom.serverUnavailable('all /Occupancy/CarPark endpoints are temporarily unavailable');
                 }
@@ -69,6 +69,7 @@ export const fireHose = callback => {
         }
     };
     all().then(data => {
+        data = JSON.parse(data);
         callback({
             type: 'new',
             data: data.features.map(compileStream)
@@ -99,6 +100,7 @@ export const streamSingle = (carPark, callback) => {
         }
     };
     all().then(data => {
+        data = JSON.parse(data);
         for (var key in data.features) {
             if (data.features[key].properties.id == carPark) {
                 callback({

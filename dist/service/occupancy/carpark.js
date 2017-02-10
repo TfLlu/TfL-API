@@ -31,7 +31,7 @@ const STREAM_NAME = (0, _config2.default)('NAME_VERSION', true) + '_occupancy_ca
 const all = exports.all = () => {
     return _redis.redis.get(CACHE_NAME).then(function (result) {
         if (result && result !== '') {
-            return JSON.parse(result);
+            return result;
         } else {
             throw new _boom2.default.serverUnavailable('all /Occupancy/CarPark endpoints are temporarily unavailable');
         }
@@ -90,6 +90,7 @@ const fireHose = exports.fireHose = callback => {
         }
     };
     all().then(data => {
+        data = JSON.parse(data);
         callback({
             type: 'new',
             data: data.features.map(compileStream)
@@ -120,6 +121,7 @@ const streamSingle = exports.streamSingle = (carPark, callback) => {
         }
     };
     all().then(data => {
+        data = JSON.parse(data);
         for (var key in data.features) {
             if (data.features[key].properties.id == carPark) {
                 callback({
