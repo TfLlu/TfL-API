@@ -45,7 +45,7 @@ const load = exports.load = (() => {
 const current = exports.current = () => {
     return _redis.redis.get(CACHE_NAME).then(function (result) {
         if (result && result !== '') {
-            return JSON.parse(result);
+            return result;
         } else {
             throw new _boom2.default.serverUnavailable('the /Weather endpoint is temporarily unavailable');
         }
@@ -60,6 +60,7 @@ const fireHose = exports.fireHose = callback => {
         }
     };
     current().then(data => {
+        data = JSON.parse(data);
         callback({
             type: 'new',
             data: data

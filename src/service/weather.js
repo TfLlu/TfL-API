@@ -19,7 +19,7 @@ export const current = () => {
         .then(
             function (result) {
                 if (result && result !== '') {
-                    return JSON.parse(result);
+                    return result;
                 } else {
                     throw new Boom.serverUnavailable('the /Weather endpoint is temporarily unavailable');
                 }
@@ -35,6 +35,7 @@ export const fireHose = callback => {
         }
     };
     current().then(data => {
+        data = JSON.parse(data);
         callback({
             type: 'new',
             data: data

@@ -24,7 +24,7 @@ export const all = () => {
         .then(
             function (result) {
                 if (result && result !== '') {
-                    return JSON.parse(result);
+                    return result;
                 } else {
                     throw new Boom.serverUnavailable('all /BikePoints endpoints are temporarily unavailable');
                 }
@@ -65,7 +65,7 @@ export const load = () => {
 };
 
 export const get = async bikePoint => {
-    var bikePoints = (await all()).features;
+    var bikePoints = (await JSON.parse(all())).features;
     for (var i = 0; i < bikePoints.length; i++) {
         if (bikePoints[i].properties.id == bikePoint) {
             return bikePoints[i];
@@ -75,7 +75,7 @@ export const get = async bikePoint => {
 };
 
 export const around = async (lon, lat, radius) => {
-    var bikePoints = (await all()).features;
+    var bikePoints = (await JSON.parse(all())).features;
     var dist = 0;
     var bikePointsAround = [];
 
@@ -101,7 +101,7 @@ export const around = async (lon, lat, radius) => {
 };
 
 export const box = async (swlon, swlat, nelon, nelat) => {
-    var bikePoints = (await all()).features;
+    var bikePoints = (await JSON.parse(all())).features;
     var bikePointsInBox = bikePoints.filter(function(bikePoint) {
         return inbox(
             swlon, swlat, nelon, nelat,
@@ -116,7 +116,7 @@ export const box = async (swlon, swlat, nelon, nelat) => {
 };
 
 export const search = async searchString => {
-    var bikePoints = (await all()).features;
+    var bikePoints = (await JSON.parse(all())).features;
     var results = fuzzy.filter(searchString, bikePoints, fuzzyOptions);
     results = results.map(function(res) { return res.original; });
     return {
@@ -133,6 +133,7 @@ export const fireHose = callback => {
         }
     };
     all().then(data => {
+        data = JSON.parse(data);
         callback({
             type: 'new',
             data: data.features.map(compileStream)
@@ -163,6 +164,7 @@ export const streamSingle = (bikePoint, callback) => {
         }
     };
     all().then(data => {
+        data = JSON.parse(data);
         for (var key in data.features) {
             if (data.features[key].properties.id == bikePoint) {
                 callback({

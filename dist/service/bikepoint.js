@@ -58,7 +58,7 @@ const compileBikePoint = exports.compileBikePoint = function (provider, bikePoin
 const all = exports.all = () => {
     return _redis.redis.get(CACHE_NAME).then(function (result) {
         if (result && result !== '') {
-            return JSON.parse(result);
+            return result;
         } else {
             throw new _boom2.default.serverUnavailable('all /BikePoints endpoints are temporarily unavailable');
         }
@@ -95,7 +95,7 @@ const load = exports.load = () => {
 
 const get = exports.get = (() => {
     var _ref = _asyncToGenerator(function* (bikePoint) {
-        var bikePoints = (yield all()).features;
+        var bikePoints = (yield JSON.parse(all())).features;
         for (var i = 0; i < bikePoints.length; i++) {
             if (bikePoints[i].properties.id == bikePoint) {
                 return bikePoints[i];
@@ -111,7 +111,7 @@ const get = exports.get = (() => {
 
 const around = exports.around = (() => {
     var _ref2 = _asyncToGenerator(function* (lon, lat, radius) {
-        var bikePoints = (yield all()).features;
+        var bikePoints = (yield JSON.parse(all())).features;
         var dist = 0;
         var bikePointsAround = [];
 
@@ -137,7 +137,7 @@ const around = exports.around = (() => {
 
 const box = exports.box = (() => {
     var _ref3 = _asyncToGenerator(function* (swlon, swlat, nelon, nelat) {
-        var bikePoints = (yield all()).features;
+        var bikePoints = (yield JSON.parse(all())).features;
         var bikePointsInBox = bikePoints.filter(function (bikePoint) {
             return (0, _inbox2.default)(swlon, swlat, nelon, nelat, bikePoint.geometry.coordinates[0], bikePoint.geometry.coordinates[1]);
         });
@@ -154,7 +154,7 @@ const box = exports.box = (() => {
 
 const search = exports.search = (() => {
     var _ref4 = _asyncToGenerator(function* (searchString) {
-        var bikePoints = (yield all()).features;
+        var bikePoints = (yield JSON.parse(all())).features;
         var results = _fuzzy2.default.filter(searchString, bikePoints, fuzzyOptions);
         results = results.map(function (res) {
             return res.original;
@@ -178,6 +178,7 @@ const fireHose = exports.fireHose = callback => {
         }
     };
     all().then(data => {
+        data = JSON.parse(data);
         callback({
             type: 'new',
             data: data.features.map(compileStream)
@@ -208,6 +209,7 @@ const streamSingle = exports.streamSingle = (bikePoint, callback) => {
         }
     };
     all().then(data => {
+        data = JSON.parse(data);
         for (var key in data.features) {
             if (data.features[key].properties.id == bikePoint) {
                 callback({
