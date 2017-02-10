@@ -6,18 +6,14 @@ import {redis, redisPubSub} from '../../redis';
 import Boom                 from 'boom';
 
 const STREAM_NAME = config('NAME_VERSION', true) + '_stoppoint_departures_';
-const CACHE_TABLE = config('NAME_VERSION', true) + '_cache_stoppoint_departures';
+const CACHE_TABLE = config('NAME_VERSION', true) + '_cache_stoppoint_departures_';
 
 export const get = async stopPoint => {
-    return redis.get(CACHE_TABLE)
+    return redis.get(CACHE_TABLE + stopPoint)
         .then(
             function (result) {
                 if (result && result !== '') {
-                    var departures = JSON.parse(result)[stopPoint];
-                    if (!departures) {
-                        throw new Boom.notFound('No departures from stoppoint [' + stopPoint + '] found');
-                    }
-                    return departures;
+                    return result;
                 } else {
                     throw new Boom.serverUnavailable('Departures from stoppoint [' + stopPoint + '] are temporarily unavailable');
                 }

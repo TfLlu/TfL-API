@@ -6,7 +6,7 @@ const CACHE_TTL              = config('CACHE_TTL_STOPPOINT_DEPARTURE', true);
 const CRAWL_TTL              = config('CRAWL_TTL_STOPPOINT_DEPARTURE', true);
 const CRAWL_AMOUNT           = config('CRAWL_STOPPOINT_DEPARTURE_AMOUNT', true);
 const PUB_TABLE              = config('NAME_VERSION', true) + '_stoppoint_departures_';
-const CACHE_TABLE            = config('NAME_VERSION', true) + '_cache_stoppoint_departures';
+const CACHE_TABLE            = config('NAME_VERSION', true) + '_cache_stoppoint_departures_';
 const CACHE_STOPPOINTS_TABLE = config('NAME_VERSION', true) + '_cache_stoppoint';
 const MAX_CONCURRENT_CRAWLS  = config('CRAWL_MAX_CONCURRENT_STOPPOINT_DEPARTURE', true);
 
@@ -50,8 +50,8 @@ const worker = async retry => {
     if (!cache[stopPointID]) {
         cache[stopPointID] = newData;
         await redis.set(
-            CACHE_TABLE,
-            JSON.stringify(cache),
+            CACHE_TABLE + stopPointID,
+            JSON.stringify(newData),
             'EX',
             CACHE_TTL
         );
@@ -109,8 +109,8 @@ const worker = async retry => {
 
     cache[stopPointID] = newData;
     await redis.set(
-        CACHE_TABLE,
-        JSON.stringify(cache),
+        CACHE_TABLE + stopPointID,
+        JSON.stringify(newData),
         'EX',
         CACHE_TTL
     );

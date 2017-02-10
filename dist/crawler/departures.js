@@ -20,7 +20,7 @@ const CACHE_TTL = (0, _config2.default)('CACHE_TTL_STOPPOINT_DEPARTURE', true);
 const CRAWL_TTL = (0, _config2.default)('CRAWL_TTL_STOPPOINT_DEPARTURE', true);
 const CRAWL_AMOUNT = (0, _config2.default)('CRAWL_STOPPOINT_DEPARTURE_AMOUNT', true);
 const PUB_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_stoppoint_departures_';
-const CACHE_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_stoppoint_departures';
+const CACHE_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_stoppoint_departures_';
 const CACHE_STOPPOINTS_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_stoppoint';
 const MAX_CONCURRENT_CRAWLS = (0, _config2.default)('CRAWL_MAX_CONCURRENT_STOPPOINT_DEPARTURE', true);
 
@@ -64,7 +64,7 @@ const worker = (() => {
 
         if (!cache[stopPointID]) {
             cache[stopPointID] = newData;
-            yield _redis.redis.set(CACHE_TABLE, JSON.stringify(cache), 'EX', CACHE_TTL);
+            yield _redis.redis.set(CACHE_TABLE + stopPointID, JSON.stringify(newData), 'EX', CACHE_TTL);
             return;
         }
 
@@ -115,7 +115,7 @@ const worker = (() => {
         }
 
         cache[stopPointID] = newData;
-        yield _redis.redis.set(CACHE_TABLE, JSON.stringify(cache), 'EX', CACHE_TTL);
+        yield _redis.redis.set(CACHE_TABLE + stopPointID, JSON.stringify(newData), 'EX', CACHE_TTL);
     });
 
     return function worker(_x) {

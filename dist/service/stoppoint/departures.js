@@ -34,17 +34,13 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 const STREAM_NAME = (0, _config2.default)('NAME_VERSION', true) + '_stoppoint_departures_';
-const CACHE_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_stoppoint_departures';
+const CACHE_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_stoppoint_departures_';
 
 const get = exports.get = (() => {
     var _ref = _asyncToGenerator(function* (stopPoint) {
-        return _redis.redis.get(CACHE_TABLE).then(function (result) {
+        return _redis.redis.get(CACHE_TABLE + stopPoint).then(function (result) {
             if (result && result !== '') {
-                var departures = JSON.parse(result)[stopPoint];
-                if (!departures) {
-                    throw new _boom2.default.notFound('No departures from stoppoint [' + stopPoint + '] found');
-                }
-                return departures;
+                return result;
             } else {
                 throw new _boom2.default.serverUnavailable('Departures from stoppoint [' + stopPoint + '] are temporarily unavailable');
             }
