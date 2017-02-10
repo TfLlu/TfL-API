@@ -82,7 +82,9 @@ var influxdb = false;
 const streamCountToInflux = () => {
     influxdb.write('streamConnections').field({
         departures: _controller2.default.departures.streamCount(),
-        bikepoint: _controller2.default.bikepoint.streamCount()
+        bikepoint: _controller2.default.bikepoint.streamCount(),
+        carpark: _controller2.default.carpark.streamCount(),
+        weather: _controller2.default.weather.streamCount()
     }).then();
     return;
 };

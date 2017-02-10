@@ -59,8 +59,8 @@ const streamCountToInflux = () => {
         .field({
             departures: controller.departures.streamCount(),
             bikepoint:  controller.bikepoint.streamCount(),
-            carpark:  controller.carpark.streamCount(),
-            weather:  controller.weather.streamCount()
+            carpark:    controller.carpark.streamCount(),
+            weather:    controller.weather.streamCount()
         })
         .then();
     return;
