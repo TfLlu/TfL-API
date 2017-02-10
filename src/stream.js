@@ -40,7 +40,7 @@ const Stream = {
                 const action = layer.stack[layer.stack.length - 1];
 
                 const emit = data => {
-                    socket.emit('update', {
+                    socket.emit('data', {
                         path,
                         data
                     });
@@ -48,6 +48,8 @@ const Stream = {
 
                 action({
                     method: 'io',
+                    io,
+                    path,
                     params,
                     socket,
                     emit,

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.get = exports.index = undefined;
+exports.streamSingle = exports.get = exports.fireHose = exports.streamCount = exports.index = undefined;
 
 var _carpark = require('../../service/occupancy/carpark');
 
@@ -13,9 +13,16 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
+var streamClients = 0;
+
 const index = exports.index = (() => {
     var _ref = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield carpark.all();
+        try {
+            ctx.body = yield carpark.all();
+        } catch (boom) {
+            ctx.body = boom.output.payload;
+            ctx.status = boom.output.statusCode;
+        }
     });
 
     return function index(_x) {
@@ -23,12 +30,55 @@ const index = exports.index = (() => {
     };
 })();
 
-const get = exports.get = (() => {
-    var _ref2 = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield carpark.get(ctx.params.carPark);
+const streamCount = exports.streamCount = () => streamClients;
+
+const fireHose = exports.fireHose = (() => {
+    var _ref2 = _asyncToGenerator(function* ({ emit, disconnect }) {
+        streamClients++;
+        var res = carpark.fireHose(function (data) {
+            emit(data);
+        });
+
+        disconnect(function () {
+            streamClients--;
+            res.off();
+        });
     });
 
-    return function get(_x2) {
+    return function fireHose(_x2) {
         return _ref2.apply(this, arguments);
+    };
+})();
+
+const get = exports.get = (() => {
+    var _ref3 = _asyncToGenerator(function* (ctx) {
+        try {
+            ctx.body = yield carpark.get(ctx.params.carPark);
+        } catch (boom) {
+            ctx.body = boom.output.payload;
+            ctx.status = boom.output.statusCode;
+        }
+    });
+
+    return function get(_x3) {
+        return _ref3.apply(this, arguments);
+    };
+})();
+
+const streamSingle = exports.streamSingle = (() => {
+    var _ref4 = _asyncToGenerator(function* ({ emit, disconnect, params }) {
+        streamClients++;
+        var res = carpark.streamSingle(params.carpark, function (data) {
+            emit(data);
+        });
+
+        disconnect(function () {
+            streamClients--;
+            res.off();
+        });
+    });
+
+    return function streamSingle(_x4) {
+        return _ref4.apply(this, arguments);
     };
 })();
