@@ -41,6 +41,10 @@ router.io ('/Weather',                                   controller.weather.stre
 
 app.use(monitor())
    .use(middleware.responseTime())
+   .use(async (ctx, next) => {
+       await next();
+       ctx.type = 'application/json';
+   })
    .use(router.routes())
    .use(router.allowedMethods());
 
