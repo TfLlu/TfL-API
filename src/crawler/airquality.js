@@ -1,6 +1,7 @@
 import * as airquality from '../service/weather/airquality';
 import config          from '../config';
 import {redis}         from '../redis';
+import deepClone       from 'deep-clone';
 
 var newData = [];
 var cache;
@@ -35,8 +36,12 @@ const crawl = async () => {
 
     // update
     var updatedWeatherStations = cache.features.filter(row => {
-        var oldRow = newData.features.find(row2 => row2.properties.id === row.properties.id);
-        return oldRow && (JSON.stringify(row) !=  JSON.stringify(oldRow));
+        var oldRow    = newData.features.find(row2 => row2.properties.id === row.properties.id);
+        var tmpRow    = deepClone(row);
+        delete tmpRow.properties.last_update;
+        var tmpOldRow = deepClone(oldRow);
+        delete tmpOldRow.properties.last_update;
+        return oldRow && (JSON.stringify(tmpRow) !=  JSON.stringify(tmpOldRow));
     });
 
     if (updatedWeatherStations.length) {

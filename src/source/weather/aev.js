@@ -1,5 +1,6 @@
 import { aev } from '../../requests';
 import luref   from '../../helper/luref';
+import moment  from 'moment';
 
 export const get = async (measurment) => {
     var raw = await aev(measurment);
@@ -47,6 +48,10 @@ export const load = async () => {
                         ]
                     };
                 }
+                var last_update = moment(measurment[1] + ' +0000', 'YYYYMMDDHHmm Z').format('x');
+                if (!tmpStations[id].last_update || last_update > tmpStations[id].last_update) {
+                    tmpStations[id].last_update = last_update;
+                }
                 tmpStations[id][sources[i]] = parseFloat(measurment[3]);
             }
         }
@@ -75,14 +80,15 @@ export const compileWeatherStation = (name, weatherStation) => {
             coordinates: weatherStation.coordinates
         },
         properties: {
-            id:     'aev:' + name,
-            name:   name,
-            temp:   weatherStation.temp || null,
-            pm10:   weatherStation.pm10 || null,
-            no2:    weatherStation.no2  || null,
-            o3:     weatherStation.o3   || null,
-            so2:    weatherStation.so2  || null,
-            co:     weatherStation.co   || null
+            id:          'aev:' + name,
+            name:        name,
+            temp:        weatherStation.temp        || null,
+            pm10:        weatherStation.pm10        || null,
+            no2:         weatherStation.no2         || null,
+            o3:          weatherStation.o3          || null,
+            so2:         weatherStation.so2         || null,
+            co:          weatherStation.co          || null,
+            last_update: weatherStation.last_update || null
         }
     };
 };

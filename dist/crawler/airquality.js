@@ -10,6 +10,10 @@ var _config2 = _interopRequireDefault(_config);
 
 var _redis = require('../redis');
 
+var _deepClone = require('deep-clone');
+
+var _deepClone2 = _interopRequireDefault(_deepClone);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -48,7 +52,11 @@ const crawl = (() => {
             var oldRow = newData.features.find(function (row2) {
                 return row2.properties.id === row.properties.id;
             });
-            return oldRow && JSON.stringify(row) != JSON.stringify(oldRow);
+            var tmpRow = (0, _deepClone2.default)(row);
+            delete tmpRow.properties.last_update;
+            var tmpOldRow = (0, _deepClone2.default)(oldRow);
+            delete tmpOldRow.properties.last_update;
+            return oldRow && JSON.stringify(tmpRow) != JSON.stringify(tmpOldRow);
         });
 
         if (updatedWeatherStations.length) {

@@ -11,6 +11,10 @@ var _luref = require('../../helper/luref');
 
 var _luref2 = _interopRequireDefault(_luref);
 
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
@@ -66,6 +70,10 @@ const load = exports.load = (() => {
                             coordinates: [(0, _luref2.default)(measurment[5]), (0, _luref2.default)(measurment[6])]
                         };
                     }
+                    var last_update = (0, _moment2.default)(measurment[1] + ' +0000', 'YYYYMMDDHHmm Z').format('x');
+                    if (!tmpStations[id].last_update || last_update > tmpStations[id].last_update) {
+                        tmpStations[id].last_update = last_update;
+                    }
                     tmpStations[id][sources[i]] = parseFloat(measurment[3]);
                 }
             }
@@ -105,7 +113,8 @@ const compileWeatherStation = exports.compileWeatherStation = (name, weatherStat
             no2: weatherStation.no2 || null,
             o3: weatherStation.o3 || null,
             so2: weatherStation.so2 || null,
-            co: weatherStation.co || null
+            co: weatherStation.co || null,
+            last_update: weatherStation.last_update || null
         }
     };
 };
