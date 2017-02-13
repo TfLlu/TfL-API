@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.streamSingle = exports.streamCount = exports.index = undefined;
+exports.streamSingle = exports.fireHose = exports.streamCount = exports.get = exports.index = undefined;
 
 var _airquality = require('../../service/weather/airquality');
 
@@ -18,7 +18,7 @@ var streamClients = 0;
 const index = exports.index = (() => {
     var _ref = _asyncToGenerator(function* (ctx) {
         try {
-            ctx.body = yield airquality.current();
+            ctx.body = yield airquality.all();
         } catch (boom) {
             ctx.body = boom.output.payload;
             ctx.status = boom.output.statusCode;
@@ -30,10 +30,25 @@ const index = exports.index = (() => {
     };
 })();
 
+const get = exports.get = (() => {
+    var _ref2 = _asyncToGenerator(function* (ctx) {
+        try {
+            ctx.body = yield airquality.get(ctx.params.weatherStation);
+        } catch (boom) {
+            ctx.body = boom.output.payload;
+            ctx.status = boom.output.statusCode;
+        }
+    });
+
+    return function get(_x2) {
+        return _ref2.apply(this, arguments);
+    };
+})();
+
 const streamCount = exports.streamCount = () => streamClients;
 
-const streamSingle = exports.streamSingle = (() => {
-    var _ref2 = _asyncToGenerator(function* ({ emit, disconnect }) {
+const fireHose = exports.fireHose = (() => {
+    var _ref3 = _asyncToGenerator(function* ({ emit, disconnect }) {
         streamClients++;
         var res = airquality.fireHose(function (data) {
             emit(data);
@@ -45,7 +60,25 @@ const streamSingle = exports.streamSingle = (() => {
         });
     });
 
-    return function streamSingle(_x2) {
-        return _ref2.apply(this, arguments);
+    return function fireHose(_x3) {
+        return _ref3.apply(this, arguments);
+    };
+})();
+
+const streamSingle = exports.streamSingle = (() => {
+    var _ref4 = _asyncToGenerator(function* ({ emit, disconnect, params }) {
+        streamClients++;
+        var res = airquality.streamSingle(params.weatherStation, function (data) {
+            emit(data);
+        });
+
+        disconnect(function () {
+            streamClients--;
+            res.off();
+        });
+    });
+
+    return function streamSingle(_x4) {
+        return _ref4.apply(this, arguments);
     };
 })();

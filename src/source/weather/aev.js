@@ -1,10 +1,6 @@
 import { aev } from '../../requests';
 import luref   from '../../helper/luref';
 
-export const current = async () => {
-    return await load();
-};
-
 export const get = async (measurment) => {
     var raw = await aev(measurment);
     var rawData = /<DATA_RESULT>([^<]*)<\/DATA_RESULT>/g.exec(raw)[1].split('|');
@@ -40,15 +36,18 @@ export const load = async () => {
             for(let j=0; j < measurments.length; j++) {
                 var measurment = measurments[j].split(';');
 
-                if (!tmpStations[measurment[0]]) {
-                    tmpStations[measurment[0]] = {
+                // remove special characters from name
+                var id = measurment[0].replace(/-/g,'').replace(/[\s&\/\\#,+()$~%.'":*?<>{}]/g,'-');
+
+                if (!tmpStations[id]) {
+                    tmpStations[id] = {
                         coordinates: [
                             luref(measurment[5]),
                             luref(measurment[6])
                         ]
                     };
                 }
-                tmpStations[measurment[0]][sources[i]] = parseFloat(measurment[3]);
+                tmpStations[id][sources[i]] = parseFloat(measurment[3]);
             }
         }
 

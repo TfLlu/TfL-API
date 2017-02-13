@@ -37,8 +37,11 @@ router.io ('/StopPoint/Departures/:stopPoint',           controller.departures.s
 router.get('/StopPoint/Departures/:stopPoint/:limit',    controller.departures.load);
 router.get('/Journey/:from/to/:to',                      controller.journey.plan);
 router.get('/Weather',                                   controller.weather.current);
-router.get('/Weather/AirQuality',                        controller.airquality.index);
 router.io ('/Weather',                                   controller.weather.streamSingle);
+router.get('/Weather/AirQuality',                        controller.airquality.index);
+router.io ('/Weather/AirQuality',                        controller.airquality.fireHose);
+router.get('/Weather/AirQuality/:weatherStation',        controller.airquality.get);
+router.io ('/Weather/AirQuality/:weatherStation',        controller.airquality.streamSingle);
 
 app.use(monitor())
    .use(middleware.responseTime())
