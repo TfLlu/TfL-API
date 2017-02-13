@@ -46,3 +46,8 @@ export const meteolux = () => {
     const url = config('URL_WEATHER_METEOLUX', true);
     return run('meteolux', url);
 };
+
+export const aev = (measurement) => {
+    const url = config('URL_WEATHER_AEV', true) + measurement;
+    return run('aev', url);
+};

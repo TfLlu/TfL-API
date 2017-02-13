@@ -67,6 +67,7 @@ router.io('/StopPoint/Departures/:stopPoint', _controller2.default.departures.st
 router.get('/StopPoint/Departures/:stopPoint/:limit', _controller2.default.departures.load);
 router.get('/Journey/:from/to/:to', _controller2.default.journey.plan);
 router.get('/Weather', _controller2.default.weather.current);
+router.get('/Weather/AirQuality', _controller2.default.airquality.index);
 router.io('/Weather', _controller2.default.weather.streamSingle);
 
 app.use((0, _monitor2.default)()).use(_monitor.middleware.responseTime()).use((() => {

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.meteolux = exports.mobiliteitDeparture = exports.mobiliteitStoppoints = exports.vdl = exports.openov = exports.velok = exports.veloh = undefined;
+exports.aev = exports.meteolux = exports.mobiliteitDeparture = exports.mobiliteitStoppoints = exports.vdl = exports.openov = exports.velok = exports.veloh = undefined;
 
 var _config = require('./config');
 
@@ -52,4 +52,9 @@ const mobiliteitDeparture = exports.mobiliteitDeparture = (stopPoint, maxJourney
 const meteolux = exports.meteolux = () => {
     const url = (0, _config2.default)('URL_WEATHER_METEOLUX', true);
     return run('meteolux', url);
+};
+
+const aev = exports.aev = measurement => {
+    const url = (0, _config2.default)('URL_WEATHER_AEV', true) + measurement;
+    return run('aev', url);
 };
