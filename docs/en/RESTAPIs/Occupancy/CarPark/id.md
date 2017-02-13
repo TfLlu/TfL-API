@@ -105,5 +105,5 @@ _**All the following values can be null**_
 ```
 
 ## License
-Please refer to [Occupancy](/RESTAPIs/Occupancy.md#license) for information about the train and bus stop data licensing.
+Please refer to [Occupancy](/RESTAPIs/Occupancy.md#license) for information about the occupancy data licensing.
 {% endblock %}

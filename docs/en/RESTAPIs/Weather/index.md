@@ -59,5 +59,5 @@ The [OpenWeathermap](https://openweathermap.org) API documentation can be found 
 ```
 
 ## License
-Please refer to [Weather](/RESTAPIs/Weather.md#license) for information about the train and bus stop data licensing.
+Please refer to [Weather](/RESTAPIs/Weather.md#license) for information about the weather data licensing.
 {% endblock %}
