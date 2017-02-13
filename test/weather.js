@@ -71,4 +71,40 @@ describe('Weather', () => {
                 });
         });
     });
+    describe('GET /Weather/Airqulity/aev:Lux-Bonnevoie', () => {
+        it('should get current airquality conditions from Bonnevoie', (done) => {
+            chai.request(server)
+                .get('/Weather/Airquality/aev:Lux-Bonnevoie')
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.should.be.json;
+                    res.body.should.be.a('object');
+                    geojsonValidation.isFeature(res.body).should.be.equal(true);
+                    var props = res.body.properties;
+                    props.id.should.be.a('String');
+                    props.id.should.be.equal('aev:Lux-Bonnevoie');
+                    props.name.should.be.a('String');
+                    props.name.should.be.equal('Lux-Bonnevoie');
+                    if (props.temp !== null) {
+                        props.temp.should.be.a('Number');
+                    }
+                    if (props.pm10 !== null) {
+                        props.pm10.should.be.a('Number');
+                    }
+                    if (props.no2 !== null) {
+                        props.no2.should.be.a('Number');
+                    }
+                    if (props.o3 !== null) {
+                        props.o3.should.be.a('Number');
+                    }
+                    if (props.so2 !== null) {
+                        props.so2.should.be.a('Number');
+                    }
+                    if (props.co !== null) {
+                        props.co.should.be.a('Number');
+                    }
+                    done();
+                });
+        });
+    });
 });
