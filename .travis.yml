@@ -8,6 +8,7 @@ before_script:
   - node dist/crawler/departures.js
   - node dist/crawler/carpark.js
   - node dist/crawler/weather.js
+  - node dist/crawler/airquality.js
 services:
   - redis-server
 script: npm test
