@@ -9,6 +9,7 @@ import Boom                 from 'boom';
 
 const CACHE_NAME  = config('NAME_VERSION', true) + '_cache_bikepoint';
 const STREAM_NAME = config('NAME_VERSION', true) + '_bikepoint';
+const UNAVAILABLE_ERROR = new Boom.serverUnavailable('all /BikePoints endpoints are temporarily unavailable');
 
 var fuzzyOptions = {
     extract: function(obj) { return obj.properties.name + obj.properties.address + obj.properties.city; }
@@ -20,16 +21,20 @@ export const compileBikePoint = function(provider, bikePoint) {
 };
 
 export const all = () => {
+
     return redis.get(CACHE_NAME)
         .then(
             function (result) {
                 if (result && result !== '') {
                     return result;
                 } else {
-                    throw new Boom.serverUnavailable('all /BikePoints endpoints are temporarily unavailable');
+                    throw UNAVAILABLE_ERROR;
                 }
             }
-        );
+        )
+        .catch(() => {
+            throw UNAVAILABLE_ERROR;
+        });
 };
 
 export const load = () => {
@@ -58,9 +63,10 @@ export const load = () => {
             type: 'FeatureCollection',
             features: bikePoints
         };
-    }, err => {
+    })
+    .catch(err => {
         console.error(err);
-        throw new Boom.serverUnavailable('all /BikePoints endpoints are temporarily unavailable');
+        throw UNAVAILABLE_ERROR;
     });
 };
 

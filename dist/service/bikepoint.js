@@ -43,6 +43,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 const CACHE_NAME = (0, _config2.default)('NAME_VERSION', true) + '_cache_bikepoint';
 const STREAM_NAME = (0, _config2.default)('NAME_VERSION', true) + '_bikepoint';
+const UNAVAILABLE_ERROR = new _boom2.default.serverUnavailable('all /BikePoints endpoints are temporarily unavailable');
 
 var fuzzyOptions = {
     extract: function (obj) {
@@ -56,12 +57,15 @@ const compileBikePoint = exports.compileBikePoint = function (provider, bikePoin
 };
 
 const all = exports.all = () => {
+
     return _redis.redis.get(CACHE_NAME).then(function (result) {
         if (result && result !== '') {
             return result;
         } else {
-            throw new _boom2.default.serverUnavailable('all /BikePoints endpoints are temporarily unavailable');
+            throw UNAVAILABLE_ERROR;
         }
+    }).catch(() => {
+        throw UNAVAILABLE_ERROR;
     });
 };
 
@@ -87,9 +91,9 @@ const load = exports.load = () => {
             type: 'FeatureCollection',
             features: bikePoints
         };
-    }, err => {
+    }).catch(err => {
         console.error(err);
-        throw new _boom2.default.serverUnavailable('all /BikePoints endpoints are temporarily unavailable');
+        throw UNAVAILABLE_ERROR;
     });
 };
 
