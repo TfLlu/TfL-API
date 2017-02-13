@@ -28,6 +28,10 @@ var _stoppoint = require('./stoppoint');
 
 var stoppoint = _interopRequireWildcard(_stoppoint);
 
+var _departures = require('./stoppoint/departures');
+
+var departures = _interopRequireWildcard(_departures);
+
 var _journey = require('./journey');
 
 var journey = _interopRequireWildcard(_journey);
@@ -36,6 +40,10 @@ var _weather = require('./weather');
 
 var weather = _interopRequireWildcard(_weather);
 
+var _airquality = require('./weather/airquality');
+
+var airquality = _interopRequireWildcard(_airquality);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-exports.default = { home, test, bikepoint, occupancy, carpark, stoppoint, journey, weather };
+exports.default = { home, test, bikepoint, occupancy, carpark, stoppoint, departures, journey, weather, airquality };

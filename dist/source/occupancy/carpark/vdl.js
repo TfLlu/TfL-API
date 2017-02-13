@@ -60,13 +60,13 @@ const compileParking = exports.compileParking = parking => {
     var trend;
     switch (parseInt(parking['vdlxml:tendance'])) {
         case -1:
-            trend = 'down';
+            trend = 'up';
             break;
         case 0:
             trend = 'stable';
             break;
         case 1:
-            trend = 'up';
+            trend = 'down';
             break;
         default:
             trend = null;
