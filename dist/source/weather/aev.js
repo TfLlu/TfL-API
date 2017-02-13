@@ -61,25 +61,27 @@ const load = exports.load = (() => {
         Object.keys(data).map(function (key) {
             return data[key];
         })).then(function (results) {
-            var stations = {};
+            var tmpStations = {};
             for (let i = 0; i < results.length; i++) {
                 var measurments = results[i];
 
                 for (let j = 0; j < measurments.length; j++) {
                     var measurment = measurments[j].split(';');
 
-                    if (!stations[measurment[0]]) {
-                        stations[measurment[0]] = {
+                    if (!tmpStations[measurment[0]]) {
+                        tmpStations[measurment[0]] = {
                             coordinates: [(0, _luref2.default)(measurment[5]), (0, _luref2.default)(measurment[6])]
                         };
                     }
-                    stations[measurment[0]][sources[i]] = parseFloat(measurment[3]);
+                    tmpStations[measurment[0]][sources[i]] = parseFloat(measurment[3]);
                 }
             }
 
-            for (var key in stations) {
-                if (stations.hasOwnProperty(key)) {
-                    stations[key] = compileWeatherStation(key, stations[key]);
+            var stations = [];
+
+            for (var key in tmpStations) {
+                if (tmpStations.hasOwnProperty(key)) {
+                    stations.push(compileWeatherStation(key, tmpStations[key]));
                 }
             }
 
