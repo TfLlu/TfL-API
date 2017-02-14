@@ -62,5 +62,5 @@ The response will be formatted as a [JSON](https://en.wikipedia.org/wiki/JSON).
 ```
 
 ## License
-Please refer to [StopPoint/Departures](/RESTAPIs/StopPoint/Departures.md#license) for information about the train and bus departures data licensing.
+Please refer to [StopPoint/Departures](/RESTAPIs/StopPoint/departures.md#license) for information about the train and bus departures data licensing.
 {% endblock %}
