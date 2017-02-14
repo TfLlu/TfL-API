@@ -15,6 +15,7 @@
         - [GET StopPoint/around/{lon}/{lat}/{radius}](/RESTAPIs/StopPoint/around.md)
         - [GET StopPoint/Search/{query}](/RESTAPIs/StopPoint/search.md)
         - [StopPoint/Departures](/RESTAPIs/StopPoint/departures.md)
+            - [GET StopPoint/Departures](/RESTAPIs/StopPoint/Departures/index.md)
             - [GET StopPoint/Departures/{ID}](/RESTAPIs/StopPoint/Departures/id.md)
             - [GET StopPoint/Departures/{ID}/{limit}](/RESTAPIs/StopPoint/Departures/id-limit.md)
     - [Journey](/RESTAPIs/Journey.md)
