@@ -8,6 +8,19 @@ import Boom                 from 'boom';
 const STREAM_NAME     = config('NAME_VERSION', true) + '_stoppoint_departures_';
 const CACHE_TABLE     = config('NAME_VERSION', true) + '_cache_stoppoint_departures';
 
+export const index = async () => {
+    return redis.get(CACHE_TABLE)
+        .then(
+            function (result) {
+                if (result && result !== '') {
+                    return result;
+                } else {
+                    throw new Boom.serverUnavailable('Departures are temporarily unavailable');
+                }
+            }
+        );
+};
+
 export const get = async stopPoint => {
     return redis.get(CACHE_TABLE + '_' + stopPoint)
         .then(

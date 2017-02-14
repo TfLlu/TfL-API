@@ -27,6 +27,7 @@ router.get('/Occupancy/CarPark/:carPark',                controller.carpark.get)
 router.io ('/Occupancy/CarPark/:carPark',                controller.carpark.streamSingle);
 router.get('/StopPoint',                                 controller.stoppoint.index);
 router.io ('/StopPoint',                                 controller.stoppoint.streamIndex);
+router.get('/StopPoint/Departures',                      controller.departures.index);
 router.get('/StopPoint/:stopPoint',                      controller.stoppoint.get);
 router.get('/StopPoint/around/:lon/:lat/:radius',        controller.stoppoint.around);
 router.get('/StopPoint/box/:swlon/:swlat/:nelon/:nelat', controller.stoppoint.box);

@@ -57,6 +57,7 @@ router.get('/Occupancy/CarPark/:carPark', _controller2.default.carpark.get);
 router.io('/Occupancy/CarPark/:carPark', _controller2.default.carpark.streamSingle);
 router.get('/StopPoint', _controller2.default.stoppoint.index);
 router.io('/StopPoint', _controller2.default.stoppoint.streamIndex);
+router.get('/StopPoint/Departures', _controller2.default.departures.index);
 router.get('/StopPoint/:stopPoint', _controller2.default.stoppoint.get);
 router.get('/StopPoint/around/:lon/:lat/:radius', _controller2.default.stoppoint.around);
 router.get('/StopPoint/box/:swlon/:swlat/:nelon/:nelat', _controller2.default.stoppoint.box);

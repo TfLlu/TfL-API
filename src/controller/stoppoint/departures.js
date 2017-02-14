@@ -2,6 +2,15 @@ import * as departures from '../../service/stoppoint/departures';
 
 var streamClients = 0;
 
+export const index = async ctx => {
+    try {
+        ctx.body = await departures.index();
+    } catch (boom) {
+        ctx.body = boom.output.payload;
+        ctx.status = boom.output.statusCode;
+    }
+};
+
 export const get = async ctx => {
     try {
         ctx.body = await departures.get(

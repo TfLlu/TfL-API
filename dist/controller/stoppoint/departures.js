@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.streamSingle = exports.fireHose = exports.streamCount = exports.load = exports.get = undefined;
+exports.streamSingle = exports.fireHose = exports.streamCount = exports.load = exports.get = exports.index = undefined;
 
 var _departures = require('../../service/stoppoint/departures');
 
@@ -15,8 +15,23 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 var streamClients = 0;
 
-const get = exports.get = (() => {
+const index = exports.index = (() => {
     var _ref = _asyncToGenerator(function* (ctx) {
+        try {
+            ctx.body = yield departures.index();
+        } catch (boom) {
+            ctx.body = boom.output.payload;
+            ctx.status = boom.output.statusCode;
+        }
+    });
+
+    return function index(_x) {
+        return _ref.apply(this, arguments);
+    };
+})();
+
+const get = exports.get = (() => {
+    var _ref2 = _asyncToGenerator(function* (ctx) {
         try {
             ctx.body = yield departures.get(parseInt(ctx.params.stopPoint));
         } catch (boom) {
@@ -25,13 +40,13 @@ const get = exports.get = (() => {
         }
     });
 
-    return function get(_x) {
-        return _ref.apply(this, arguments);
+    return function get(_x2) {
+        return _ref2.apply(this, arguments);
     };
 })();
 
 const load = exports.load = (() => {
-    var _ref2 = _asyncToGenerator(function* (ctx) {
+    var _ref3 = _asyncToGenerator(function* (ctx) {
         try {
             ctx.body = yield departures.load(parseInt(ctx.params.stopPoint), parseInt(ctx.params.limit));
         } catch (boom) {
@@ -40,15 +55,15 @@ const load = exports.load = (() => {
         }
     });
 
-    return function load(_x2) {
-        return _ref2.apply(this, arguments);
+    return function load(_x3) {
+        return _ref3.apply(this, arguments);
     };
 })();
 
 const streamCount = exports.streamCount = () => streamClients;
 
 const fireHose = exports.fireHose = (() => {
-    var _ref3 = _asyncToGenerator(function* ({ emit, disconnect }) {
+    var _ref4 = _asyncToGenerator(function* ({ emit, disconnect }) {
         streamClients++;
         var res = departures.fireHose(function (data) {
             emit(data);
@@ -60,13 +75,13 @@ const fireHose = exports.fireHose = (() => {
         });
     });
 
-    return function fireHose(_x3) {
-        return _ref3.apply(this, arguments);
+    return function fireHose(_x4) {
+        return _ref4.apply(this, arguments);
     };
 })();
 
 const streamSingle = exports.streamSingle = (() => {
-    var _ref4 = _asyncToGenerator(function* ({ emit, disconnect, params }) {
+    var _ref5 = _asyncToGenerator(function* ({ emit, disconnect, params }) {
         streamClients++;
         var res = departures.streamSingle(parseInt(params.stopPoint), function (data) {
             emit(data);
@@ -78,7 +93,7 @@ const streamSingle = exports.streamSingle = (() => {
         });
     });
 
-    return function streamSingle(_x4) {
-        return _ref4.apply(this, arguments);
+    return function streamSingle(_x5) {
+        return _ref5.apply(this, arguments);
     };
 })();
