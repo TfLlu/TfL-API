@@ -60,12 +60,12 @@ const loadCache = async () => {
         console.log('BIKEPOINT CRAWLER LOAD CACHE ERROR', err.message);
     }
 
-    return nextCrawl();
+    return true;
 };
 
 const crawl = async () => {
     if (await loadCache()) {
-        return;
+        return nextCrawl();
     }
 
     try {
