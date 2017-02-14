@@ -1,7 +1,7 @@
 {% extends "/docs.md" %}
 {% block content %}
 # GET StopPoint/Departures/{ID}
-Returns the 10 next departures from a single bus and/or train stop requested by the ID parameter.
+Returns the 20 next departures from a single bus and/or train stop requested by the ID parameter.
 
 ## Parameters
 | Parameter         | Example value                   | Description |
@@ -17,6 +17,7 @@ The response will be formatted as a [JSON](https://en.wikipedia.org/wiki/JSON).
 ## Object properties
 | Key               | Type      | Possible values                   | Description |
 | ----------------- | --------- | --------------------------------- | ----------- |
+| **id**            | `string`  | `{id}`                            | Id of the departure |
 | **type**          | `string`  | - `'train'`<br />- `'bus'`        | type of transportation |
 | **trainId**       | `string`  | - `{trainId}`<br />- `NULL`       | train id _(null on busses)_ |
 | **line**          | `string`  | - `{line}`<br />- `NULL`          | bus or train line (currently null for all trains as info is missing on [Verkéiersverbond](https://data.public.lu/en/organizations/mobiliteitszentral/) API) |
@@ -32,27 +33,29 @@ The response will be formatted as a [JSON](https://en.wikipedia.org/wiki/JSON).
 **GET** https://api.tfl.lu/v1/StopPoint/Departures/200405035
 ```json
 [{
+	"id": "1|5232|4|82|14022017",
 	"type": "bus",
 	"trainId": null,
-	"line": "18",
-	"number": 2667,
-	"departure": 1485859140,
-	"delay": 60,
+	"line": "13",
+	"number": 1123,
+	"departure": 1487086020,
+	"delay": 0,
 	"live": true,
-	"departureISO": "2017-01-31T11:39:00+01:00",
-	"destination": "Kirchberg, Luxexpo Entrée Sud Quai 1",
-	"destinationId": 200417023
+	"departureISO": "2017-02-14T16:27:00+01:00",
+	"destination": "Luxembourg/Strassen, Centre Hospitalier",
+	"destinationId": 200405008
 }, {
-    "type": "train",
-    "trainId": "CRE 3811",
-    "line": "",
-    "number": 3811,
-    "departure": 1485859500,
-    "delay": 0,
-    "live": false,
-    "departureISO": "2017-01-31T11:45:00+01:00",
-    "destination": "Troisvierges, Gare",
-    "destinationId": 110606001
+	"id": "1|5776|0|82|14022017",
+	"type": "bus",
+	"trainId": null,
+	"line": "9",
+	"number": 2660,
+	"departure": 1487086020,
+	"delay": 0,
+	"live": true,
+	"departureISO": "2017-02-14T16:27:00+01:00",
+	"destination": "Cents, Waassertuerm",
+	"destinationId": 200406019
 }, {
 	...
 }]

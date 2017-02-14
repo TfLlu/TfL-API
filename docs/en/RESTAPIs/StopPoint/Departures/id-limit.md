@@ -18,6 +18,7 @@ The response will be formatted as a [JSON](https://en.wikipedia.org/wiki/JSON).
 ## Object properties
 | Key               | Type      | Possible values                   | Description |
 | ----------------- | --------- | --------------------------------- | ----------- |
+| **id**            | `string`  | `{id}`                            | Id of the departure |
 | **type**          | `string`  | - `'train'`<br />- `'bus'`        | type of transportation |
 | **trainId**       | `string`  | - `{trainId}`<br />- `NULL`       | train id _(null on busses)_ |
 | **line**          | `string`  | - `{line}`<br />- `NULL`          | bus or train line (currently null for all trains as info is missing on [Verkéiersverbond](https://data.public.lu/en/organizations/mobiliteitszentral/) API) |
@@ -33,38 +34,41 @@ The response will be formatted as a [JSON](https://en.wikipedia.org/wiki/JSON).
 **GET** https://api.tfl.lu/v1/StopPoint/Departures/200405035/3
 ```json
 [{
+	"id": "1|637|57|82|14022017",
 	"type": "bus",
 	"trainId": null,
-	"line": "195",
-	"number": 307,
-	"departure": 1485861600,
-	"delay": 1380,
+	"line": "22",
+	"number": 2261,
+	"departure": 1487085900,
+	"delay": 0,
 	"live": true,
-	"departureISO": "2017-01-31T12:20:00+01:00",
-	"destination": "Kirchberg, Rehazenter",
-	"destinationId": 200417034
+	"departureISO": "2017-02-14T16:25:00+01:00",
+	"destination": "Strassen, Primeurs",
+	"destinationId": 200901024
 }, {
-	"type": "bus",
-	"trainId": null,
-	"line": "1",
-	"number": 1862,
-	"departure": 1485860880,
-	"delay": 120,
-	"live": true,
-	"departureISO": "2017-01-31T12:08:00+01:00",
-	"destination": "Kirchberg, Luxexpo Entrée Sud Quai 1",
-	"destinationId": 200417023
+	"id": "1|1305|3|82|14022017",
+	"type": "train",
+	"trainId": "RB 5836",
+	"line": "",
+	"number": 5836,
+	"departure": 1487085900,
+	"delay": 0,
+	"live": false,
+	"departureISO": "2017-02-14T16:25:00+01:00",
+	"destination": "Arlon, Gare",
+	"destinationId": 300000003
 }, {
+	"id": "1|616|38|82|14022017",
 	"type": "bus",
 	"trainId": null,
-	"line": "194",
-	"number": 263,
-	"departure": 1485861060,
-	"delay": 240,
+	"line": "21",
+	"number": 2236,
+	"departure": 1487086080,
+	"delay": 60,
 	"live": true,
-	"departureISO": "2017-01-31T12:11:00+01:00",
-	"destination": "Sandweiler, Am Eck",
-	"destinationId": 200601001
+	"departureISO": "2017-02-14T16:28:00+01:00",
+	"destination": "Eich, Centre Culturel",
+	"destinationId": 200410001
 }]
 ```
 
