@@ -34,7 +34,7 @@ const nextCrawl = () => {
         try {
             return crawl();
         } catch (err) {
-            console.log('BIKEPOINT CRAWLER ERROR', err.message)
+            console.log('BIKEPOINT CRAWLER ERROR', err.message);
         }
     });
 };
@@ -134,7 +134,7 @@ const crawl = async () => {
         CACHE_TTL
     );
 
-    nextCrawl()
+    nextCrawl();
 };
 
 // Run crawler
