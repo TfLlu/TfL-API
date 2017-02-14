@@ -99,7 +99,8 @@ const streamCountToInflux = () => {
         departures: _controller2.default.departures.streamCount(),
         bikepoint: _controller2.default.bikepoint.streamCount(),
         carpark: _controller2.default.carpark.streamCount(),
-        weather: _controller2.default.weather.streamCount()
+        weather: _controller2.default.weather.streamCount(),
+        airquality: _controller2.default.airquality.streamCount()
     }).then();
     return;
 };

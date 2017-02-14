@@ -68,7 +68,8 @@ const streamCountToInflux = () => {
             departures: controller.departures.streamCount(),
             bikepoint:  controller.bikepoint.streamCount(),
             carpark:    controller.carpark.streamCount(),
-            weather:    controller.weather.streamCount()
+            weather:    controller.weather.streamCount(),
+            airquality: controller.airquality.streamCount()
         })
         .then();
     return;
