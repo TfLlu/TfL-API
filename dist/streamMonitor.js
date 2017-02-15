@@ -36,6 +36,7 @@ const streamCountToInflux = () => {
 
         for (let i = 0; i < results.length; i++) {
             data[sourceName[i]] = parseInt(results[i]);
+            if (isNaN(data[sourceName[i]])) data[sourceName[i]] = 0;
         }
         influxdb.write('streamConnections').field(data).then();
     }).catch(err => {
