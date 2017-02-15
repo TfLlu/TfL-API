@@ -58,7 +58,7 @@ Stream.bind(server, router);
 
 const PORT = config('SERVER_PORT', true);
 if (PORT) {
-    server.listen(PORT);
+    server.listen(PORT, 'localhost');
 }
 
 var influxdb = false;
