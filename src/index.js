@@ -6,7 +6,6 @@ import controller     from './controller';
 import { middleware } from './monitor';
 import monitor        from './monitor';
 import config         from './config';
-import Influx         from 'influxdb-nodejs';
 
 const app    = new Koa();
 const router = new KoaRouter();
@@ -59,26 +58,6 @@ Stream.bind(server, router);
 const PORT = config('SERVER_PORT', true);
 if (PORT) {
     server.listen(PORT, 'localhost');
-}
-
-var influxdb = false;
-
-const streamCountToInflux = () => {
-    influxdb.write('streamConnections')
-        .field({
-            departures: controller.departures.streamCount(),
-            bikepoint:  controller.bikepoint.streamCount(),
-            carpark:    controller.carpark.streamCount(),
-            weather:    controller.weather.streamCount(),
-            airquality: controller.airquality.streamCount()
-        })
-        .then();
-    return;
-};
-
-if (config('INFLUXDB')) {
-    influxdb = new Influx(config('INFLUXDB') + config('NAME_VERSION'));
-    setInterval(streamCountToInflux, 10000);
 }
 
 export default server;

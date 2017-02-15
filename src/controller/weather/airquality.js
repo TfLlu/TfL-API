@@ -1,6 +1,8 @@
 import * as airquality from '../../service/weather/airquality';
+import config          from '../../config';
+import {redis}         from '../../redis';
 
-var streamClients = 0;
+const STREAM_CLIENTS_KEY = config('NAME_VERSION', true) + '_stream_clients_weather_airquality';
 
 export const index = async ctx => {
     try {
@@ -20,28 +22,26 @@ export const get = async ctx => {
     }
 };
 
-export const streamCount = () => streamClients;
-
 export const fireHose = async ({ emit, disconnect }) => {
-    streamClients++;
+    redis.incr(STREAM_CLIENTS_KEY);
     var res = airquality.fireHose(data => {
         emit(data);
     });
 
     disconnect(() => {
-        streamClients--;
+        redis.decr(STREAM_CLIENTS_KEY);
         res.off();
     });
 };
 
 export const streamSingle = async ({ emit, disconnect, params }) => {
-    streamClients++;
+    redis.incr(STREAM_CLIENTS_KEY);
     var res = airquality.streamSingle(params.weatherStation, data => {
         emit(data);
     });
 
     disconnect(() => {
-        streamClients--;
+        redis.decr(STREAM_CLIENTS_KEY);
         res.off();
     });
 };
