@@ -89,21 +89,24 @@ const compileHighwayInfo = exports.compileHighwayInfo = highwayInfo => {
     }
 
     var coordinates = /([\d\.]+),([\d\.]+)/g.exec(highwayInfo.Point.coordinates);
-
     var fluidityRaw = highwayInfo.description.split('</span>');
-
-    var transitTimes = [];
-    var fluidity;
+    var transitTimes = {};
+    var fluidity, destination, time;
 
     for (var i = 0; i < fluidityRaw.length; i++) {
         fluidity = /time'>(.*?)\:\s(.*)/g.exec(fluidityRaw[i]);
-
-        return fluidity;
-
-        fluidity = {
-            [fluidity[1]]: fluidity[2]
-        };
-        transitTimes.push(fluidity);
+        if (fluidity === null) {
+            continue;
+        }
+        destination = fluidity[1];
+        time = fluidity[2];
+        if (time.indexOf('min') === -1) {
+            time = null;
+        } else {
+            time = /(\d+)min/g.exec(time);
+            time = parseInt(time[1]) * 60;
+        }
+        transitTimes[destination] = time;
     }
 
     return {
@@ -115,7 +118,7 @@ const compileHighwayInfo = exports.compileHighwayInfo = highwayInfo => {
         properties: {
             id: parseInt(/ID_(\d+)/g.exec(highwayInfo['$'].id)[1]),
             highway: highway,
-            transitTime: transitTimes
+            transitTimes: transitTimes
         }
     };
 };
