@@ -69,6 +69,7 @@ router.get('/Weather/AirQuality', _controller2.default.airquality.index);
 router.io('/Weather/AirQuality', _controller2.default.airquality.fireHose);
 router.get('/Weather/AirQuality/:weatherStation', _controller2.default.airquality.get);
 router.io('/Weather/AirQuality/:weatherStation', _controller2.default.airquality.streamSingle);
+router.get('/Highway', _controller2.default.highway.index);
 
 app.use((0, _monitor2.default)()).use(_monitor.middleware.responseTime()).use((() => {
     var _ref = _asyncToGenerator(function* (ctx, next) {

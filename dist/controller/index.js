@@ -44,6 +44,10 @@ var _airquality = require('./weather/airquality');
 
 var airquality = _interopRequireWildcard(_airquality);
 
+var _highway = require('./highway');
+
+var highway = _interopRequireWildcard(_highway);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-exports.default = { home, test, bikepoint, occupancy, carpark, stoppoint, departures, journey, weather, airquality };
+exports.default = { home, test, bikepoint, occupancy, carpark, stoppoint, departures, journey, weather, airquality, highway };

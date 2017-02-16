@@ -51,3 +51,8 @@ export const aev = (measurement) => {
     const url = config('URL_WEATHER_AEV', true) + measurement;
     return run('aev', url);
 };
+
+export const cita = () => {
+    const url = config('URL_HIGHWAY_CITA', true);
+    return run('cita', url);
+};
