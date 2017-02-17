@@ -1,18 +1,13 @@
 {% extends "/docs.md" %}
 {% block content %}
-# GET Weather/Airquality/{ID}
-Returns the current air quality data from a single location collected by [Administration de l'Environnement](http://www.environnement.public.lu/).
-
-## Parameters
-| Parameter | Example value       | Description |
-| --------- | --------------------| ----------- |
-| **id**    | `aev:Lux-Bonnevoie` | Id `integer` of weather station as found in [`GET /Weather/AirQuality`](/RESTAPIs/Weather/AirQuality/index.md) |
+# /Weather/Airquality
+Returns the current air quality data from various locations in Luxembourg collected by [Administration de l'Environnement](http://www.environnement.public.lu/) and sends you updates as they are processed by our engine.
 
 ## Resource URL
-    https://api.tfl.lu/v1/Weather/Airquality/{ID}
+    /Weather/Airquality
 
 ## Format
-The response will be formatted as a [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) [Feature](http://geojson.org/geojson-spec.html#feature-objects).
+The response will be formatted as [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) [Features](http://geojson.org/geojson-spec.html#feature-objects).
 
 ## Object properties
 | Key             | Type      | Possible values                    | Description                                                                                                          |
@@ -28,32 +23,55 @@ The response will be formatted as a [GeoJSON](https://en.wikipedia.org/wiki/GeoJ
 | **last_update** | `integer` | `{last_update}`                    | last update of the data in [Unix time](https://en.wikipedia.org/wiki/Unix_time) (milliseconds)                       |
 
 
-## Sample request & response
-**GET** https://api.tfl.lu/v1/Weather/Airquality/aev:Lux-Bonnevoie
+## Sample channels & response
+/Weather/Airquality
 ```json
 {
-	"type": "Feature",
-	"geometry": {
-		"type": "Point",
-		"coordinates": [
-			6.137603,
-			49.597692
-		]
-	},
-	"properties": {
-		"id": "aev:Lux-Bonnevoie",
-		"name": "Lux-Bonnevoie",
-		"temp": null,
-		"pm10": 40,
-		"no2": 43,
-		"o3": 29,
-		"so2": 2.4,
-		"co": 0.4,
-		"last_update": "1487001600000"
-	}
+	"type": "update",
+	"data": [{
+		"id": "aev:Esch-Alzette",
+		"data": {
+			"type": "Feature",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [5.976941, 49.505011]
+			},
+			"properties": {
+				"id": "aev:Esch-Alzette",
+				"name": "Esch-Alzette",
+				"temp": 8.5,
+				"pm10": 15,
+				"no2": 12.9,
+				"o3": 54,
+				"so2": 1.2,
+				"co": 0.2,
+				"last_update": "1487340000000"
+			}
+		}
+	}, {
+		"id": "aev:Beidweiler",
+		"data": {
+			"type": "Feature",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [6.305332, 49.722229]
+			},
+			"properties": {
+				"id": "aev:Beidweiler",
+				"name": "Beidweiler",
+				"temp": 7,
+				"pm10": 10,
+				"no2": 6.4,
+				"o3": 62,
+				"so2": 2.5,
+				"co": null,
+				"last_update": "1487340000000"
+			}
+		}
+	}]
 }
 ```
 
 ## License
-Please refer to [Weather/AirQuality](/RESTAPIs/Weather.md#license) for information about the air quality data licensing.
+Please refer to [Weather/AirQuality](/Streaming_APIs/Weather.md#license) for information about the air quality data licensing.
 {% endblock %}

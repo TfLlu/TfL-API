@@ -14,6 +14,8 @@ Below are some documents that will help you get going with the Streaming APIs as
 - [StopPoint](/Streaming_APIs/StopPoint.md)
 - [StopPoint/Departures](/Streaming_APIs/StopPoint/departures.md)
 - [Occupancy](/Streaming_APIs/Occupancy.md)
+- [Weather](/Streaming_APIs/Weather.md)
+- [Weather/AirQuality](/Streaming_APIs/Weather/airquality.md)
 
 ## Feedback
 If you find any issues with the Streaming API, please notify us via [Twitter](https://twitter.com/TfLlu) or [email](mailto:tfl@ion.lu) where we’ll be actively listening to your feedback. We look forward to working with you, and can’t wait to see what everyone builds!

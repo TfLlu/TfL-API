@@ -1,7 +1,7 @@
 {% extends "/docs.md" %}
 {% block content %}
-# GET Weather/Airquality/{ID}
-Returns the current air quality data from a single location collected by [Administration de l'Environnement](http://www.environnement.public.lu/).
+# /Weather/Airquality/{ID}
+Returns the current air quality data from a single location collected by [Administration de l'Environnement](http://www.environnement.public.lu/) and sends you updates as they are processed by our engine.
 
 ## Parameters
 | Parameter | Example value       | Description |
@@ -9,7 +9,7 @@ Returns the current air quality data from a single location collected by [Admini
 | **id**    | `aev:Lux-Bonnevoie` | Id `integer` of weather station as found in [`GET /Weather/AirQuality`](/RESTAPIs/Weather/AirQuality/index.md) |
 
 ## Resource URL
-    https://api.tfl.lu/v1/Weather/Airquality/{ID}
+    /Weather/Airquality/{ID}
 
 ## Format
 The response will be formatted as a [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) [Feature](http://geojson.org/geojson-spec.html#feature-objects).
@@ -28,32 +28,35 @@ The response will be formatted as a [GeoJSON](https://en.wikipedia.org/wiki/GeoJ
 | **last_update** | `integer` | `{last_update}`                    | last update of the data in [Unix time](https://en.wikipedia.org/wiki/Unix_time) (milliseconds)                       |
 
 
-## Sample request & response
-**GET** https://api.tfl.lu/v1/Weather/Airquality/aev:Lux-Bonnevoie
+## Sample channels & response
+/Weather/Airquality/aev:Esch-Alzette
 ```json
 {
-	"type": "Feature",
-	"geometry": {
-		"type": "Point",
-		"coordinates": [
-			6.137603,
-			49.597692
-		]
-	},
-	"properties": {
-		"id": "aev:Lux-Bonnevoie",
-		"name": "Lux-Bonnevoie",
-		"temp": null,
-		"pm10": 40,
-		"no2": 43,
-		"o3": 29,
-		"so2": 2.4,
-		"co": 0.4,
-		"last_update": "1487001600000"
-	}
+	"type": "new",
+	"data": [{
+		"id": "aev:Esch-Alzette",
+		"data": {
+			"type": "Feature",
+			"geometry": {
+				"type": "Point",
+				"coordinates": [5.976941, 49.505011]
+			},
+			"properties": {
+				"id": "aev:Esch-Alzette",
+				"name": "Esch-Alzette",
+				"temp": 8.5,
+				"pm10": 15,
+				"no2": 12.9,
+				"o3": 54,
+				"so2": 1.2,
+				"co": 0.2,
+				"last_update": "1487340000000"
+			}
+		}
+	}]
 }
 ```
 
 ## License
-Please refer to [Weather/AirQuality](/RESTAPIs/Weather.md#license) for information about the air quality data licensing.
+Please refer to [Weather/AirQuality](/Streaming_APIs/Weather.md#license) for information about the air quality data licensing.
 {% endblock %}
