@@ -5,7 +5,7 @@ The following [REST](https://en.wikipedia.org/wiki/Representational_state_transf
 Currently we're providing data from [Vel'oh](https://developer.jcdecaux.com/#/opendata/vls) and [Vel'ok](http://www.velok.lu/).
 
 ## License
-The data from [Vel'oh](https://developer.jcdecaux.com/#/opendata/vls) is licensed under [CC-BY 2.0](https://creativecommons.org/licenses/by/2.0/).<br />
+The data from [Vel'oh](https://developer.jcdecaux.com/#/opendata/vls) is licensed under [CC-BY 2.0](https://creativecommons.org/licenses/by/2.0/) &copy; JCDecaux.<br />
 The data from [Vel'ok](http://www.velok.lu/) is still unlicensed.
 
 ## Available endpoints
