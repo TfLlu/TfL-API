@@ -55,7 +55,7 @@ _**All the following values can be null**_
 | **restrictions.allowed_truck**   | `boolean`  | - `true`<br />- `false`     | Wether you are allowed tp park a truck or not |
 | **restrictions.max_height**      | `float`    | `{max_height}`              | Maximum vehicle height allowed |
 
-## Sample channels & response
+## Sample channel & response
 /Occupancy/CarPark/vdl:1
 ```json
 {
