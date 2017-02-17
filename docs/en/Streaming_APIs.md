@@ -12,6 +12,7 @@ Below are some documents that will help you get going with the Streaming APIs as
 
 - [BikePoint](/Streaming_APIs/BikePoint.md)
 - [StopPoint](/Streaming_APIs/StopPoint.md)
+- [StopPoint/Departures](/Streaming_APIs/StopPoint/departures.md)
 - [Occupancy](/Streaming_APIs/Occupancy.md)
 
 ## Feedback
