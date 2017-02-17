@@ -32,3 +32,6 @@
     - [BikePoint](/Streaming_APIs/BikePoint.md)
         - [/BikePoint](/Streaming_APIs/BikePoint/index.md)
         - [/BikePoint/{ID}](/Streaming_APIs/BikePoint/id.md)
+    - [Occupancy](/Streaming_APIs/Occupancy.md)
+        - [/Occupancy/CarPark](/Streaming_APIs/Occupancy/CarPark/index.md)
+        - [/Occupancy/CarPark/{ID}](/Streaming_APIs/Occupancy/CarPark/id.md)
