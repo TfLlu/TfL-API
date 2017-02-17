@@ -6,7 +6,7 @@ Returns the current state one single shared bike point requested by the ID param
 ## Parameters
 | Parameter         | Example value                   | Description |
 | ----------------- | ------------------------------- | ----------- |
-| **id** | `velok:1` | Id `string` of shared bike point as found in [`/BikePoint`](/RESTAPIs/BikePoint/index.md) |
+| **id** | `velok:1` | Id `string` of shared bike point as found in [`GET /BikePoint`](/RESTAPIs/BikePoint/index.md) |
 
 ## Resource URL
     https://api.tfl.lu/v1/BikePoint/{ID}

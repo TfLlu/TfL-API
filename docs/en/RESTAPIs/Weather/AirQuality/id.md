@@ -3,6 +3,11 @@
 # GET Weather/Airquality/{ID}
 Returns the current air quality data from a single location collected by [Administration de l'Environnement](http://www.environnement.public.lu/).
 
+## Parameters
+| Parameter | Example value       | Description |
+| --------- | --------------------| ----------- |
+| **id**    | `aev:Lux-Bonnevoie` | Id `integer` of weather station as found in [`GET /Weather/AirQuality`](/RESTAPIs/Weather/AirQuality/index.md) |
+
 ## Resource URL
     https://api.tfl.lu/v1/Weather/Airquality/{ID}
 
