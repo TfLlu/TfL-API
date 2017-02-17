@@ -1,6 +1,6 @@
 {% extends "/docs.md" %}
 {% block content %}
-# GET StopPoint
+# /StopPoint
 Returns all train and bus stops from Luxembourg integrated in Transport for Luxembourg and sends you updates as they are processed by our engine.
 
 ## Resource URL

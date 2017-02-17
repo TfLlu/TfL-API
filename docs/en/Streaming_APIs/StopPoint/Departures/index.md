@@ -1,6 +1,6 @@
 {% extends "/docs.md" %}
 {% block content %}
-# GET StopPoint/Departures
+# /StopPoint/Departures
 Returns the 20 next departures from all bus and/or train stops and sends you updates as they are processed by our engine.
 
 ## Resource URL

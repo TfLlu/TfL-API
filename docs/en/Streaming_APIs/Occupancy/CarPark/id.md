@@ -1,6 +1,6 @@
 {% extends "/docs.md" %}
 {% block content %}
-# GET Occupancy/CarPark/{ID}
+# /Occupancy/CarPark/{ID}
 Returns a single bus and/or train stop requested by the ID parameter and sends you updates as they are processed by our engine.
 
 ## Parameters
