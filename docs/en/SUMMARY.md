@@ -28,3 +28,4 @@
         - [Weather/AirQuality](/RESTAPIs/Weather/airquality.md)
             - [GET Weather/AirQuality](/RESTAPIs/Weather/AirQuality/index.md)
             - [GET Weather/AirQuality/{ID}](/RESTAPIs/Weather/AirQuality/id.md)
+* [Streaming APIs](/Streaming_APIs.md)

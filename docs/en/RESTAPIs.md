@@ -3,7 +3,7 @@
 # REST APIs
 The REST APIs provide programmatic access to read Transport for Luxembourg data. Read carpark occupancy data, upcoming bus/train departures from a stop point, and more. All responses are in [JSON](https://en.wikipedia.org/wiki/JSON) format.
 
-If your intention is to monitor or process our data in real-time, consider using the [Streaming APIs](/StreamingAPIs.md) instead.
+If your intention is to monitor or process our data in real-time, consider using the [Streaming APIs](/Streaming_APIs.md) instead.
 
 ## Endpoints
 Below are some documents that will help you get going with the REST APIs as quickly as possible:
