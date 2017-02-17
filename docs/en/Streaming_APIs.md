@@ -11,6 +11,7 @@ Just subscribe to the channel(s) you want to get the data from and create magica
 Below are some documents that will help you get going with the Streaming APIs as quickly as possible:
 
 - [BikePoint](/Streaming_APIs/BikePoint.md)
+- [StopPoint](/Streaming_APIs/StopPoint.md)
 - [Occupancy](/Streaming_APIs/Occupancy.md)
 
 ## Feedback
