@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+  - 6
+before_script:
+  - touch .env
+  - node dist/crawler/bikepoint.js
+  - node dist/crawler/stoppoint.js
+  - node dist/crawler/departures.js
+  - node dist/crawler/carpark.js
+  - node dist/crawler/weather.js
+  - node dist/crawler/airquality.js
+services:
+  - redis-server
+script: npm test

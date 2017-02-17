@@ -1,0 +1,77 @@
+{% extends "/docs.md" %}
+{% block content %}
+# GET StopPoint/Departures/{ID}/{limit}
+Returns the X next departures from a single bus and/or train stop requested by the ID parameter, _where X is equal to your requested {limit}_.
+
+## Parameters
+| Parameter         | Example value                   | Description |
+| ----------------- | ------------------------------- | ----------- |
+| **id** | `200405035` | Id `integer` of train and/or bus stop to get departures returned for |
+| **limit** | `3` | Amount of departures `integer` to get returned by the API |
+
+## Resource URL
+    https://api.tfl.lu/v1/StopPoint/Departures/{ID}/{limit}
+
+## Format
+The response will be formatted as a [JSON](https://en.wikipedia.org/wiki/JSON).
+
+## Object properties
+| Key               | Type      | Possible values                   | Description |
+| ----------------- | --------- | --------------------------------- | ----------- |
+| **id**            | `string`  | `{id}`                            | Id of the departure |
+| **type**          | `string`  | - `'train'`<br />- `'bus'`        | type of transportation |
+| **trainId**       | `string`  | - `{trainId}`<br />- `NULL`       | train id _(null on busses)_ |
+| **line**          | `string`  | - `{line}`<br />- `NULL`          | bus or train line (currently null for all trains as info is missing on [Verkéiersverbond](https://data.public.lu/en/organizations/mobiliteitszentral/) API) |
+| **number**        | `integer` | `{number}`                        | number given by [Verkéiersverbond](https://data.public.lu/en/organizations/mobiliteitszentral/). _Do not trust it to be unique_ |
+| **departure**     | `integer` | `{departure}`                     | calculated real life departure of train/bus in [Unix time](https://en.wikipedia.org/wiki/Unix_time) |
+| **delay**         | `integer` | `{delay}`                         | offset between `{departure}` and scheduled departure in seconds |
+| **live**          | `boolean` | - `true`<br />- `false`           | wether live data is available for the given train/bus or not |
+| **departureISO**  | `string`  | `{departureISO}`                  | calculated real life departure of train/bus in [ISO 8601 time](https://en.wikipedia.org/wiki/ISO_8601) |
+| **destination**   | `string`  | `{destination}`                   | name of destination |
+| **destinationId** | `integer` | <nobr>- `{destinationId}`</nobr><br />- `NULL` | id of destination as found on `/StopPoint/{id}` or `NULL` if unknown |
+
+## Sample request & response
+**GET** https://api.tfl.lu/v1/StopPoint/Departures/200405035/3
+```json
+[{
+	"id": "1|637|57|82|14022017",
+	"type": "bus",
+	"trainId": null,
+	"line": "22",
+	"number": 2261,
+	"departure": 1487085900,
+	"delay": 0,
+	"live": true,
+	"departureISO": "2017-02-14T16:25:00+01:00",
+	"destination": "Strassen, Primeurs",
+	"destinationId": 200901024
+}, {
+	"id": "1|1305|3|82|14022017",
+	"type": "train",
+	"trainId": "RB 5836",
+	"line": "",
+	"number": 5836,
+	"departure": 1487085900,
+	"delay": 0,
+	"live": false,
+	"departureISO": "2017-02-14T16:25:00+01:00",
+	"destination": "Arlon, Gare",
+	"destinationId": 300000003
+}, {
+	"id": "1|616|38|82|14022017",
+	"type": "bus",
+	"trainId": null,
+	"line": "21",
+	"number": 2236,
+	"departure": 1487086080,
+	"delay": 60,
+	"live": true,
+	"departureISO": "2017-02-14T16:28:00+01:00",
+	"destination": "Eich, Centre Culturel",
+	"destinationId": 200410001
+}]
+```
+
+## License
+Please refer to [StopPoint/Departures](/RESTAPIs/StopPoint/departures.md#license) for information about the train and bus departures data licensing.
+{% endblock %}
