@@ -16,7 +16,49 @@ The [OpenWeathermap](https://openweathermap.org) API documentation can be found 
 ## Sample request & response
 /Weather
 ```json
-
+{
+	"type": "new",
+	"data": {
+		"coord": {
+			"lat": 49.627688,
+			"lon": 6.223234
+		},
+		"weather": [{
+			"id": null,
+			"main": null,
+			"description": "Faible averse de pluie",
+			"icon": null
+		}],
+		"base": null,
+		"main": {
+			"temp": 6,
+			"pressure": 1026,
+			"humidity": 93,
+			"temp_min": null,
+			"temp_max": null
+		},
+		"visibility": 10000,
+		"wind": {
+			"speed": 19,
+			"deg": 270
+		},
+		"clouds": {
+			"all": null
+		},
+		"dt": 1487342675,
+		"sys": {
+			"type": null,
+			"id": null,
+			"message": null,
+			"country": null,
+			"sunrise": null,
+			"sunset": null
+		},
+		"id": null,
+		"name": "Findel",
+		"cod": 200
+	}
+}
 ```
 
 ## License
