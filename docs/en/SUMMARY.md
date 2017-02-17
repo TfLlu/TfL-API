@@ -29,3 +29,6 @@
             - [GET Weather/AirQuality](/RESTAPIs/Weather/AirQuality/index.md)
             - [GET Weather/AirQuality/{ID}](/RESTAPIs/Weather/AirQuality/id.md)
 * [Streaming APIs](/Streaming_APIs.md)
+    - [BikePoint](/Streaming_APIs/BikePoint.md)
+        - [/BikePoint](/Streaming_APIs/BikePoint/index.md)
+        - [/BikePoint/{ID}](/Streaming_APIs/BikePoint/id.md)

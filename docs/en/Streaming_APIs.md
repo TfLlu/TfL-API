@@ -10,6 +10,7 @@ Just subscribe to the channel(s) you want to get the data from and create magica
 ## Channels
 Below are some documents that will help you get going with the Streaming APIs as quickly as possible:
 
+- [BikePoint](/Streaming_APIs/BikePoint.md)
 
 ## Feedback
 If you find any issues with the Streaming API, please notify us via [Twitter](https://twitter.com/TfLlu) or [email](mailto:tfl@ion.lu) where we’ll be actively listening to your feedback. We look forward to working with you, and can’t wait to see what everyone builds!
