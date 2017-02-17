@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.streamSingle = exports.fireHose = exports.all = exports.load = exports.get = undefined;
+exports.streamSingle = exports.fireHose = exports.all = exports.load = exports.get = exports.index = undefined;
 
 var _mobiliteit = require('../../source/stoppoint/mobiliteit');
 
@@ -36,8 +36,24 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 const STREAM_NAME = (0, _config2.default)('NAME_VERSION', true) + '_stoppoint_departures_';
 const CACHE_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_stoppoint_departures';
 
+const index = exports.index = (() => {
+    var _ref = _asyncToGenerator(function* () {
+        return _redis.redis.get(CACHE_TABLE).then(function (result) {
+            if (result && result !== '') {
+                return result;
+            } else {
+                throw new _boom2.default.serverUnavailable('Departures are temporarily unavailable');
+            }
+        });
+    });
+
+    return function index() {
+        return _ref.apply(this, arguments);
+    };
+})();
+
 const get = exports.get = (() => {
-    var _ref = _asyncToGenerator(function* (stopPoint) {
+    var _ref2 = _asyncToGenerator(function* (stopPoint) {
         return _redis.redis.get(CACHE_TABLE + '_' + stopPoint).then(function (result) {
             if (result && result !== '') {
                 return result;
@@ -48,12 +64,12 @@ const get = exports.get = (() => {
     });
 
     return function get(_x) {
-        return _ref.apply(this, arguments);
+        return _ref2.apply(this, arguments);
     };
 })();
 
 const load = exports.load = (() => {
-    var _ref2 = _asyncToGenerator(function* (stopPoint, limit) {
+    var _ref3 = _asyncToGenerator(function* (stopPoint, limit) {
         var departuresRaw = yield mobiliteit.departures(stopPoint, limit);
         var departures = [];
         var rawDepartures = departuresRaw.Departure;
@@ -110,7 +126,7 @@ const load = exports.load = (() => {
     });
 
     return function load(_x2, _x3) {
-        return _ref2.apply(this, arguments);
+        return _ref3.apply(this, arguments);
     };
 })();
 

@@ -10,6 +10,10 @@ var _config2 = _interopRequireDefault(_config);
 
 var _redis = require('../redis');
 
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -132,6 +136,7 @@ const removeFromCrawlList = id => {
 
 const crawl = (() => {
     var _ref2 = _asyncToGenerator(function* () {
+        console.log((0, _moment2.default)().format() + ' crawling');
         var result = yield _redis.redis.get(CACHE_STOPPOINTS_TABLE);
         if (result && result !== '') {
             stopPointsToCrawl = JSON.parse(result).features;

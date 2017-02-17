@@ -10,15 +10,42 @@ const CRAWL_TTL   = config('CRAWL_TTL_CARPARK', true);
 const PUB_TABLE   = config('NAME_VERSION', true) + '_occupancy_carpark';
 const CACHE_TABLE = config('NAME_VERSION', true) + '_cache_occupancy_carpark';
 
-const crawl = async () => {
-    var startTime = new Date().getTime();
-    if (!cache) {
+var nextCrawlTimeoutHandle = null;
+var nextCrawlStartTime = null;
+const nextCrawl = () => {
+    if (nextCrawlTimeoutHandle) {
+        clearTimeout(nextCrawlTimeoutHandle);
+    }
+
+    var timeOut = 0;
+    if (nextCrawlStartTime) {
+        var diffTime = Date.now() - nextCrawlStartTime;
+        timeOut = CRAWL_TTL - diffTime < 0 ? 0 : CRAWL_TTL - diffTime;
+    }
+
+    var timeoutPromise = new Promise(resolve => {
+        nextCrawlTimeoutHandle = setTimeout(() => {
+            resolve();
+        }, timeOut);
+    });
+    return timeoutPromise.then(() => {
+        nextCrawlStartTime = Date.now();
         try {
-            cache = await carpark.load();
+            return crawl();
         } catch (err) {
-            setTimeout(crawl, CRAWL_TTL);
-            return;
+            console.log('CARPARK CRAWLER ERROR', err.message);
         }
+    });
+};
+
+const loadCache = async () => {
+    if (cache) {
+        return false;
+    }
+
+    try {
+        cache = await carpark.load();
+
         await redis.set(
             CACHE_TABLE,
             JSON.stringify(cache),
@@ -28,10 +55,23 @@ const crawl = async () => {
         if (process.env.TRAVIS) {
             process.exit();
         }
-        setTimeout(crawl, CRAWL_TTL);
-        return;
+    } catch (err) {
+        console.log('CARPARK CRAWLER LOAD CACHE ERROR', err.message);
     }
-    newData = await carpark.load();
+
+    return true;
+};
+
+const crawl = async () => {
+    if (await loadCache()) {
+        return nextCrawl();
+    }
+
+    try {
+        newData = await carpark.load();
+    } catch (err) {
+        return nextCrawl();
+    }
 
     // update
     var updatedCarparks = cache.features.filter(row => {
@@ -88,10 +128,8 @@ const crawl = async () => {
         CACHE_TTL
     );
 
-    var diffTime = new Date().getTime() - startTime;
-    var timeOut = CRAWL_TTL - diffTime < 0 ? 0 : CRAWL_TTL - diffTime;
-    setTimeout(crawl, timeOut);
+    nextCrawl();
 };
 
 // Run crawler
-crawl();
+nextCrawl();

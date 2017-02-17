@@ -24,7 +24,6 @@ export const get = async carPark => {
 };
 
 export const compileParking = parking => {
-    //return parking;
     var trend;
     switch(parseInt(parking['vdlxml:tendance'])) {
     case -1:

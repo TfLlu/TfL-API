@@ -6,7 +6,6 @@ import controller     from './controller';
 import { middleware } from './monitor';
 import monitor        from './monitor';
 import config         from './config';
-import Influx         from 'influxdb-nodejs';
 
 const app    = new Koa();
 const router = new KoaRouter();
@@ -27,6 +26,7 @@ router.get('/Occupancy/CarPark/:carPark',                controller.carpark.get)
 router.io ('/Occupancy/CarPark/:carPark',                controller.carpark.streamSingle);
 router.get('/StopPoint',                                 controller.stoppoint.index);
 router.io ('/StopPoint',                                 controller.stoppoint.streamIndex);
+router.get('/StopPoint/Departures',                      controller.departures.index);
 router.get('/StopPoint/:stopPoint',                      controller.stoppoint.get);
 router.get('/StopPoint/around/:lon/:lat/:radius',        controller.stoppoint.around);
 router.get('/StopPoint/box/:swlon/:swlat/:nelon/:nelat', controller.stoppoint.box);
@@ -57,26 +57,7 @@ Stream.bind(server, router);
 
 const PORT = config('SERVER_PORT', true);
 if (PORT) {
-    server.listen(PORT);
-}
-
-var influxdb = false;
-
-const streamCountToInflux = () => {
-    influxdb.write('streamConnections')
-        .field({
-            departures: controller.departures.streamCount(),
-            bikepoint:  controller.bikepoint.streamCount(),
-            carpark:    controller.carpark.streamCount(),
-            weather:    controller.weather.streamCount()
-        })
-        .then();
-    return;
-};
-
-if (config('INFLUXDB')) {
-    influxdb = new Influx(config('INFLUXDB') + config('NAME_VERSION'));
-    setInterval(streamCountToInflux, 10000);
+    server.listen(PORT, 'localhost');
 }
 
 export default server;

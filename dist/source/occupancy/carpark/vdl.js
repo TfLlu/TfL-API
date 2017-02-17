@@ -56,7 +56,6 @@ const get = exports.get = (() => {
 })();
 
 const compileParking = exports.compileParking = parking => {
-    //return parking;
     var trend;
     switch (parseInt(parking['vdlxml:tendance'])) {
         case -1:

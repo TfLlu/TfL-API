@@ -30,10 +30,6 @@ var _config = require('./config');
 
 var _config2 = _interopRequireDefault(_config);
 
-var _influxdbNodejs = require('influxdb-nodejs');
-
-var _influxdbNodejs2 = _interopRequireDefault(_influxdbNodejs);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
@@ -57,6 +53,7 @@ router.get('/Occupancy/CarPark/:carPark', _controller2.default.carpark.get);
 router.io('/Occupancy/CarPark/:carPark', _controller2.default.carpark.streamSingle);
 router.get('/StopPoint', _controller2.default.stoppoint.index);
 router.io('/StopPoint', _controller2.default.stoppoint.streamIndex);
+router.get('/StopPoint/Departures', _controller2.default.departures.index);
 router.get('/StopPoint/:stopPoint', _controller2.default.stoppoint.get);
 router.get('/StopPoint/around/:lon/:lat/:radius', _controller2.default.stoppoint.around);
 router.get('/StopPoint/box/:swlon/:swlat/:nelon/:nelat', _controller2.default.stoppoint.box);
@@ -89,24 +86,7 @@ _stream2.default.bind(server, router);
 
 const PORT = (0, _config2.default)('SERVER_PORT', true);
 if (PORT) {
-    server.listen(PORT);
-}
-
-var influxdb = false;
-
-const streamCountToInflux = () => {
-    influxdb.write('streamConnections').field({
-        departures: _controller2.default.departures.streamCount(),
-        bikepoint: _controller2.default.bikepoint.streamCount(),
-        carpark: _controller2.default.carpark.streamCount(),
-        weather: _controller2.default.weather.streamCount()
-    }).then();
-    return;
-};
-
-if ((0, _config2.default)('INFLUXDB')) {
-    influxdb = new _influxdbNodejs2.default((0, _config2.default)('INFLUXDB') + (0, _config2.default)('NAME_VERSION'));
-    setInterval(streamCountToInflux, 10000);
+    server.listen(PORT, 'localhost');
 }
 
 exports.default = server;

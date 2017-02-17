@@ -73,7 +73,7 @@ const loadCache = (() => {
             console.log('BIKEPOINT CRAWLER LOAD CACHE ERROR', err.message);
         }
 
-        return nextCrawl();
+        return true;
     });
 
     return function loadCache() {
@@ -84,7 +84,7 @@ const loadCache = (() => {
 const crawl = (() => {
     var _ref2 = _asyncToGenerator(function* () {
         if (yield loadCache()) {
-            return;
+            return nextCrawl();
         }
 
         try {

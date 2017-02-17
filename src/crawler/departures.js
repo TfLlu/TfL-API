@@ -1,6 +1,7 @@
 import * as departures from '../service/stoppoint/departures';
 import config          from '../config';
 import {redis}         from '../redis';
+import moment          from 'moment';
 
 const CACHE_TTL              = config('CACHE_TTL_STOPPOINT_DEPARTURE', true);
 const CRAWL_TTL              = config('CRAWL_TTL_STOPPOINT_DEPARTURE', true);
@@ -124,6 +125,7 @@ const removeFromCrawlList = id => {
 };
 
 const crawl = async () => {
+    console.log(moment().format() + ' crawling');
     var result = await redis.get(CACHE_STOPPOINTS_TABLE);
     if (result && result !== '') {
         stopPointsToCrawl = (JSON.parse(result)).features;

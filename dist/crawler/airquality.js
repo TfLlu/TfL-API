@@ -28,24 +28,70 @@ const CRAWL_TTL = (0, _config2.default)('CRAWL_TTL_WEATHER_AIRQUALITY', true);
 const PUB_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_weather_airquality';
 const CACHE_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_weather_airquality';
 
-const crawl = (() => {
+var nextCrawlTimeoutHandle = null;
+var nextCrawlStartTime = null;
+const nextCrawl = () => {
+    if (nextCrawlTimeoutHandle) {
+        clearTimeout(nextCrawlTimeoutHandle);
+    }
+
+    var timeOut = 0;
+    if (nextCrawlStartTime) {
+        var diffTime = Date.now() - nextCrawlStartTime;
+        timeOut = CRAWL_TTL - diffTime < 0 ? 0 : CRAWL_TTL - diffTime;
+    }
+
+    var timeoutPromise = new Promise(resolve => {
+        nextCrawlTimeoutHandle = setTimeout(() => {
+            resolve();
+        }, timeOut);
+    });
+    return timeoutPromise.then(() => {
+        nextCrawlStartTime = Date.now();
+        try {
+            return crawl();
+        } catch (err) {
+            console.log('AIRQUALITY CRAWLER ERROR', err.message);
+        }
+    });
+};
+
+const loadCache = (() => {
     var _ref = _asyncToGenerator(function* () {
-        var startTime = new Date().getTime();
-        if (!cache) {
-            try {
-                cache = yield airquality.load();
-            } catch (err) {
-                setTimeout(crawl, CRAWL_TTL);
-                return;
-            }
+        if (cache) {
+            return false;
+        }
+
+        try {
+            cache = yield airquality.load();
+
             yield _redis.redis.set(CACHE_TABLE, JSON.stringify(cache), 'EX', CACHE_TTL);
             if (process.env.TRAVIS) {
                 process.exit();
             }
-            setTimeout(crawl, CRAWL_TTL);
-            return;
+        } catch (err) {
+            console.log('AIRQUALITY CRAWLER LOAD CACHE ERROR', err.message);
         }
-        newData = yield airquality.load();
+
+        return true;
+    });
+
+    return function loadCache() {
+        return _ref.apply(this, arguments);
+    };
+})();
+
+const crawl = (() => {
+    var _ref2 = _asyncToGenerator(function* () {
+        if (yield loadCache()) {
+            return nextCrawl();
+        }
+
+        try {
+            newData = yield airquality.load();
+        } catch (err) {
+            return nextCrawl();
+        }
 
         // update
         var updatedWeatherStations = cache.features.filter(function (row) {
@@ -97,15 +143,13 @@ const crawl = (() => {
 
         yield _redis.redis.set(CACHE_TABLE, JSON.stringify(cache), 'EX', CACHE_TTL);
 
-        var diffTime = new Date().getTime() - startTime;
-        var timeOut = CRAWL_TTL - diffTime < 0 ? 0 : CRAWL_TTL - diffTime;
-        setTimeout(crawl, timeOut);
+        nextCrawl();
     });
 
     return function crawl() {
-        return _ref.apply(this, arguments);
+        return _ref2.apply(this, arguments);
     };
 })();
 
 // Run crawler
-crawl();
+nextCrawl();
