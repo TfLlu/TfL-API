@@ -9,6 +9,6 @@ The data from [Vel'oh](https://developer.jcdecaux.com/#/opendata/vls) is license
 The data from [Vel'ok](http://www.velok.lu/) is still unlicensed.
 
 ## Available channels
-- [/BikePoint](/RESTAPIs/BikePoint/index.md)
-- [/BikePoint/{ID}](/RESTAPIs/BikePoint/id.md)
+- [/BikePoint](/Streaming_APIs/BikePoint/index.md)
+- [/BikePoint/{ID}](/Streaming_APIs/BikePoint/id.md)
 {% endblock %}

@@ -8,6 +8,6 @@ Currently we're providing data from the [Verkéiersverbond](https://data.public.
 The data from [Verkéiersverbond](https://data.public.lu/en/organizations/mobiliteitszentral/) is licensed under [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
 
 ## Available channels
-- [/StopPoint](/RESTAPIs/StopPoint/index.md)
-- [StopPoint/Departures](/RESTAPIs/StopPoint/departures.md)
+- [/StopPoint](/Streaming_APIs/StopPoint/index.md)
+- [StopPoint/Departures](/Streaming_APIs/StopPoint/departures.md)
 {% endblock %}

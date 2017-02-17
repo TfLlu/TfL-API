@@ -8,6 +8,6 @@ Currently we're providing data from [Ville de Luxembourg](https://data.public.lu
 The data from [Ville de Luxembourg](https://data.public.lu/en/organizations/ville-de-luxembourg/) is licensed under [CC-BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/deed.en).
 
 ## Available channels
-- [/Occupancy/CarPark](/RESTAPIs/Occupancy/CarPark/index.md)
-- [/Occupancy/CarPark/{id}](/RESTAPIs/Occupancy/CarPark/id.md)
+- [/Occupancy/CarPark](/Streaming_APIs/Occupancy/CarPark/index.md)
+- [/Occupancy/CarPark/{id}](/Streaming_APIs/Occupancy/CarPark/id.md)
 {% endblock %}
