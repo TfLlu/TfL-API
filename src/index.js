@@ -34,7 +34,7 @@ router.get('/StopPoint/search/:searchstring',            controller.stoppoint.se
 router.io ('/StopPoint/Departures',                      controller.departures.fireHose);
 router.get('/StopPoint/Departures/:stopPoint',           controller.departures.get);
 router.io ('/StopPoint/Departures/:stopPoint',           controller.departures.streamSingle);
-router.get('/StopPoint/Departures/:stopPoint/:limit',    controller.departures.load);
+router.get('/StopPoint/Departures/:stopPoint/:limit',    controller.departures.limit);
 router.get('/Journey/:from/to/:to',                      controller.journey.plan);
 router.get('/Weather',                                   controller.weather.current);
 router.io ('/Weather',                                   controller.weather.streamSingle);

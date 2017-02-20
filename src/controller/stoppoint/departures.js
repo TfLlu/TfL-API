@@ -24,12 +24,25 @@ export const get = async ctx => {
     }
 };
 
-export const load = async ctx => {
+export const limit = async ctx => {
     try {
-        ctx.body = await departures.load(
-            parseInt(ctx.params.stopPoint),
-            parseInt(ctx.params.limit)
-        );
+        var cache_count = parseInt(config('CRAWL_STOPPOINT_DEPARTURE_AMOUNT', true));
+        if (ctx.params.limit == cache_count) {
+            ctx.body = await departures.get(
+                parseInt(ctx.params.stopPoint)
+            );
+        } else if (ctx.params.limit <= cache_count) {
+            ctx.body = JSON.parse(
+                await departures.get(
+                    parseInt(ctx.params.stopPoint)
+                )
+            ).slice(0, parseInt(ctx.params.limit));
+        } else {
+            ctx.body = await departures.load(
+                parseInt(ctx.params.stopPoint),
+                parseInt(ctx.params.limit)
+            );
+        }
     } catch (boom) {
         ctx.body = boom.output.payload;
         ctx.status = boom.output.statusCode;

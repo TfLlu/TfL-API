@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.streamSingle = exports.fireHose = exports.load = exports.get = exports.index = undefined;
+exports.streamSingle = exports.fireHose = exports.limit = exports.get = exports.index = undefined;
 
 var _departures = require('../../service/stoppoint/departures');
 
@@ -53,17 +53,24 @@ const get = exports.get = (() => {
     };
 })();
 
-const load = exports.load = (() => {
+const limit = exports.limit = (() => {
     var _ref3 = _asyncToGenerator(function* (ctx) {
         try {
-            ctx.body = yield departures.load(parseInt(ctx.params.stopPoint), parseInt(ctx.params.limit));
+            var cache_count = parseInt((0, _config2.default)('CRAWL_STOPPOINT_DEPARTURE_AMOUNT', true));
+            if (ctx.params.limit == cache_count) {
+                ctx.body = yield departures.get(parseInt(ctx.params.stopPoint));
+            } else if (ctx.params.limit <= cache_count) {
+                ctx.body = JSON.parse((yield departures.get(parseInt(ctx.params.stopPoint)))).slice(0, parseInt(ctx.params.limit));
+            } else {
+                ctx.body = yield departures.load(parseInt(ctx.params.stopPoint), parseInt(ctx.params.limit));
+            }
         } catch (boom) {
             ctx.body = boom.output.payload;
             ctx.status = boom.output.statusCode;
         }
     });
 
-    return function load(_x3) {
+    return function limit(_x3) {
         return _ref3.apply(this, arguments);
     };
 })();

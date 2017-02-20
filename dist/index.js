@@ -61,7 +61,7 @@ router.get('/StopPoint/search/:searchstring', _controller2.default.stoppoint.sea
 router.io('/StopPoint/Departures', _controller2.default.departures.fireHose);
 router.get('/StopPoint/Departures/:stopPoint', _controller2.default.departures.get);
 router.io('/StopPoint/Departures/:stopPoint', _controller2.default.departures.streamSingle);
-router.get('/StopPoint/Departures/:stopPoint/:limit', _controller2.default.departures.load);
+router.get('/StopPoint/Departures/:stopPoint/:limit', _controller2.default.departures.limit);
 router.get('/Journey/:from/to/:to', _controller2.default.journey.plan);
 router.get('/Weather', _controller2.default.weather.current);
 router.io('/Weather', _controller2.default.weather.streamSingle);
