@@ -28,7 +28,7 @@ The response will be formatted as a [GeoJSON](https://en.wikipedia.org/wiki/GeoJ
 | **last_update** | `integer` | `{last_update}`                    | last update of the data in [Unix time](https://en.wikipedia.org/wiki/Unix_time) (milliseconds)                       |
 
 
-## Sample channels & response
+## Sample channel & response
 /Weather/Airquality/aev:Esch-Alzette
 ```json
 {
