@@ -23,7 +23,7 @@ The response will be formatted as [GeoJSON](https://en.wikipedia.org/wiki/GeoJSO
 | **last_update** | `integer` | `{last_update}`                    | last update of the data in [Unix time](https://en.wikipedia.org/wiki/Unix_time) (milliseconds)                       |
 
 
-## Sample channels & response
+## Sample channel & response
 /Weather/Airquality
 ```json
 {

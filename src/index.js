@@ -42,6 +42,10 @@ router.get('/Weather/AirQuality',                        controller.airquality.i
 router.io ('/Weather/AirQuality',                        controller.airquality.fireHose);
 router.get('/Weather/AirQuality/:weatherStation',        controller.airquality.get);
 router.io ('/Weather/AirQuality/:weatherStation',        controller.airquality.streamSingle);
+router.get('/Highway',                                   controller.highway.index);
+router.io ('/Highway',                                   controller.highway.fireHose);
+router.get('/Highway/:highway',                          controller.highway.get);
+router.io ('/Highway/:highway',                          controller.highway.streamSingle);
 
 app.use(monitor())
    .use(middleware.responseTime())

@@ -8,5 +8,6 @@ import * as departures from './stoppoint/departures';
 import * as journey from './journey';
 import * as weather from './weather';
 import * as airquality from './weather/airquality';
+import * as highway from './highway';
 
-export default { home, test, bikepoint, occupancy, carpark, stoppoint, departures, journey, weather, airquality };
+export default { home, test, bikepoint, occupancy, carpark, stoppoint, departures, journey, weather, airquality, highway };
