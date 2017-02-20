@@ -15,6 +15,7 @@ Below are some documents that will help you get going with the REST APIs as quic
 - [Occupancy](/RESTAPIs/Occupancy.md)
 - [Weather](/RESTAPIs/Weather.md)
 - [Weather/AirQuality](/RESTAPIs/Weather/airquality.md)
+- [Highway](/RESTAPIs/Highway.md)
 
 ## Feedback
 If you find any issues with the REST API, please notify us via [Twitter](https://twitter.com/TfLlu) or [email](mailto:tfl@ion.lu) where we’ll be actively listening to your feedback. We look forward to working with you, and can’t wait to see what everyone builds!
