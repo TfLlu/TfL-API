@@ -38,7 +38,7 @@ export const get = async ctx => {
 
 export const streamSingle = async ({ emit, disconnect, params }) => {
     redis.incr(STREAM_CLIENTS_KEY);
-    var res = carpark.streamSingle(params.carpark, data => {
+    var res = carpark.streamSingle(params.carPark, data => {
         emit(data);
     });
 
