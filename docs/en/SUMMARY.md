@@ -48,3 +48,6 @@
         - [Weather/AirQuality](/Streaming_APIs/Weather/airquality.md)
             - [/Weather/AirQuality](/Streaming_APIs/Weather/AirQuality/index.md)
             - [/Weather/AirQuality/{ID}](/Streaming_APIs/Weather/AirQuality/id.md)
+    - [Highway](/Streaming_APIs/Highway.md)
+        - [/Highway](/Streaming_APIs/Highway/index.md)
+        - [/Highway/{ID}](/Streaming_APIs/Highway/id.md)

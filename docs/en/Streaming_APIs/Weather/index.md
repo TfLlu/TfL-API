@@ -13,7 +13,7 @@ The response will be formatted as a [JSON](https://en.wikipedia.org/wiki/JSON).
 The [OpenWeathermap](https://openweathermap.org) API documentation can be found here: [https://openweathermap.org/current#current_JSON](https://openweathermap.org/current#current_JSON)
 
 
-## Sample request & response
+## Sample channel & response
 /Weather
 ```json
 {
