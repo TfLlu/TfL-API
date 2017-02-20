@@ -70,6 +70,9 @@ router.io('/Weather/AirQuality', _controller2.default.airquality.fireHose);
 router.get('/Weather/AirQuality/:weatherStation', _controller2.default.airquality.get);
 router.io('/Weather/AirQuality/:weatherStation', _controller2.default.airquality.streamSingle);
 router.get('/Highway', _controller2.default.highway.index);
+router.io('/Highway', _controller2.default.highway.fireHose);
+router.get('/Highway/:highway', _controller2.default.highway.get);
+router.io('/Highway/:highway', _controller2.default.highway.streamSingle);
 
 app.use((0, _monitor2.default)()).use(_monitor.middleware.responseTime()).use((() => {
     var _ref = _asyncToGenerator(function* (ctx, next) {

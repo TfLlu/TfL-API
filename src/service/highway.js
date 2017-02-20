@@ -3,9 +3,9 @@ import config               from '../config';
 import {redis, redisPubSub} from '../redis';
 import Boom                 from 'boom';
 
-const CACHE_NAME  = config('NAME_VERSION', true) + '_cache_weather_airquality';
-const STREAM_NAME = config('NAME_VERSION', true) + '_weather_airquality';
-const UNAVAILABLE_ERROR = new Boom.serverUnavailable('the /Highway endpoint is temporarily unavailable11');
+const CACHE_NAME  = config('NAME_VERSION', true) + '_cache_highway';
+const STREAM_NAME = config('NAME_VERSION', true) + '_highway';
+const UNAVAILABLE_ERROR = new Boom.serverUnavailable('the /Highway endpoint is temporarily unavailable');
 
 export const load = async () => {
     try {
@@ -31,14 +31,14 @@ export const all = () => {
         });
 };
 
-export const get = async weatherStation => {
-    var weatherStations = JSON.parse(await all()).features;
-    for (var i = 0; i < weatherStations.length; i++) {
-        if (weatherStations[i].properties.id == weatherStation) {
-            return weatherStations[i];
+export const get = async highway => {
+    var highways = JSON.parse(await all());
+    for (var i = 0; i < highways.length; i++) {
+        if (highways[i].id == highway) {
+            return highways[i];
         }
     }
-    throw new Boom.notFound('Weather stations [' + weatherStation + '] not found');
+    throw new Boom.notFound('Highway [' + highway + '] not found');
 };
 
 redisPubSub.subscribe(STREAM_NAME);
@@ -52,7 +52,7 @@ export const fireHose = callback => {
         data = JSON.parse(data);
         callback({
             type: 'new',
-            data: data.features.map(compileStream)
+            data: data.map(compileStream)
         });
     });
 
@@ -65,12 +65,12 @@ export const fireHose = callback => {
     };
 };
 
-export const streamSingle = (weatherStation, callback) => {
+export const streamSingle = (highway, callback) => {
     const messageCallback = (channel, message) => {
         if (channel === STREAM_NAME) {
             message = JSON.parse(message);
             for (var i = 0; i < message.data.length; i++) {
-                if (message.data[i].id == weatherStation) {
+                if (message.data[i].id == highway) {
                     callback({
                         type: 'update',
                         data: [compileStream(message.data[i].data)]
@@ -81,11 +81,11 @@ export const streamSingle = (weatherStation, callback) => {
     };
     all().then(data => {
         data = JSON.parse(data);
-        for (var key in data.features) {
-            if (data.features[key].properties.id == weatherStation) {
+        for (var key in data) {
+            if (data[key].id == highway) {
                 callback({
                     type: 'new',
-                    data: [compileStream(data.features[key])]
+                    data: [compileStream(data[key])]
                 });
             }
         }
@@ -99,9 +99,9 @@ export const streamSingle = (weatherStation, callback) => {
     };
 };
 
-export const compileStream = weatherStation => {
+export const compileStream = highway => {
     return {
-        id: weatherStation.properties.id,
-        data: weatherStation,
+        id: highway.id,
+        data: highway,
     };
 };

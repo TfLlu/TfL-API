@@ -25,9 +25,9 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-const CACHE_NAME = (0, _config2.default)('NAME_VERSION', true) + '_cache_weather_airquality';
-const STREAM_NAME = (0, _config2.default)('NAME_VERSION', true) + '_weather_airquality';
-const UNAVAILABLE_ERROR = new _boom2.default.serverUnavailable('the /Highway endpoint is temporarily unavailable11');
+const CACHE_NAME = (0, _config2.default)('NAME_VERSION', true) + '_cache_highway';
+const STREAM_NAME = (0, _config2.default)('NAME_VERSION', true) + '_highway';
+const UNAVAILABLE_ERROR = new _boom2.default.serverUnavailable('the /Highway endpoint is temporarily unavailable');
 
 const load = exports.load = (() => {
     var _ref = _asyncToGenerator(function* () {
@@ -56,14 +56,14 @@ const all = exports.all = () => {
 };
 
 const get = exports.get = (() => {
-    var _ref2 = _asyncToGenerator(function* (weatherStation) {
-        var weatherStations = JSON.parse((yield all())).features;
-        for (var i = 0; i < weatherStations.length; i++) {
-            if (weatherStations[i].properties.id == weatherStation) {
-                return weatherStations[i];
+    var _ref2 = _asyncToGenerator(function* (highway) {
+        var highways = JSON.parse((yield all()));
+        for (var i = 0; i < highways.length; i++) {
+            if (highways[i].id == highway) {
+                return highways[i];
             }
         }
-        throw new _boom2.default.notFound('Weather stations [' + weatherStation + '] not found');
+        throw new _boom2.default.notFound('Highway [' + highway + '] not found');
     });
 
     return function get(_x) {
@@ -82,7 +82,7 @@ const fireHose = exports.fireHose = callback => {
         data = JSON.parse(data);
         callback({
             type: 'new',
-            data: data.features.map(compileStream)
+            data: data.map(compileStream)
         });
     });
 
@@ -95,12 +95,12 @@ const fireHose = exports.fireHose = callback => {
     };
 };
 
-const streamSingle = exports.streamSingle = (weatherStation, callback) => {
+const streamSingle = exports.streamSingle = (highway, callback) => {
     const messageCallback = (channel, message) => {
         if (channel === STREAM_NAME) {
             message = JSON.parse(message);
             for (var i = 0; i < message.data.length; i++) {
-                if (message.data[i].id == weatherStation) {
+                if (message.data[i].id == highway) {
                     callback({
                         type: 'update',
                         data: [compileStream(message.data[i].data)]
@@ -111,11 +111,11 @@ const streamSingle = exports.streamSingle = (weatherStation, callback) => {
     };
     all().then(data => {
         data = JSON.parse(data);
-        for (var key in data.features) {
-            if (data.features[key].properties.id == weatherStation) {
+        for (var key in data) {
+            if (data[key].id == highway) {
                 callback({
                     type: 'new',
-                    data: [compileStream(data.features[key])]
+                    data: [compileStream(data[key])]
                 });
             }
         }
@@ -129,9 +129,9 @@ const streamSingle = exports.streamSingle = (weatherStation, callback) => {
     };
 };
 
-const compileStream = exports.compileStream = weatherStation => {
+const compileStream = exports.compileStream = highway => {
     return {
-        id: weatherStation.properties.id,
-        data: weatherStation
+        id: highway.id,
+        data: highway
     };
 };

@@ -9,11 +9,23 @@ export const load = async () => {
 
 export const all = async () => {
     var highwayInfo = await load();
-    var items = highwayInfo.map(compileHighwayInfo);
-    return{
-        type: 'FeatureCollection',
-        features: items
-    };
+    var highways = highwayInfo.map(compileHighwayInfo);
+    var res = [];
+    for (let i = 0; i < highways.length;i++) {
+        let highway = highways[i];
+        let inRes = false;
+        for (let j = 0; j < res.length; j++) {
+            if (res[j].id == highway.id) {
+                res[j].transitTimes.push(...highway.transitTimes);
+                inRes = true;
+            }
+        }
+        if (!inRes) {
+            res.push(highway);
+        }
+    }
+
+    return res;
 };
 
 export const get = async carPark => {
@@ -27,36 +39,33 @@ export const get = async carPark => {
 };
 
 export const compileHighwayInfo = highwayInfo => {
-
-    var highway = null;
-
+    var id = null;
     switch(highwayInfo.name.toLowerCase()) {
     case 'senningerberg':
     case 'wasserbillig':
-        highway = 1;
+        id = 'A1';
         break;
     case 'france':
     case 'lux-sud':
-        highway = 3;
+        id = 'A3';
         break;
     case 'lallange':
     case 'merl':
-        highway = 4;
+        id = 'A4';
         break;
     case 'belgique':
     case 'bridel':
-        highway = 6;
+        id = 'A6';
         break;
     case 'schieren':
     case 'mersch':
-        highway = 7;
+        id = 'A7';
         break;
     case 'schengen':
-        highway = 13;
+        id = 'A13';
         break;
     }
 
-    var coordinates = /([\d\.]+),([\d\.]+)/g.exec(highwayInfo.Point.coordinates);
     var fluidityRaw = highwayInfo.description.split('</span>');
     var transitTimes = {};
     var fluidity, destination, time;
@@ -66,7 +75,7 @@ export const compileHighwayInfo = highwayInfo => {
         if (fluidity === null) {
             continue;
         }
-        destination = fluidity[1];
+        destination = fluidity[1].toLowerCase();
         time = fluidity[2];
         if (time.indexOf('min') === -1) {
             time = null;
@@ -78,18 +87,12 @@ export const compileHighwayInfo = highwayInfo => {
     }
 
     return {
-        type: 'Feature',
-        geometry: {
-            type: 'Point',
-            coordinates: [
-                Math.round(parseFloat(coordinates[1]) * 1000000) / 1000000,
-                Math.round(parseFloat(coordinates[2]) * 1000000) / 1000000
-            ]
-        },
-        properties: {
-            id:           parseInt(/ID_(\d+)/g.exec(highwayInfo['$'].id)[1]),
-            highway:      highway,
-            transitTimes: transitTimes
-        }
+        id: 'cita:'+id,
+        transitTimes: [
+            {
+                origin:       highwayInfo.name.toLowerCase(),
+                destinations: transitTimes
+            }
+        ]
     };
 };

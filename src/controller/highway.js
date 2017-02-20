@@ -1,13 +1,12 @@
 import * as highway from '../service/highway';
-/*import config          from '../config';
-import {redis}         from '../redis';
+import config       from '../config';
+import {redis}      from '../redis';
 
-const STREAM_CLIENTS_KEY = config('NAME_VERSION', true) + '_stream_clients_weather_airquality';*/
+const STREAM_CLIENTS_KEY = config('NAME_VERSION', true) + '_stream_clients_highway';
 
 export const index = async ctx => {
     try {
-        //ctx.body = await highway.all();
-        ctx.body = await highway.load();
+        ctx.body = await highway.all();
     } catch (boom) {
         ctx.body = boom.output.payload;
         ctx.status = boom.output.statusCode;
@@ -16,16 +15,16 @@ export const index = async ctx => {
 
 export const get = async ctx => {
     try {
-        ctx.body = await highway.get(ctx.params.weatherStation);
+        ctx.body = await highway.get(ctx.params.highway);
     } catch (boom) {
         ctx.body = boom.output.payload;
         ctx.status = boom.output.statusCode;
     }
 };
-/*
+
 export const fireHose = async ({ emit, disconnect }) => {
     redis.incr(STREAM_CLIENTS_KEY);
-    var res = airquality.fireHose(data => {
+    var res = highway.fireHose(data => {
         emit(data);
     });
 
@@ -37,7 +36,7 @@ export const fireHose = async ({ emit, disconnect }) => {
 
 export const streamSingle = async ({ emit, disconnect, params }) => {
     redis.incr(STREAM_CLIENTS_KEY);
-    var res = airquality.streamSingle(params.weatherStation, data => {
+    var res = highway.streamSingle(params.highway, data => {
         emit(data);
     });
 
@@ -45,4 +44,4 @@ export const streamSingle = async ({ emit, disconnect, params }) => {
         redis.decr(STREAM_CLIENTS_KEY);
         res.off();
     });
-};*/
+};
