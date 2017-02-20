@@ -7,7 +7,7 @@
             "size": 1
         },
         "edit-link": {
-            "base": "https://github.com/TfLlu/TfL-API/tree/master",
+            "base": "https://github.com/TfLlu/TfL-API/tree/master/docs",
             "label": "Edit This Page"
         },
         "github": {
