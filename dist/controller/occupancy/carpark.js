@@ -74,7 +74,7 @@ const get = exports.get = (() => {
 const streamSingle = exports.streamSingle = (() => {
     var _ref4 = _asyncToGenerator(function* ({ emit, disconnect, params }) {
         _redis.redis.incr(STREAM_CLIENTS_KEY);
-        var res = carpark.streamSingle(params.carpark, function (data) {
+        var res = carpark.streamSingle(params.carPark, function (data) {
             emit(data);
         });
 
