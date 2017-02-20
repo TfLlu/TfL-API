@@ -23,7 +23,8 @@ const streamCountToInflux = () => {
         bikepoint: _redis.redis.get(STREAM_CLIENTS_KEY + 'bikepoint'),
         carpark: _redis.redis.get(STREAM_CLIENTS_KEY + 'occupancy_carpark'),
         weather: _redis.redis.get(STREAM_CLIENTS_KEY + 'weather'),
-        airquality: _redis.redis.get(STREAM_CLIENTS_KEY + 'weather_airquality')
+        airquality: _redis.redis.get(STREAM_CLIENTS_KEY + 'weather_airquality'),
+        highway: _redis.redis.get(STREAM_CLIENTS_KEY + 'highway')
     };
 
     var sourceName = Object.keys(sources);

@@ -13,7 +13,8 @@ const streamCountToInflux = () => {
         bikepoint:  redis.get(STREAM_CLIENTS_KEY + 'bikepoint'),
         carpark:    redis.get(STREAM_CLIENTS_KEY + 'occupancy_carpark'),
         weather:    redis.get(STREAM_CLIENTS_KEY + 'weather'),
-        airquality: redis.get(STREAM_CLIENTS_KEY + 'weather_airquality')
+        airquality: redis.get(STREAM_CLIENTS_KEY + 'weather_airquality'),
+        highway:    redis.get(STREAM_CLIENTS_KEY + 'highway')
     };
 
     var sourceName = Object.keys(sources);
