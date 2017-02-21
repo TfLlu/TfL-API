@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.cita = exports.aev = exports.meteolux = exports.mobiliteitDeparture = exports.mobiliteitStoppoints = exports.vdl = exports.openov = exports.velok = exports.veloh = undefined;
+exports.transitfeedsStopTimes = exports.transitfeedsTrips = exports.transitfeedsRoutes = exports.cita = exports.aev = exports.meteolux = exports.mobiliteitDeparture = exports.mobiliteitStoppoints = exports.vdl = exports.openov = exports.velok = exports.veloh = undefined;
 
 var _config = require('./config');
 
@@ -62,4 +62,19 @@ const aev = exports.aev = measurement => {
 const cita = exports.cita = () => {
     const url = (0, _config2.default)('URL_HIGHWAY_CITA', true);
     return run('cita', url);
+};
+
+const transitfeedsRoutes = exports.transitfeedsRoutes = () => {
+    const url = (0, _config2.default)('URL_TRANSITFEEDS_ROUTES', true);
+    return run('transitfeeds', url);
+};
+
+const transitfeedsTrips = exports.transitfeedsTrips = () => {
+    const url = (0, _config2.default)('URL_TRANSITFEEDS_TRIPS', true);
+    return run('transitfeeds', url);
+};
+
+const transitfeedsStopTimes = exports.transitfeedsStopTimes = () => {
+    const url = (0, _config2.default)('URL_TRANSITFEEDS_STOP_TIMES', true);
+    return run('transitfeeds', url);
 };
