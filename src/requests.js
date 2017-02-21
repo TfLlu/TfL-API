@@ -56,3 +56,18 @@ export const cita = () => {
     const url = config('URL_HIGHWAY_CITA', true);
     return run('cita', url);
 };
+
+export const transitfeedsRoutes = () => {
+    const url = config('URL_TRANSITFEEDS_ROUTES', true);
+    return run('transitfeedsRoutes', url);
+};
+
+export const transitfeedsTrips = () => {
+    const url = config('URL_TRANSITFEEDS_TRIPS', true);
+    return run('transitfeedsTrips', url);
+};
+
+export const transitfeedsStopTimes = () => {
+    const url = config('URL_TRANSITFEEDS_STOP_TIMES', true);
+    return run('transitfeedsStopTimes', url);
+};
