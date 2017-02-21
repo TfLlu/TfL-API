@@ -74,6 +74,12 @@ router.io('/Highway', _controller2.default.highway.fireHose);
 router.get('/Highway/:highway', _controller2.default.highway.get);
 router.io('/Highway/:highway', _controller2.default.highway.streamSingle);
 router.get('/Line', _controller2.default.line.index);
+router.get('/Line/:line', _controller2.default.line.get);
+//router.get('/Line/Mode/:mode',                           controller.line.getMode);
+//router.get('/Line/Mode/:mode/Route',                     controller.route.byMode);
+//router.get('/Line/Route',                                controller.route.index);
+//router.get('/Line/:line/Route',                          controller.route.byLine);
+//router.get('/Line/:line/StopPoints',                     controller.route.stopPoints);
 
 app.use((0, _monitor2.default)()).use(_monitor.middleware.responseTime()).use((() => {
     var _ref = _asyncToGenerator(function* (ctx, next) {
