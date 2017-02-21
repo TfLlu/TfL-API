@@ -17,3 +17,12 @@ export const get = async ctx => {
         ctx.status = boom.output.statusCode;
     }
 };
+
+export const stopPoints = async ctx => {
+    try {
+        ctx.body = await line.getStopPoints(ctx.params.line);
+    } catch (boom) {
+        ctx.body = boom.output.payload;
+        ctx.status = boom.output.statusCode;
+    }
+};

@@ -5,9 +5,10 @@ import {redis}    from '../redis';
 var newData = [];
 var cache;
 
-const CACHE_TTL   = config('CACHE_TTL_LINE', true);
-const CRAWL_TTL   = config('CRAWL_TTL_LINE', true);
-const CACHE_TABLE = config('NAME_VERSION', true) + '_cache_line_route';
+const CACHE_TTL              = config('CACHE_TTL_LINE', true);
+const CRAWL_TTL              = config('CRAWL_TTL_LINE', true);
+const CACHE_TABLE            = config('NAME_VERSION', true) + '_cache_line_route';
+const CACHE_TABLE_STOPPOINTS = config('NAME_VERSION', true) + '_cache_line_stoppoints_';
 
 var nextCrawlTimeoutHandle = null;
 var nextCrawlStartTime = null;
@@ -52,6 +53,12 @@ const loadCache = async () => {
                 'EX',
                 CACHE_TTL
             );
+            await redis.set(
+                CACHE_TABLE_STOPPOINTS + cache[i].id,
+                JSON.stringify(cache[i].stopPoints),
+                'EX',
+                CACHE_TTL
+            );
         }
 
         await redis.set(
@@ -87,6 +94,12 @@ const crawl = async () => {
         await redis.set(
             CACHE_TABLE + '_' + cache[i].id,
             JSON.stringify(cache[i]),
+            'EX',
+            CACHE_TTL
+        );
+        await redis.set(
+            CACHE_TABLE_STOPPOINTS + cache[i].id,
+            JSON.stringify(cache[i].stopPoints),
             'EX',
             CACHE_TTL
         );

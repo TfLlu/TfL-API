@@ -22,6 +22,7 @@ var cache;
 const CACHE_TTL = (0, _config2.default)('CACHE_TTL_LINE', true);
 const CRAWL_TTL = (0, _config2.default)('CRAWL_TTL_LINE', true);
 const CACHE_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_line_route';
+const CACHE_TABLE_STOPPOINTS = (0, _config2.default)('NAME_VERSION', true) + '_cache_line_stoppoints_';
 
 var nextCrawlTimeoutHandle = null;
 var nextCrawlStartTime = null;
@@ -62,6 +63,7 @@ const loadCache = (() => {
 
             for (let i = 0; i < cache.length; i++) {
                 yield _redis.redis.set(CACHE_TABLE + '_' + cache[i].id, JSON.stringify(cache[i]), 'EX', CACHE_TTL);
+                yield _redis.redis.set(CACHE_TABLE_STOPPOINTS + cache[i].id, JSON.stringify(cache[i].stopPoints), 'EX', CACHE_TTL);
             }
 
             yield _redis.redis.set(CACHE_TABLE, JSON.stringify(cache), 'EX', CACHE_TTL);
@@ -96,6 +98,7 @@ const crawl = (() => {
 
         for (let i = 0; i < cache.length; i++) {
             yield _redis.redis.set(CACHE_TABLE + '_' + cache[i].id, JSON.stringify(cache[i]), 'EX', CACHE_TTL);
+            yield _redis.redis.set(CACHE_TABLE_STOPPOINTS + cache[i].id, JSON.stringify(cache[i].stopPoints), 'EX', CACHE_TTL);
         }
 
         yield _redis.redis.set(CACHE_TABLE, JSON.stringify(cache), 'EX', CACHE_TTL);

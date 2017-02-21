@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.get = exports.all = exports.load = undefined;
+exports.getStopPoints = exports.get = exports.all = exports.load = undefined;
 
 var _transitfeeds = require('../source/line/transitfeeds');
 
@@ -69,5 +69,23 @@ const get = exports.get = (() => {
 
     return function get(_x) {
         return _ref2.apply(this, arguments);
+    };
+})();
+
+const getStopPoints = exports.getStopPoints = (() => {
+    var _ref3 = _asyncToGenerator(function* (line) {
+        return _redis.redis.get(CACHE_NAME + '_stoppoints_' + line).then(function (result) {
+            if (result && result !== '') {
+                return result;
+            } else {
+                throw UNAVAILABLE_ERROR;
+            }
+        }).catch(function () {
+            throw new _boom2.default.notFound('Line [' + line + '] not found');
+        });
+    });
+
+    return function getStopPoints(_x2) {
+        return _ref3.apply(this, arguments);
     };
 })();

@@ -45,3 +45,19 @@ export const get = async line => {
             throw new Boom.notFound('Line [' + line + '] not found');
         });
 };
+
+export const getStopPoints = async line => {
+    return redis.get(CACHE_NAME + '_stoppoints_' + line)
+        .then(
+            function (result) {
+                if (result && result !== '') {
+                    return result;
+                } else {
+                    throw UNAVAILABLE_ERROR;
+                }
+            }
+        )
+        .catch(() => {
+            throw new Boom.notFound('Line [' + line + '] not found');
+        });
+};

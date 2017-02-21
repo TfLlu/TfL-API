@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.get = exports.index = undefined;
+exports.stopPoints = exports.get = exports.index = undefined;
 
 var _line = require('../service/line');
 
@@ -40,5 +40,20 @@ const get = exports.get = (() => {
 
     return function get(_x2) {
         return _ref2.apply(this, arguments);
+    };
+})();
+
+const stopPoints = exports.stopPoints = (() => {
+    var _ref3 = _asyncToGenerator(function* (ctx) {
+        try {
+            ctx.body = yield line.getStopPoints(ctx.params.line);
+        } catch (boom) {
+            ctx.body = boom.output.payload;
+            ctx.status = boom.output.statusCode;
+        }
+    });
+
+    return function stopPoints(_x3) {
+        return _ref3.apply(this, arguments);
     };
 })();
