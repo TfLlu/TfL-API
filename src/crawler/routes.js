@@ -9,6 +9,7 @@ const CACHE_TTL              = config('CACHE_TTL_LINE', true);
 const CRAWL_TTL              = config('CRAWL_TTL_LINE', true);
 const CACHE_TABLE            = config('NAME_VERSION', true) + '_cache_line_route';
 const CACHE_TABLE_STOPPOINTS = config('NAME_VERSION', true) + '_cache_line_stoppoints_';
+const CACHE_MODE_TABLE       = config('NAME_VERSION', true) + '_cache_line_route_mode_';
 
 var nextCrawlTimeoutHandle = null;
 var nextCrawlStartTime = null;
@@ -45,7 +46,7 @@ const loadCache = async () => {
 
     try {
         cache = await route.load();
-
+        var modes = {};
         for (let i=0;i<cache.length;i++) {
             await redis.set(
                 CACHE_TABLE + '_' + cache[i].id,
@@ -56,6 +57,19 @@ const loadCache = async () => {
             await redis.set(
                 CACHE_TABLE_STOPPOINTS + cache[i].id,
                 JSON.stringify(cache[i].stopPoints),
+                'EX',
+                CACHE_TTL
+            );
+            if (!modes[cache[i].type]) {
+                modes[cache[i].type] = [];
+            }
+            modes[cache[i].type].push(cache[i]);
+        }
+
+        for (var mode in modes) {
+            await redis.set(
+                CACHE_MODE_TABLE + mode,
+                JSON.stringify(modes[mode]),
                 'EX',
                 CACHE_TTL
             );
@@ -90,6 +104,7 @@ const crawl = async () => {
 
     cache = newData;
 
+    var modes = {};
     for (let i=0;i<cache.length;i++) {
         await redis.set(
             CACHE_TABLE + '_' + cache[i].id,
@@ -100,6 +115,19 @@ const crawl = async () => {
         await redis.set(
             CACHE_TABLE_STOPPOINTS + cache[i].id,
             JSON.stringify(cache[i].stopPoints),
+            'EX',
+            CACHE_TTL
+        );
+        if (!modes[cache[i].type]) {
+            modes[cache[i].type] = [];
+        }
+        modes[cache[i].type].push(cache[i]);
+    }
+
+    for (var mode in modes) {
+        await redis.set(
+            CACHE_MODE_TABLE + mode,
+            JSON.stringify(modes[mode]),
             'EX',
             CACHE_TTL
         );

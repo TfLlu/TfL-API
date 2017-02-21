@@ -23,6 +23,7 @@ const CACHE_TTL = (0, _config2.default)('CACHE_TTL_LINE', true);
 const CRAWL_TTL = (0, _config2.default)('CRAWL_TTL_LINE', true);
 const CACHE_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_line_route';
 const CACHE_TABLE_STOPPOINTS = (0, _config2.default)('NAME_VERSION', true) + '_cache_line_stoppoints_';
+const CACHE_MODE_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_line_route_mode_';
 
 var nextCrawlTimeoutHandle = null;
 var nextCrawlStartTime = null;
@@ -60,10 +61,18 @@ const loadCache = (() => {
 
         try {
             cache = yield route.load();
-
+            var modes = {};
             for (let i = 0; i < cache.length; i++) {
                 yield _redis.redis.set(CACHE_TABLE + '_' + cache[i].id, JSON.stringify(cache[i]), 'EX', CACHE_TTL);
                 yield _redis.redis.set(CACHE_TABLE_STOPPOINTS + cache[i].id, JSON.stringify(cache[i].stopPoints), 'EX', CACHE_TTL);
+                if (!modes[cache[i].type]) {
+                    modes[cache[i].type] = [];
+                }
+                modes[cache[i].type].push(cache[i]);
+            }
+
+            for (var mode in modes) {
+                yield _redis.redis.set(CACHE_MODE_TABLE + mode, JSON.stringify(modes[mode]), 'EX', CACHE_TTL);
             }
 
             yield _redis.redis.set(CACHE_TABLE, JSON.stringify(cache), 'EX', CACHE_TTL);
@@ -96,9 +105,18 @@ const crawl = (() => {
 
         cache = newData;
 
+        var modes = {};
         for (let i = 0; i < cache.length; i++) {
             yield _redis.redis.set(CACHE_TABLE + '_' + cache[i].id, JSON.stringify(cache[i]), 'EX', CACHE_TTL);
             yield _redis.redis.set(CACHE_TABLE_STOPPOINTS + cache[i].id, JSON.stringify(cache[i].stopPoints), 'EX', CACHE_TTL);
+            if (!modes[cache[i].type]) {
+                modes[cache[i].type] = [];
+            }
+            modes[cache[i].type].push(cache[i]);
+        }
+
+        for (var mode in modes) {
+            yield _redis.redis.set(CACHE_MODE_TABLE + mode, JSON.stringify(modes[mode]), 'EX', CACHE_TTL);
         }
 
         yield _redis.redis.set(CACHE_TABLE, JSON.stringify(cache), 'EX', CACHE_TTL);

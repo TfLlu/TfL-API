@@ -11,5 +11,6 @@ import * as airquality from './weather/airquality';
 import * as highway from './highway';
 import * as line from './line';
 import * as route from './line/route';
+import * as mode from './line/mode';
 
-export default { home, test, bikepoint, occupancy, carpark, stoppoint, departures, journey, weather, airquality, highway, line, route };
+export default { home, test, bikepoint, occupancy, carpark, stoppoint, departures, journey, weather, airquality, highway, line, route, mode };

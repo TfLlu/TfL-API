@@ -76,10 +76,10 @@ router.io('/Highway/:highway', _controller2.default.highway.streamSingle);
 router.get('/Line', _controller2.default.line.index);
 router.get('/Line/:line', _controller2.default.line.get);
 router.get('/Line/:line/StopPoints', _controller2.default.line.stopPoints);
-//router.get('/Line/Mode/:mode',                           controller.line.getMode);
-//router.get('/Line/Mode/:mode/Route',                     controller.route.byMode);
+router.get('/Line/Mode/:mode', _controller2.default.mode.get);
 router.get('/Line/Route', _controller2.default.route.index);
 router.get('/Line/:line/Route', _controller2.default.route.byLine);
+router.get('/Line/Mode/:mode/Route', _controller2.default.mode.getRoutes);
 
 app.use((0, _monitor2.default)()).use(_monitor.middleware.responseTime()).use((() => {
     var _ref = _asyncToGenerator(function* (ctx, next) {

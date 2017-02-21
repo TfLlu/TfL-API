@@ -5,9 +5,10 @@ import {redis}   from '../redis';
 var newData = [];
 var cache;
 
-const CACHE_TTL   = config('CACHE_TTL_LINE', true);
-const CRAWL_TTL   = config('CRAWL_TTL_LINE', true);
-const CACHE_TABLE = config('NAME_VERSION', true) + '_cache_line';
+const CACHE_TTL        = config('CACHE_TTL_LINE', true);
+const CRAWL_TTL        = config('CRAWL_TTL_LINE', true);
+const CACHE_TABLE      = config('NAME_VERSION', true) + '_cache_line';
+const CACHE_MODE_TABLE = config('NAME_VERSION', true) + '_cache_line_mode_';
 
 var nextCrawlTimeoutHandle = null;
 var nextCrawlStartTime = null;
@@ -45,10 +46,25 @@ const loadCache = async () => {
     try {
         cache = await line.load();
 
+        var modes = {};
+
         for (let i=0;i<cache.length;i++) {
             await redis.set(
                 CACHE_TABLE + '_' + cache[i].id,
                 JSON.stringify(cache[i]),
+                'EX',
+                CACHE_TTL
+            );
+            if (!modes[cache[i].type]) {
+                modes[cache[i].type] = [];
+            }
+            modes[cache[i].type].push(cache[i]);
+        }
+
+        for (var mode in modes) {
+            await redis.set(
+                CACHE_MODE_TABLE + mode,
+                JSON.stringify(modes[mode]),
                 'EX',
                 CACHE_TTL
             );
@@ -83,10 +99,25 @@ const crawl = async () => {
 
     cache = newData;
 
+    var modes = {};
+
     for (let i=0;i<cache.length;i++) {
         await redis.set(
             CACHE_TABLE + '_' + cache[i].id,
             JSON.stringify(cache[i]),
+            'EX',
+            CACHE_TTL
+        );
+        if (!modes[cache[i].type]) {
+            modes[cache[i].type] = [];
+        }
+        modes[cache[i].type].push(cache[i]);
+    }
+
+    for (var mode in modes) {
+        await redis.set(
+            CACHE_MODE_TABLE + mode,
+            JSON.stringify(modes[mode]),
             'EX',
             CACHE_TTL
         );
