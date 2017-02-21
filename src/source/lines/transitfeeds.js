@@ -1,9 +1,7 @@
 import { transitfeedsRoutes, transitfeedsTrips, transitfeedsStopTimes } from '../../requests';
 
-var keys = [];
-
 const CSVtoArray = text => {
-    var re_valid = /^\s*(?:'[^'\\]*(?:\\[\S\s][^'\\]*)*'|"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,'"\s\\]*(?:\s+[^,'"\s\\]+)*)\s*(?:,\s*(?:'[^'\\]*(?:\\[\S\s][^'\\]*)*'|"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,'"\s\\]*(?:\s+[^,'"\s\\]+)*)\s*)*$/;
+    var re_valid = /^\s*(?:'[^\\]*(?:\\[\S\s][^\\]*)*'|"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,"\s\\]*(?:\s+[^,"\s\\]+)*)\s*(?:,\s*(?:'[^\\]*(?:\\[\S\s][^\\]*)*'|"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,"\s\\]*(?:\s+[^,"\s\\]+)*)\s*)*$/;
     var re_value = /(?!\s*$)\s*(?:'([^'\\]*(?:\\[\S\s][^'\\]*)*)'|"([^"\\]*(?:\\[\S\s][^"\\]*)*)"|([^,'"\s\\]*(?:\s+[^,'"\s\\]+)*))\s*(?:,|$)/g;
     // Return NULL if input string is not well formed CSV string.
     if (!re_valid.test(text)) return null;
@@ -24,18 +22,69 @@ const CSVtoArray = text => {
 
 const handleCSV = csv => {
     var lines = csv.trim().split('\n');
-    keys = lines[0].split(',');
     lines.splice(0, 1);
     return lines;
 };
 
 export const load = async () => {
+    var routes      = await getRoutes();
+    var tripsByLine = await getTrips();
+    var stopTimes   = await getStopTimes();
+
+    var stopPoints = {};
+    for (var line in tripsByLine) {
+        var stopsByLine = [];
+        for (var i = 0; i < tripsByLine[line].length; i++) {
+            let trip = tripsByLine[line][i];
+            if (stopTimes[trip]) {
+                for(let j = 0;j < stopTimes[trip].length;j++) {
+                    let stop = parseInt(stopTimes[trip][j]);
+                    if (stopsByLine.indexOf(stop) == -1) {
+                        stopsByLine.push(stop);
+                    }
+                }
+            }
+        }
+        stopPoints[line] = stopsByLine;
+    }
+
+    for(let i=0;i<routes.length;i++) {
+        let route = routes[i];
+        routes[i].stopPoints = stopPoints[route.id];
+    }
+
+    return routes;
+};
+
+const getRoutes = async () => {
     var routes = handleCSV(await transitfeedsRoutes());
     return routes.map(compileRoute);
-    //var trips = handleCSV(await transitfeedsTrips());
-    //return trips.map(compileTrips);
-    //var stopTimes = handleCSV(await transitfeedsStopTimes());
-    //return stopTimes.map(compileLines);
+};
+
+const getTrips = async () => {
+    var tripsRaw = handleCSV(await transitfeedsTrips());
+    var trips = {};
+    for (let i=0;i<tripsRaw.length;i++) {
+        let trip = CSVtoArray(tripsRaw[i]);
+        if (!trips[trip[0]]) {
+            trips[trip[0]] = [];
+        }
+        trips[trip[0]].push(trip[2]);
+    }
+    return trips;
+};
+
+const getStopTimes = async () => {
+    var stopTimesRaw = handleCSV(await transitfeedsStopTimes());
+    var stopTimes = {};
+    for (let i=0;i<stopTimesRaw.length;i++) {
+        let stopTime = CSVtoArray(stopTimesRaw[i]);
+        if (!stopTimes[stopTime[0]]) {
+            stopTimes[stopTime[0]] = [];
+        }
+        stopTimes[stopTime[0]].push(stopTime[3]);
+    }
+    return stopTimes;
 };
 
 const compileRoute = route => {
@@ -76,13 +125,4 @@ const compileRoute = route => {
         name:      name,
         long_name: values[3],
     };
-};
-
-const compileLines = line => {
-    var values = CSVtoArray(line);
-    var res = {};
-    for (let i = 0; i < keys.length; i++) {
-        res[keys[i]] = values[i];
-    }
-    return res;
 };
