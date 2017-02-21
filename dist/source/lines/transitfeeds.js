@@ -42,7 +42,7 @@ const load = exports.load = (() => {
         var routes = handleCSV((yield (0, _requests.transitfeedsRoutes)()));
         return routes.map(compileRoute);
         //var trips = handleCSV(await transitfeedsTrips());
-        //return trips.map(compileLines);
+        //return trips.map(compileTrips);
         //var stopTimes = handleCSV(await transitfeedsStopTimes());
         //return stopTimes.map(compileLines);
     });
@@ -86,7 +86,8 @@ const compileRoute = route => {
 
     return {
         type: type,
-        id: name,
+        id: values[0],
+        name: name,
         long_name: values[3]
     };
 };

@@ -33,7 +33,7 @@ export const load = async () => {
     var routes = handleCSV(await transitfeedsRoutes());
     return routes.map(compileRoute);
     //var trips = handleCSV(await transitfeedsTrips());
-    //return trips.map(compileLines);
+    //return trips.map(compileTrips);
     //var stopTimes = handleCSV(await transitfeedsStopTimes());
     //return stopTimes.map(compileLines);
 };
@@ -71,8 +71,9 @@ const compileRoute = route => {
     var name = values[0].substr(values[0].lastIndexOf(':') + 1);
 
     return {
-        type: type,
-        id: name,
+        type:      type,
+        id:        values[0],
+        name:      name,
         long_name: values[3],
     };
 };
