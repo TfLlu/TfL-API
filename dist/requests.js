@@ -66,15 +66,15 @@ const cita = exports.cita = () => {
 
 const transitfeedsRoutes = exports.transitfeedsRoutes = () => {
     const url = (0, _config2.default)('URL_TRANSITFEEDS_ROUTES', true);
-    return run('transitfeedsRoutes', url);
+    return run('transitfeeds', url);
 };
 
 const transitfeedsTrips = exports.transitfeedsTrips = () => {
     const url = (0, _config2.default)('URL_TRANSITFEEDS_TRIPS', true);
-    return run('transitfeedsTrips', url);
+    return run('transitfeeds', url);
 };
 
 const transitfeedsStopTimes = exports.transitfeedsStopTimes = () => {
     const url = (0, _config2.default)('URL_TRANSITFEEDS_STOP_TIMES', true);
-    return run('transitfeedsStopTimes', url);
+    return run('transitfeeds', url);
 };

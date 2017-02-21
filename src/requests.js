@@ -59,15 +59,15 @@ export const cita = () => {
 
 export const transitfeedsRoutes = () => {
     const url = config('URL_TRANSITFEEDS_ROUTES', true);
-    return run('transitfeedsRoutes', url);
+    return run('transitfeeds', url);
 };
 
 export const transitfeedsTrips = () => {
     const url = config('URL_TRANSITFEEDS_TRIPS', true);
-    return run('transitfeedsTrips', url);
+    return run('transitfeeds', url);
 };
 
 export const transitfeedsStopTimes = () => {
     const url = config('URL_TRANSITFEEDS_STOP_TIMES', true);
-    return run('transitfeedsStopTimes', url);
+    return run('transitfeeds', url);
 };
