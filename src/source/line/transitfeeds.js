@@ -26,7 +26,13 @@ const handleCSV = csv => {
     return lines;
 };
 
-export const load = async () => {
+export const lines = async () => {
+    var routes      = await getRoutes();
+
+    return routes;
+};
+
+export const routes = async () => {
     var routes      = await getRoutes();
     var tripsByLine = await getTrips();
     var stopTimes   = await getStopTimes();
@@ -120,8 +126,8 @@ const compileRoute = route => {
     var name = values[0].substr(values[0].lastIndexOf(':') + 1);
 
     return {
-        type:      type,
         id:        values[0],
+        type:      type,
         name:      name,
         long_name: values[3],
     };

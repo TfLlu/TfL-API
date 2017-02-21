@@ -5,15 +5,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.compileStream = exports.streamSingle = exports.fireHose = exports.get = exports.all = exports.load = undefined;
 
-var _transitfeeds = require('../source/line/transitfeeds');
+var _transitfeeds = require('../../source/line/transitfeeds');
 
 var transitfeeds = _interopRequireWildcard(_transitfeeds);
 
-var _config = require('../config');
+var _config = require('../../config');
 
 var _config2 = _interopRequireDefault(_config);
 
-var _redis = require('../redis');
+var _redis = require('../../redis');
 
 var _boom = require('boom');
 
@@ -25,16 +25,16 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-const CACHE_NAME = (0, _config2.default)('NAME_VERSION', true) + '_cache_lins';
-const STREAM_NAME = (0, _config2.default)('NAME_VERSION', true) + '_line';
-const UNAVAILABLE_ERROR = new _boom2.default.serverUnavailable('all /Line endpoints are temporarily unavailable');
+const CACHE_NAME = (0, _config2.default)('NAME_VERSION', true) + '_cache_line_route';
+const STREAM_NAME = (0, _config2.default)('NAME_VERSION', true) + '_line_route';
+const UNAVAILABLE_ERROR = new _boom2.default.serverUnavailable('all /Line/Route endpoints are temporarily unavailable');
 
 const load = exports.load = (() => {
     var _ref = _asyncToGenerator(function* () {
         try {
-            return yield transitfeeds.lines();
+            return yield transitfeeds.routes();
         } catch (err) {
-            throw new _boom2.default.serverUnavailable('the /Line endpoint is temporarily unavailable' + err);
+            throw new _boom2.default.serverUnavailable('the /Line/Route endpoint is temporarily unavailable' + err);
         }
     });
 

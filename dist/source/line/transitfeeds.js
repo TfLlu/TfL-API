@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.load = undefined;
+exports.routes = exports.lines = undefined;
 
 var _requests = require('../../requests');
 
@@ -34,8 +34,20 @@ const handleCSV = csv => {
     return lines;
 };
 
-const load = exports.load = (() => {
+const lines = exports.lines = (() => {
     var _ref = _asyncToGenerator(function* () {
+        var routes = yield getRoutes();
+
+        return routes;
+    });
+
+    return function lines() {
+        return _ref.apply(this, arguments);
+    };
+})();
+
+const routes = exports.routes = (() => {
+    var _ref2 = _asyncToGenerator(function* () {
         var routes = yield getRoutes();
         var tripsByLine = yield getTrips();
         var stopTimes = yield getStopTimes();
@@ -65,24 +77,24 @@ const load = exports.load = (() => {
         return routes;
     });
 
-    return function load() {
-        return _ref.apply(this, arguments);
+    return function routes() {
+        return _ref2.apply(this, arguments);
     };
 })();
 
 const getRoutes = (() => {
-    var _ref2 = _asyncToGenerator(function* () {
+    var _ref3 = _asyncToGenerator(function* () {
         var routes = handleCSV((yield (0, _requests.transitfeedsRoutes)()));
         return routes.map(compileRoute);
     });
 
     return function getRoutes() {
-        return _ref2.apply(this, arguments);
+        return _ref3.apply(this, arguments);
     };
 })();
 
 const getTrips = (() => {
-    var _ref3 = _asyncToGenerator(function* () {
+    var _ref4 = _asyncToGenerator(function* () {
         var tripsRaw = handleCSV((yield (0, _requests.transitfeedsTrips)()));
         var trips = {};
         for (let i = 0; i < tripsRaw.length; i++) {
@@ -96,12 +108,12 @@ const getTrips = (() => {
     });
 
     return function getTrips() {
-        return _ref3.apply(this, arguments);
+        return _ref4.apply(this, arguments);
     };
 })();
 
 const getStopTimes = (() => {
-    var _ref4 = _asyncToGenerator(function* () {
+    var _ref5 = _asyncToGenerator(function* () {
         var stopTimesRaw = handleCSV((yield (0, _requests.transitfeedsStopTimes)()));
         var stopTimes = {};
         for (let i = 0; i < stopTimesRaw.length; i++) {
@@ -115,7 +127,7 @@ const getStopTimes = (() => {
     });
 
     return function getStopTimes() {
-        return _ref4.apply(this, arguments);
+        return _ref5.apply(this, arguments);
     };
 })();
 
@@ -152,8 +164,8 @@ const compileRoute = route => {
     var name = values[0].substr(values[0].lastIndexOf(':') + 1);
 
     return {
-        type: type,
         id: values[0],
+        type: type,
         name: name,
         long_name: values[3]
     };
