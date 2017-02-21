@@ -47,10 +47,10 @@ router.io ('/Highway',                                   controller.highway.fire
 router.get('/Highway/:highway',                          controller.highway.get);
 router.io ('/Highway/:highway',                          controller.highway.streamSingle);
 router.get('/Line',                                      controller.line.index);
+router.get('/Line/Route',                                controller.route.index);
 router.get('/Line/:line',                                controller.line.get);
 router.get('/Line/:line/StopPoints',                     controller.line.stopPoints);
 router.get('/Line/Mode/:mode',                           controller.mode.get);
-router.get('/Line/Route',                                controller.route.index);
 router.get('/Line/:line/Route',                          controller.route.byLine);
 router.get('/Line/Mode/:mode/Route',                     controller.mode.getRoutes);
 

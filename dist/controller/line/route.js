@@ -31,7 +31,7 @@ const index = exports.index = (() => {
 const byLine = exports.byLine = (() => {
     var _ref2 = _asyncToGenerator(function* (ctx) {
         try {
-            ctx.body = yield route.get(ctx.params.line);
+            ctx.body = yield route.byLine(ctx.params.line);
         } catch (boom) {
             ctx.body = boom.output.payload;
             ctx.status = boom.output.statusCode;

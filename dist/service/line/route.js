@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.get = exports.all = exports.load = undefined;
+exports.byLine = exports.all = exports.load = undefined;
 
 var _transitfeeds = require('../../source/line/transitfeeds');
 
@@ -54,18 +54,14 @@ const all = exports.all = () => {
     });
 };
 
-const get = exports.get = (() => {
-    var _ref2 = _asyncToGenerator(function* (highway) {
-        var highways = JSON.parse((yield all()));
-        for (var i = 0; i < highways.length; i++) {
-            if (highways[i].id == highway) {
-                return highways[i];
-            }
+const byLine = exports.byLine = line => {
+    return _redis.redis.get(CACHE_NAME + '_' + line).then(function (result) {
+        if (result && result !== '') {
+            return result;
+        } else {
+            throw UNAVAILABLE_ERROR;
         }
-        throw new _boom2.default.notFound('Highway [' + highway + '] not found');
+    }).catch(() => {
+        throw new _boom2.default.notFound('Line [' + line + '] not found');
     });
-
-    return function get(_x) {
-        return _ref2.apply(this, arguments);
-    };
-})();
+};

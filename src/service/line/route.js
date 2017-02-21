@@ -30,12 +30,18 @@ export const all = () => {
         });
 };
 
-export const get = async highway => {
-    var highways = JSON.parse(await all());
-    for (var i = 0; i < highways.length; i++) {
-        if (highways[i].id == highway) {
-            return highways[i];
-        }
-    }
-    throw new Boom.notFound('Highway [' + highway + '] not found');
+export const byLine = line => {
+    return redis.get(CACHE_NAME + '_' + line)
+        .then(
+            function (result) {
+                if (result && result !== '') {
+                    return result;
+                } else {
+                    throw UNAVAILABLE_ERROR;
+                }
+            }
+        )
+        .catch(() => {
+            throw new Boom.notFound('Line [' + line + '] not found');
+        });
 };

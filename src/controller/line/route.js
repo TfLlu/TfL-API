@@ -11,7 +11,7 @@ export const index = async ctx => {
 
 export const byLine = async ctx => {
     try {
-        ctx.body = await route.get(ctx.params.line);
+        ctx.body = await route.byLine(ctx.params.line);
     } catch (boom) {
         ctx.body = boom.output.payload;
         ctx.status = boom.output.statusCode;
