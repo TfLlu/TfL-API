@@ -46,7 +46,7 @@ router.get('/Highway',                                   controller.highway.inde
 router.io ('/Highway',                                   controller.highway.fireHose);
 router.get('/Highway/:highway',                          controller.highway.get);
 router.io ('/Highway/:highway',                          controller.highway.streamSingle);
-router.get('/Lines',                                     controller.lines.index);
+router.get('/Line',                                      controller.line.index);
 
 app.use(monitor())
    .use(middleware.responseTime())

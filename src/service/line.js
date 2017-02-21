@@ -1,17 +1,17 @@
-import * as transitfeeds    from '../source/lines/transitfeeds';
+import * as transitfeeds    from '../source/line/transitfeeds';
 import config               from '../config';
 import {redis, redisPubSub} from '../redis';
 import Boom                 from 'boom';
 
 const CACHE_NAME  = config('NAME_VERSION', true) + '_cache_lines';
 const STREAM_NAME = config('NAME_VERSION', true) + '_lines';
-const UNAVAILABLE_ERROR = new Boom.serverUnavailable('all /Lines endpoints are temporarily unavailable');
+const UNAVAILABLE_ERROR = new Boom.serverUnavailable('all /Line endpoints are temporarily unavailable');
 
 export const load = async () => {
     try {
         return await transitfeeds.load();
     } catch (err) {
-        throw new Boom.serverUnavailable('the /Highway endpoint is temporarily unavailable' + err);
+        throw new Boom.serverUnavailable('the /Line endpoint is temporarily unavailable' + err);
     }
 };
 

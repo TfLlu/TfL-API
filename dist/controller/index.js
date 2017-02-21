@@ -48,10 +48,10 @@ var _highway = require('./highway');
 
 var highway = _interopRequireWildcard(_highway);
 
-var _lines = require('./lines');
+var _line = require('./line');
 
-var lines = _interopRequireWildcard(_lines);
+var line = _interopRequireWildcard(_line);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-exports.default = { home, test, bikepoint, occupancy, carpark, stoppoint, departures, journey, weather, airquality, highway, lines };
+exports.default = { home, test, bikepoint, occupancy, carpark, stoppoint, departures, journey, weather, airquality, highway, line };

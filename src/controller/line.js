@@ -1,4 +1,4 @@
-import * as lines from '../service/lines';
+import * as line from '../service/line';
 //import config       from '../config';
 //import {redis}      from '../redis';
 
@@ -6,7 +6,7 @@ import * as lines from '../service/lines';
 
 export const index = async ctx => {
     try {
-        ctx.body = await lines.load();
+        ctx.body = await line.load();
     } catch (boom) {
         ctx.body = boom.output.payload;
         ctx.status = boom.output.statusCode;
@@ -15,7 +15,7 @@ export const index = async ctx => {
 
 export const get = async ctx => {
     try {
-        ctx.body = await lines.get(ctx.params.line);
+        ctx.body = await line.get(ctx.params.line);
     } catch (boom) {
         ctx.body = boom.output.payload;
         ctx.status = boom.output.statusCode;

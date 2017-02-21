@@ -73,7 +73,7 @@ router.get('/Highway', _controller2.default.highway.index);
 router.io('/Highway', _controller2.default.highway.fireHose);
 router.get('/Highway/:highway', _controller2.default.highway.get);
 router.io('/Highway/:highway', _controller2.default.highway.streamSingle);
-router.get('/Lines', _controller2.default.lines.index);
+router.get('/Line', _controller2.default.line.index);
 
 app.use((0, _monitor2.default)()).use(_monitor.middleware.responseTime()).use((() => {
     var _ref = _asyncToGenerator(function* (ctx, next) {
