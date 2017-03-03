@@ -10,5 +10,10 @@ The data from [Verkéiersverbond](https://data.public.lu/en/organizations/mobili
 ## Available endpoints
 - [GET Line](/RESTAPIs/Line/index.md)
 - [GET Line/{ID}](/RESTAPIs/Line/id.md)
+- [GET Line/{ID}/StopPoints](/RESTAPIs/Line/Id/stoppoints.md)
+- [GET Line/Mode/{Mode}](/RESTAPIs/Line/Mode/mode.md)
+- [GET Line/Mode/{Mode}/Route](/RESTAPIs/Line/Mode/mode.md)
+- [GET Line/Route](/RESTAPIs/Line/Route/index.md)
+- [GET Line/{Line}/Route](/RESTAPIs/Line/Route/line.md)
 
 {% endblock %}
