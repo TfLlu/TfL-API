@@ -1,6 +1,6 @@
 {% extends "/docs.md" %}
 {% block content %}
-# GET Line
+# GET Line/Mode/{Mode}
 Returns all lines from Luxembourg of a specific mode.
 
 ## Resource URL
