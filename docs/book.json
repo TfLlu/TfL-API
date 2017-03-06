@@ -1,0 +1,19 @@
+{
+    "plugins": ["fontsettings", "edit-link", "github"],
+    "pluginsConfig": {
+        "fontsettings": {
+            "theme": "white",
+            "family": "sans",
+            "size": 1
+        },
+        "edit-link": {
+            "base": "https://github.com/TfLlu/TfL-API/tree/master/docs",
+            "label": "Edit This Page"
+        },
+        "github": {
+            "url": "https://github.com/TfLlu/TfL-API"
+        }
+    },
+    "author": "Thierry Degeling",
+    "title": "TfL"
+}

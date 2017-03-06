@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.search = exports.box = exports.around = exports.departures = exports.get = exports.index = undefined;
+exports.search = exports.box = exports.around = exports.get = exports.streamIndex = exports.index = undefined;
 
 var _stoppoint = require('../service/stoppoint');
 
@@ -15,7 +15,12 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 const index = exports.index = (() => {
     var _ref = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield stoppoint.all();
+        try {
+            ctx.body = yield stoppoint.all();
+        } catch (boom) {
+            ctx.body = boom.output.payload;
+            ctx.status = boom.output.statusCode;
+        }
     });
 
     return function index(_x) {
@@ -23,29 +28,45 @@ const index = exports.index = (() => {
     };
 })();
 
-const get = exports.get = (() => {
-    var _ref2 = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield stoppoint.get(parseInt(ctx.params.stopPoint));
+const streamIndex = exports.streamIndex = (() => {
+    var _ref2 = _asyncToGenerator(function* ({ emit, disconnect }) {
+        var res = stoppoint.stream(function (data) {
+            emit(data);
+        });
+
+        disconnect(function () {
+            res.off();
+        });
     });
 
-    return function get(_x2) {
+    return function streamIndex(_x2) {
         return _ref2.apply(this, arguments);
     };
 })();
 
-const departures = exports.departures = (() => {
+const get = exports.get = (() => {
     var _ref3 = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield stoppoint.departures(parseInt(ctx.params.stopPoint), parseInt(ctx.params.limit));
+        try {
+            ctx.body = yield stoppoint.get(parseInt(ctx.params.stopPoint));
+        } catch (boom) {
+            ctx.body = boom.output.payload;
+            ctx.status = boom.output.statusCode;
+        }
     });
 
-    return function departures(_x3) {
+    return function get(_x3) {
         return _ref3.apply(this, arguments);
     };
 })();
 
 const around = exports.around = (() => {
     var _ref4 = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield stoppoint.around(parseFloat(ctx.params.lon), parseFloat(ctx.params.lat), ctx.params.radius);
+        try {
+            ctx.body = yield stoppoint.around(parseFloat(ctx.params.lon), parseFloat(ctx.params.lat), ctx.params.radius);
+        } catch (boom) {
+            ctx.body = boom.output.payload;
+            ctx.status = boom.output.statusCode;
+        }
     });
 
     return function around(_x4) {
@@ -55,7 +76,12 @@ const around = exports.around = (() => {
 
 const box = exports.box = (() => {
     var _ref5 = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield stoppoint.box(parseFloat(ctx.params.swlon), parseFloat(ctx.params.swlat), parseFloat(ctx.params.nelon), parseFloat(ctx.params.nelat));
+        try {
+            ctx.body = yield stoppoint.box(parseFloat(ctx.params.swlon), parseFloat(ctx.params.swlat), parseFloat(ctx.params.nelon), parseFloat(ctx.params.nelat));
+        } catch (boom) {
+            ctx.body = boom.output.payload;
+            ctx.status = boom.output.statusCode;
+        }
     });
 
     return function box(_x5) {
@@ -65,7 +91,12 @@ const box = exports.box = (() => {
 
 const search = exports.search = (() => {
     var _ref6 = _asyncToGenerator(function* (ctx) {
-        ctx.body = yield stoppoint.search(ctx.params.searchstring.toLowerCase());
+        try {
+            ctx.body = yield stoppoint.search(ctx.params.searchstring.toLowerCase());
+        } catch (boom) {
+            ctx.body = boom.output.payload;
+            ctx.status = boom.output.statusCode;
+        }
     });
 
     return function search(_x6) {

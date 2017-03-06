@@ -15,8 +15,13 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 const plan = exports.plan = (() => {
     var _ref = _asyncToGenerator(function* (ctx) {
-        ctx.type = 'json';
-        ctx.body = yield journey.plan(ctx.params.from, ctx.params.to);
+        try {
+            ctx.type = 'json';
+            ctx.body = yield journey.plan(ctx.params.from, ctx.params.to);
+        } catch (boom) {
+            ctx.body = boom.output.payload;
+            ctx.status = boom.output.statusCode;
+        }
     });
 
     return function plan(_x) {

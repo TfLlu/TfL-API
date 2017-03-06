@@ -24,17 +24,16 @@ export const get = async carPark => {
 };
 
 export const compileParking = parking => {
-    //return parking;
     var trend;
     switch(parseInt(parking['vdlxml:tendance'])) {
     case -1:
-        trend = 'down';
+        trend = 'up';
         break;
     case 0:
         trend = 'stable';
         break;
     case 1:
-        trend = 'up';
+        trend = 'down';
         break;
     default:
         trend = null;

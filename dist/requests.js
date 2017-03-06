@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.meteolux = exports.mobiliteitDeparture = exports.mobiliteitStoppoints = exports.vdl = exports.openov = exports.velok = exports.veloh = undefined;
+exports.transitfeedsStopTimes = exports.transitfeedsTrips = exports.transitfeedsRoutes = exports.cita = exports.aev = exports.meteolux = exports.mobiliteitDeparture = exports.mobiliteitStoppoints = exports.vdl = exports.openov = exports.velok = exports.veloh = undefined;
 
 var _config = require('./config');
 
@@ -25,17 +25,17 @@ const veloh = exports.veloh = bikePoint => {
 };
 
 const velok = exports.velok = () => {
-    const url = 'https://webservice.velok.lu/stationattache.aspx';
+    const url = (0, _config2.default)('URL_BIKEPOINT_VELOK', true);
     return run('velok', url);
 };
 
 const openov = exports.openov = (from, to) => {
-    const url = 'https://planner.tfl.lu/rrrr/plan?from-latlng=' + from + '&to-latlng=' + to;
+    const url = (0, _config2.default)('URL_JOURNEY_PLANNER', true).replace('{{from}}', from).replace('{{to}}', to);
     return run('openov', url);
 };
 
 const vdl = exports.vdl = () => {
-    const url = 'http://service.vdl.lu/rss/circulation_guidageparking.php';
+    const url = (0, _config2.default)('URL_OCCUPANCY_CARPARK_VDL', true);
     return run('vdl', url);
 };
 
@@ -50,6 +50,31 @@ const mobiliteitDeparture = exports.mobiliteitDeparture = (stopPoint, maxJourney
 };
 
 const meteolux = exports.meteolux = () => {
-    const url = 'http://meteolux.lu/Opendata/data_LUX_actual.csv';
+    const url = (0, _config2.default)('URL_WEATHER_METEOLUX', true);
     return run('meteolux', url);
+};
+
+const aev = exports.aev = measurement => {
+    const url = (0, _config2.default)('URL_WEATHER_AEV', true) + measurement;
+    return run('aev', url);
+};
+
+const cita = exports.cita = () => {
+    const url = (0, _config2.default)('URL_HIGHWAY_CITA', true);
+    return run('cita', url);
+};
+
+const transitfeedsRoutes = exports.transitfeedsRoutes = () => {
+    const url = (0, _config2.default)('URL_TRANSITFEEDS_ROUTES', true);
+    return run('transitfeeds', url);
+};
+
+const transitfeedsTrips = exports.transitfeedsTrips = () => {
+    const url = (0, _config2.default)('URL_TRANSITFEEDS_TRIPS', true);
+    return run('transitfeeds', url);
+};
+
+const transitfeedsStopTimes = exports.transitfeedsStopTimes = () => {
+    const url = (0, _config2.default)('URL_TRANSITFEEDS_STOP_TIMES', true);
+    return run('transitfeeds', url);
 };

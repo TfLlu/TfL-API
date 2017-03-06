@@ -1,10 +1,9 @@
 import config from './config';
 import Influx from 'influxdb-nodejs';
 
-
 var influxdb = false;
 if (config('INFLUXDB')) {
-    influxdb = new Influx(config('INFLUXDB'));
+    influxdb = new Influx(config('INFLUXDB') + config('NAME_VERSION'));
 }
 
 const onData = data => {
@@ -16,11 +15,17 @@ const onData = data => {
         }
         influxdb.write('responses')
             .field(data.RESPONSE_TIME)
-            .then();
+            .then()
+            .catch(err => {
+                console.log('INFLUX DB ERROR', err.message);
+            });
     } else if (data.REQUEST_TIME) {
         influxdb.write('requests')
             .field(data.REQUEST_TIME)
-            .then();
+            .then()
+            .catch(err => {
+                console.log('INFLUX DB ERROR', err.message);
+            });
     }
 };
 

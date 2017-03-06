@@ -14,17 +14,19 @@ export const veloh = bikePoint => {
 };
 
 export const velok = () => {
-    const url = 'https://webservice.velok.lu/stationattache.aspx';
+    const url = config('URL_BIKEPOINT_VELOK', true);
     return run('velok', url);
 };
 
 export const openov = (from, to) => {
-    const url = 'https://planner.tfl.lu/rrrr/plan?from-latlng=' + from + '&to-latlng=' + to;
+    const url = config('URL_JOURNEY_PLANNER', true)
+        .replace('{{from}}', from)
+        .replace('{{to}}', to);
     return run('openov', url);
 };
 
 export const vdl = () => {
-    const url = 'http://service.vdl.lu/rss/circulation_guidageparking.php';
+    const url = config('URL_OCCUPANCY_CARPARK_VDL', true);
     return run('vdl', url);
 };
 
@@ -41,6 +43,31 @@ export const mobiliteitDeparture = (stopPoint, maxJourneys) => {
 };
 
 export const meteolux = () => {
-    const url = 'http://meteolux.lu/Opendata/data_LUX_actual.csv';
+    const url = config('URL_WEATHER_METEOLUX', true);
     return run('meteolux', url);
+};
+
+export const aev = (measurement) => {
+    const url = config('URL_WEATHER_AEV', true) + measurement;
+    return run('aev', url);
+};
+
+export const cita = () => {
+    const url = config('URL_HIGHWAY_CITA', true);
+    return run('cita', url);
+};
+
+export const transitfeedsRoutes = () => {
+    const url = config('URL_TRANSITFEEDS_ROUTES', true);
+    return run('transitfeeds', url);
+};
+
+export const transitfeedsTrips = () => {
+    const url = config('URL_TRANSITFEEDS_TRIPS', true);
+    return run('transitfeeds', url);
+};
+
+export const transitfeedsStopTimes = () => {
+    const url = config('URL_TRANSITFEEDS_STOP_TIMES', true);
+    return run('transitfeeds', url);
 };
