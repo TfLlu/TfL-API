@@ -15,9 +15,12 @@ export const index = async ctx => {
 
 export const get = async ctx => {
     try {
-        ctx.body = await departures.get(
+        ctx.body = await departures.loadPlanes(
             parseInt(ctx.params.stopPoint)
         );
+        /*ctx.body = await departures.get(
+            parseInt(ctx.params.stopPoint)
+        );*/
     } catch (boom) {
         ctx.body = boom.output.payload;
         ctx.status = boom.output.statusCode;

@@ -1,4 +1,5 @@
 import * as mobiliteit      from '../../source/stoppoint/mobiliteit';
+import * as luxairport      from '../../source/stoppoint/luxairport';
 import * as stoppoint       from '../stoppoint';
 import config               from '../../config';
 import moment               from 'moment';
@@ -86,6 +87,10 @@ export const load = async (stopPoint, limit) => {
     departures.sort((a,b) => a.departure - b.departure);
 
     return departures;
+};
+
+export const loadPlanes = async () => {
+    return await luxairport.departures();
 };
 
 export const all = () => {
