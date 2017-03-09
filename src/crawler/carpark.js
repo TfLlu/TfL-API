@@ -128,6 +128,17 @@ const crawl = async () => {
         CACHE_TTL
     );
 
+    for (let i=0; i<cache.features.length;i++) {
+        let id = cache.features[i].properties.id;
+
+        await redis.set(
+            CACHE_TABLE + '_' + id,
+            JSON.stringify(cache.features[i]),
+            'EX',
+            CACHE_TTL
+        );
+    }
+
     nextCrawl();
 };
 

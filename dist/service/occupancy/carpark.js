@@ -61,20 +61,13 @@ const load = exports.load = () => {
 
 const get = exports.get = (() => {
     var _ref = _asyncToGenerator(function* (carPark) {
-        try {
-            var carParkSplit = carPark.split(':');
-            var provider = carParkSplit[0];
-            switch (provider) {
-                case 'vdl':
-                    carPark = yield vdl.get(carParkSplit[1]);
-                    break;
-                default:
-                    throw new Error('not found');
+        return _redis.redis.get(CACHE_NAME + '_' + carPark).then(function (result) {
+            if (result && result !== '') {
+                return result;
+            } else {
+                throw new _boom2.default.serverUnavailable('Data from carpark [' + carPark + '] is temporarily unavailable');
             }
-            return compileCarPark(provider, carPark);
-        } catch (err) {
-            throw new _boom2.default.notFound('Carpark [' + carPark + '] not found or unavailable');
-        }
+        });
     });
 
     return function get(_x) {

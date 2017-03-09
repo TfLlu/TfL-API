@@ -136,6 +136,12 @@ const crawl = (() => {
 
         yield _redis.redis.set(CACHE_TABLE, JSON.stringify(cache), 'EX', CACHE_TTL);
 
+        for (let i = 0; i < cache.features.length; i++) {
+            let id = cache.features[i].properties.id;
+
+            yield _redis.redis.set(CACHE_TABLE + '_' + id, JSON.stringify(cache.features[i]), 'EX', CACHE_TTL);
+        }
+
         nextCrawl();
     });
 
