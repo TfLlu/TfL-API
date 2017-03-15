@@ -5,8 +5,8 @@ import {redis}    from '../redis';
 var newData = [];
 var cache;
 
-const CACHE_TTL              = config('CACHE_TTL_LINE', true);
-const CRAWL_TTL              = config('CRAWL_TTL_LINE', true);
+const CACHE_TTL              = config('CACHE_TTL_ROUTES', true);
+const CRAWL_TTL              = config('CRAWL_TTL_ROUTES', true);
 const CACHE_TABLE            = config('NAME_VERSION', true) + '_cache_line_route';
 const CACHE_TABLE_STOPPOINTS = config('NAME_VERSION', true) + '_cache_line_stoppoints_';
 const CACHE_MODE_TABLE       = config('NAME_VERSION', true) + '_cache_line_route_mode_';

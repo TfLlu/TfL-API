@@ -34,7 +34,7 @@ export const get = async stopPoint => {
         );
 };
 
-export const load = async (stopPoint, limit) => {
+export const load = async (stopPoint, limit, agencies) => {
     var departuresRaw = await mobiliteit.departures(stopPoint, limit);
     var departures = [];
     var rawDepartures = departuresRaw.Departure;
@@ -49,11 +49,13 @@ export const load = async (stopPoint, limit) => {
                 switch (rawDepartures[i].Product.operatorCode.toLowerCase()) {
                 case 'cfl':
                     departure.type = 'train';
-                    departure.trainId = rawDepartures[i].Product.name.replace(/ +/g,' ');
+                    departure.trainId = rawDepartures[i].Product.name.replace(/ +/g,'');
+                    departure.lineId = agencies[rawDepartures[i].Product.operatorCode] + ':' + rawDepartures[i].Product.admin + ':' + departure.trainId.substring(0, departure.trainId.length - 2) + '00';
                     break;
                 default:
                     departure.type = 'bus';
                     departure.trainId = null;
+                    departure.lineId = agencies[rawDepartures[i].Product.operatorCode] + ':' + rawDepartures[i].Product.admin + ':' + rawDepartures[i].Product.line;
                     break;
                 }
             }

@@ -71,3 +71,8 @@ export const transitfeedsStopTimes = () => {
     const url = config('URL_TRANSITFEEDS_STOP_TIMES', true);
     return run('transitfeeds', url);
 };
+
+export const transitfeedsAgencies = () => {
+    const url = config('URL_TRANSITFEEDS_AGENCIES', true);
+    return run('transitfeeds', url);
+};

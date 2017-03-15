@@ -10,10 +10,6 @@ var _config2 = _interopRequireDefault(_config);
 
 var _redis = require('../redis');
 
-var _moment = require('moment');
-
-var _moment2 = _interopRequireDefault(_moment);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -27,9 +23,11 @@ const PUB_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_stoppoint_depa
 const CACHE_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_stoppoint_departures';
 const CACHE_STOPPOINTS_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_stoppoint';
 const MAX_CONCURRENT_CRAWLS = (0, _config2.default)('CRAWL_MAX_CONCURRENT_STOPPOINT_DEPARTURE', true);
+const CACHE_AGENCIES = (0, _config2.default)('NAME_VERSION', true) + '_cache_agencies';
 
 var cache = {};
 var JobsToAdd;
+var agencies;
 var stopPointsToCrawl = [];
 var currentlyCrawling = [];
 
@@ -42,7 +40,7 @@ const worker = (() => {
         while (retry) {
             retry--;
             try {
-                var newData = yield departures.load(stopPointID, CRAWL_AMOUNT);
+                var newData = yield departures.load(stopPointID, CRAWL_AMOUNT, agencies);
                 break;
             } catch (err) {
                 if (!err.code) {
@@ -136,8 +134,8 @@ const removeFromCrawlList = id => {
 
 const crawl = (() => {
     var _ref2 = _asyncToGenerator(function* () {
-        console.log((0, _moment2.default)().format() + ' crawling');
         var result = yield _redis.redis.get(CACHE_STOPPOINTS_TABLE);
+        agencies = JSON.parse((yield _redis.redis.get(CACHE_AGENCIES)));
         if (result && result !== '') {
             stopPointsToCrawl = JSON.parse(result).features;
         } else {

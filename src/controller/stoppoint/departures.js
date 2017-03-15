@@ -3,6 +3,7 @@ import config          from '../../config';
 import {redis}         from '../../redis';
 
 const STREAM_CLIENTS_KEY = config('NAME_VERSION', true) + '_stream_clients_stoppoint_departures';
+const CACHE_AGENCIES     = config('NAME_VERSION', true) + '_cache_agencies';
 
 export const index = async ctx => {
     try {
@@ -40,7 +41,8 @@ export const limit = async ctx => {
         } else {
             ctx.body = await departures.load(
                 parseInt(ctx.params.stopPoint),
-                parseInt(ctx.params.limit)
+                parseInt(ctx.params.limit),
+                JSON.parse(await redis.get(CACHE_AGENCIES))
             );
         }
     } catch (boom) {

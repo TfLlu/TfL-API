@@ -69,7 +69,7 @@ const get = exports.get = (() => {
 })();
 
 const load = exports.load = (() => {
-    var _ref3 = _asyncToGenerator(function* (stopPoint, limit) {
+    var _ref3 = _asyncToGenerator(function* (stopPoint, limit, agencies) {
         var departuresRaw = yield mobiliteit.departures(stopPoint, limit);
         var departures = [];
         var rawDepartures = departuresRaw.Departure;
@@ -84,11 +84,13 @@ const load = exports.load = (() => {
                     switch (rawDepartures[i].Product.operatorCode.toLowerCase()) {
                         case 'cfl':
                             departure.type = 'train';
-                            departure.trainId = rawDepartures[i].Product.name.replace(/ +/g, ' ');
+                            departure.trainId = rawDepartures[i].Product.name.replace(/ +/g, '');
+                            departure.lineId = agencies[rawDepartures[i].Product.operatorCode] + ':' + rawDepartures[i].Product.admin + ':' + departure.trainId.substring(0, departure.trainId.length - 2) + '00';
                             break;
                         default:
                             departure.type = 'bus';
                             departure.trainId = null;
+                            departure.lineId = agencies[rawDepartures[i].Product.operatorCode] + ':' + rawDepartures[i].Product.admin + ':' + rawDepartures[i].Product.line;
                             break;
                     }
                 }
@@ -125,7 +127,7 @@ const load = exports.load = (() => {
         return departures;
     });
 
-    return function load(_x2, _x3) {
+    return function load(_x2, _x3, _x4) {
         return _ref3.apply(this, arguments);
     };
 })();

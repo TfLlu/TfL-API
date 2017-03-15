@@ -1,8 +1,8 @@
 'use strict';
 
-var _route = require('../service/line/route');
+var _agencies = require('../service/agencies');
 
-var route = _interopRequireWildcard(_route);
+var agencies = _interopRequireWildcard(_agencies);
 
 var _config = require('../config');
 
@@ -19,11 +19,9 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 var newData = [];
 var cache;
 
-const CACHE_TTL = (0, _config2.default)('CACHE_TTL_ROUTES', true);
-const CRAWL_TTL = (0, _config2.default)('CRAWL_TTL_ROUTES', true);
-const CACHE_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_line_route';
-const CACHE_TABLE_STOPPOINTS = (0, _config2.default)('NAME_VERSION', true) + '_cache_line_stoppoints_';
-const CACHE_MODE_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_line_route_mode_';
+const CACHE_TTL = (0, _config2.default)('CACHE_TTL_AGENCIES', true);
+const CRAWL_TTL = (0, _config2.default)('CRAWL_TTL_AGENCIES', true);
+const CACHE_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_agencies';
 
 var nextCrawlTimeoutHandle = null;
 var nextCrawlStartTime = null;
@@ -48,7 +46,7 @@ const nextCrawl = () => {
         try {
             return crawl();
         } catch (err) {
-            console.log('LINE/ROUTE CRAWLER ERROR', err.message);
+            console.log('AGENCIES CRAWLER ERROR', err.message);
         }
     });
 };
@@ -60,27 +58,14 @@ const loadCache = (() => {
         }
 
         try {
-            cache = yield route.load();
-            var modes = {};
-            for (let i = 0; i < cache.length; i++) {
-                yield _redis.redis.set(CACHE_TABLE + '_' + cache[i].id, JSON.stringify(cache[i]), 'EX', CACHE_TTL);
-                yield _redis.redis.set(CACHE_TABLE_STOPPOINTS + cache[i].id, JSON.stringify(cache[i].stopPoints), 'EX', CACHE_TTL);
-                if (!modes[cache[i].type]) {
-                    modes[cache[i].type] = [];
-                }
-                modes[cache[i].type].push(cache[i]);
-            }
-
-            for (var mode in modes) {
-                yield _redis.redis.set(CACHE_MODE_TABLE + mode, JSON.stringify(modes[mode]), 'EX', CACHE_TTL);
-            }
+            cache = yield agencies.load();
 
             yield _redis.redis.set(CACHE_TABLE, JSON.stringify(cache), 'EX', CACHE_TTL);
             if (process.env.TRAVIS) {
                 process.exit();
             }
         } catch (err) {
-            console.log('LINE/ROUTE CRAWLER LOAD CACHE ERROR', err.message);
+            console.log('AGENCIES CRAWLER LOAD CACHE ERROR', err.message);
         }
 
         return true;
@@ -98,26 +83,12 @@ const crawl = (() => {
         }
 
         try {
-            newData = yield route.load();
+            newData = yield agencies.load();
         } catch (err) {
             return nextCrawl();
         }
 
         cache = newData;
-
-        var modes = {};
-        for (let i = 0; i < cache.length; i++) {
-            yield _redis.redis.set(CACHE_TABLE + '_' + cache[i].id, JSON.stringify(cache[i]), 'EX', CACHE_TTL);
-            yield _redis.redis.set(CACHE_TABLE_STOPPOINTS + cache[i].id, JSON.stringify(cache[i].stopPoints), 'EX', CACHE_TTL);
-            if (!modes[cache[i].type]) {
-                modes[cache[i].type] = [];
-            }
-            modes[cache[i].type].push(cache[i]);
-        }
-
-        for (var mode in modes) {
-            yield _redis.redis.set(CACHE_MODE_TABLE + mode, JSON.stringify(modes[mode]), 'EX', CACHE_TTL);
-        }
 
         yield _redis.redis.set(CACHE_TABLE, JSON.stringify(cache), 'EX', CACHE_TTL);
 

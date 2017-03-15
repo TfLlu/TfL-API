@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.routes = exports.lines = undefined;
+exports.agencies = exports.routes = exports.lines = undefined;
 
 var _requests = require('../../requests');
 
@@ -82,19 +82,29 @@ const routes = exports.routes = (() => {
     };
 })();
 
-const getRoutes = (() => {
+const agencies = exports.agencies = (() => {
     var _ref3 = _asyncToGenerator(function* () {
+        return yield getAgencies();
+    });
+
+    return function agencies() {
+        return _ref3.apply(this, arguments);
+    };
+})();
+
+const getRoutes = (() => {
+    var _ref4 = _asyncToGenerator(function* () {
         var routes = handleCSV((yield (0, _requests.transitfeedsRoutes)()));
         return routes.map(compileRoute);
     });
 
     return function getRoutes() {
-        return _ref3.apply(this, arguments);
+        return _ref4.apply(this, arguments);
     };
 })();
 
 const getTrips = (() => {
-    var _ref4 = _asyncToGenerator(function* () {
+    var _ref5 = _asyncToGenerator(function* () {
         var tripsRaw = handleCSV((yield (0, _requests.transitfeedsTrips)()));
         var trips = {};
         for (let i = 0; i < tripsRaw.length; i++) {
@@ -108,12 +118,12 @@ const getTrips = (() => {
     });
 
     return function getTrips() {
-        return _ref4.apply(this, arguments);
+        return _ref5.apply(this, arguments);
     };
 })();
 
 const getStopTimes = (() => {
-    var _ref5 = _asyncToGenerator(function* () {
+    var _ref6 = _asyncToGenerator(function* () {
         var stopTimesRaw = handleCSV((yield (0, _requests.transitfeedsStopTimes)()));
         var stopTimes = {};
         for (let i = 0; i < stopTimesRaw.length; i++) {
@@ -127,7 +137,25 @@ const getStopTimes = (() => {
     });
 
     return function getStopTimes() {
-        return _ref5.apply(this, arguments);
+        return _ref6.apply(this, arguments);
+    };
+})();
+
+const getAgencies = (() => {
+    var _ref7 = _asyncToGenerator(function* () {
+        var agenciesRaw = handleCSV((yield (0, _requests.transitfeedsAgencies)()));
+        var agencies = {};
+        for (let i = 0; i < agenciesRaw.length; i++) {
+            let agency = CSVtoArray(agenciesRaw[i]);
+            if (!agencies[agency[1].substring(0, 3)]) {
+                agencies[agency[1].substring(0, 3)] = agency[0];
+            }
+        }
+        return agencies;
+    });
+
+    return function getAgencies() {
+        return _ref7.apply(this, arguments);
     };
 })();
 
