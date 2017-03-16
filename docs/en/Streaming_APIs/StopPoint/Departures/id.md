@@ -21,6 +21,7 @@ The response will be formatted as a [JSON](https://en.wikipedia.org/wiki/JSON).
 | **type**          | `string`  | - `'train'`<br />- `'bus'`        | type of transportation |
 | **trainId**       | `string`  | - `{trainId}`<br />- `NULL`       | train id _(null on busses)_ |
 | **line**          | `string`  | - `{line}`<br />- `NULL`          | bus or train line (currently null for all trains as info is missing on [Verkéiersverbond](https://data.public.lu/en/organizations/mobiliteitszentral/) API) |
+| **lineId**        | `string`  | `{lineId}`                        | bus or train line identifier (can be used to map departure to a [line](/RESTAPIs/Line/index.md)) |
 | **number**        | `integer` | `{number}`                        | number given by [Verkéiersverbond](https://data.public.lu/en/organizations/mobiliteitszentral/). _Do not trust it to be unique_ |
 | **departure**     | `integer` | `{departure}`                     | calculated real life departure of train/bus in [Unix time](https://en.wikipedia.org/wiki/Unix_time) |
 | **delay**         | `integer` | `{delay}`                         | offset between `{departure}` and scheduled departure in seconds |
@@ -33,34 +34,36 @@ The response will be formatted as a [JSON](https://en.wikipedia.org/wiki/JSON).
 /Departures/200405035
 ```json
 {
-	"type": "update",
+	"type": "new",
 	"data": {
-		"200405035": [{
-			"id": "1|501|22|82|17022017",
+        "200405035": [{
+			"id": "1|1533|8|82|16032017",
 			"type": "bus",
 			"trainId": null,
-			"line": "19",
-			"number": 2059,
-			"departure": 1487339700,
-			"delay": 240,
+			"lineId": "4:TIC---:13",
+			"line": "13",
+			"number": 180,
+			"departure": 1489658400,
+			"delay": 0,
 			"live": true,
-			"departureISO": "2017-02-17T14:55:00+01:00",
-			"destination": "Limpertsberg, Neumanns-Park",
-			"destinationId": 200419029
+			"departureISO": "2017-03-16T11:00:00+01:00",
+			"destination": "Esch/Alzette, Gare",
+			"destinationId": 220402034
 		}, {
-			"id": "1|3582|2|82|17022017",
+			"id": "1|1968|2|82|16032017",
 			"type": "bus",
 			"trainId": null,
-			"line": "195",
-			"number": 598,
-			"departure": 1487340480,
-			"delay": 780,
-			"live": true,
-			"departureISO": "2017-02-17T15:08:00+01:00",
-			"destination": "Kirchberg, Rehazenter",
-			"destinationId": 200417034
+			"lineId": "3:RGM---:212",
+			"line": "212",
+			"number": 1182,
+			"departure": 1489658520,
+			"delay": 0,
+			"live": false,
+			"departureISO": "2017-03-16T11:02:00+01:00",
+			"destination": "Luxembourg, Monterey Parc",
+			"destinationId": 200405004
 		}]
-	}
+    }
 }
 ```
 

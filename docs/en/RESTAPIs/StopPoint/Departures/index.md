@@ -16,6 +16,7 @@ The response will be formatted as a [JSON](https://en.wikipedia.org/wiki/JSON).
 | **type**          | `string`  | - `'train'`<br />- `'bus'`        | type of transportation |
 | **trainId**       | `string`  | - `{trainId}`<br />- `NULL`       | train id _(null on busses)_ |
 | **line**          | `string`  | - `{line}`<br />- `NULL`          | bus or train line (currently null for all trains as info is missing on [Verkéiersverbond](https://data.public.lu/en/organizations/mobiliteitszentral/) API) |
+| **lineId**        | `string`  | `{lineId}`                        | bus or train line identifier (can be used to map departure to a [line](/RESTAPIs/Line/index.md)) |
 | **number**        | `integer` | `{number}`                        | number given by [Verkéiersverbond](https://data.public.lu/en/organizations/mobiliteitszentral/). _Do not trust it to be unique_ |
 | **departure**     | `integer` | `{departure}`                     | calculated real life departure of train/bus in [Unix time](https://en.wikipedia.org/wiki/Unix_time) |
 | **delay**         | `integer` | `{delay}`                         | offset between `{departure}` and scheduled departure in seconds |
@@ -28,71 +29,67 @@ The response will be formatted as a [JSON](https://en.wikipedia.org/wiki/JSON).
 **GET** https://api.tfl.lu/v1/StopPoint/Departures
 ```json
 {
-	"8001267": [
-		{
-			"id": "1|1393|0|82|15022017",
-			"type": "train",
-			"trainId": "CRE 5105",
-			"line": "",
-			"number": 5105,
-			"departure": 1487137740,
-			"delay": 0,
-			"live": false,
-			"departureISO": "2017-02-15T06:49:00+01:00",
-			"destination": "Koblenz Hbf",
-			"destinationId": 500000025
-		}, {
-            ...
-        }
-	],
-	"8001340": [
-		{
-			"id": "1|1393|0|82|15022017",
-			"type": "train",
-			"trainId": "CRE 5105",
-			"line": "",
-			"number": 5105,
-			"departure": 1487138280,
-			"delay": 0,
-			"live": false,
-			"departureISO": "2017-02-15T06:58:00+01:00",
-			"destination": "Koblenz Hbf",
-			"destinationId": 500000025
-		}, {
-            ...
-        }
-	],
-	"8225151": [
-		{
-			"id": "1|3349|1|82|14022017",
-			"type": "bus",
-			"trainId": null,
-			"line": "319",
-			"number": 4214,
-			"departure": 1487092740,
-			"delay": 0,
-			"live": false,
-			"departureISO": "2017-02-14T18:19:00+01:00",
-			"destination": "Piennes-Zone d'activités",
-			"destinationId": 8225751
-		},
-		{
-			"id": "1|3348|1|82|14022017",
-			"type": "bus",
-			"trainId": null,
-			"line": "319",
-			"number": 4215,
-			"departure": 1487094540,
-			"delay": 0,
-			"live": false,
-			"departureISO": "2017-02-14T18:49:00+01:00",
-			"destination": "Piennes-Zone d'activités",
-			"destinationId": 8225751
-		}, {
-            ...
-        },
-    ...
-    ]
+	"8225152": [{
+		"id": "1|3130|1|82|16032017",
+		"type": "bus",
+		"trainId": null,
+		"lineId": "3:RGM---:319",
+		"line": "319",
+		"number": 4223,
+		"departure": 1489664040,
+		"delay": 0,
+		"live": false,
+		"departureISO": "2017-03-16T12:34:00+01:00",
+		"destination": "Luxembourg, Gare routière",
+		"destinationId": 200405036
+	}, {
+		...
+	}],
+	"8225161": [{
+		"id": "1|3127|0|82|16032017",
+		"type": "bus",
+		"trainId": null,
+		"lineId": "3:RGM---:319",
+		"line": "319",
+		"number": 4212,
+		"departure": 1489667040,
+		"delay": 0,
+		"live": false,
+		"departureISO": "2017-03-16T13:24:00+01:00",
+		"destination": "Piennes-Zone d'activités",
+		"destinationId": 8225751
+	}, {
+		...
+	}],
+	"8225162": [{
+		"id": "1|3130|1|82|16032017",
+		"type": "bus",
+		"trainId": null,
+		"lineId": "3:RGM---:319",
+		"line": "319",
+		"number": 4223,
+		"departure": 1489663680,
+		"delay": 0,
+		"live": false,
+		"departureISO": "2017-03-16T12:28:00+01:00",
+		"destination": "Luxembourg, Gare routière",
+		"destinationId": 200405036
+	}, {
+		"id": "1|3132|0|82|16032017",
+		"type": "bus",
+		"trainId": null,
+		"lineId": "3:RGM---:319",
+		"line": "319",
+		"number": 4224,
+		"departure": 1489675680,
+		"delay": 0,
+		"live": false,
+		"departureISO": "2017-03-16T15:48:00+01:00",
+		"destination": "Luxembourg, Gare routière",
+		"destinationId": 200405036
+	}, {
+		...
+	}]
 }
 ```
 

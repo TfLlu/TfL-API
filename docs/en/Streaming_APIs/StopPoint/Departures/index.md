@@ -16,6 +16,7 @@ The response will be formatted as a [JSON](https://en.wikipedia.org/wiki/JSON).
 | **type**          | `string`  | - `'train'`<br />- `'bus'`        | type of transportation |
 | **trainId**       | `string`  | - `{trainId}`<br />- `NULL`       | train id _(null on busses)_ |
 | **line**          | `string`  | - `{line}`<br />- `NULL`          | bus or train line (currently null for all trains as info is missing on [Verkéiersverbond](https://data.public.lu/en/organizations/mobiliteitszentral/) API) |
+| **lineId**        | `string`  | `{lineId}`                        | bus or train line identifier (can be used to map departure to a [line](/RESTAPIs/Line/index.md)) |
 | **number**        | `integer` | `{number}`                        | number given by [Verkéiersverbond](https://data.public.lu/en/organizations/mobiliteitszentral/). _Do not trust it to be unique_ |
 | **departure**     | `integer` | `{departure}`                     | calculated real life departure of train/bus in [Unix time](https://en.wikipedia.org/wiki/Unix_time) |
 | **delay**         | `integer` | `{delay}`                         | offset between `{departure}` and scheduled departure in seconds |
@@ -32,46 +33,33 @@ The response will be formatted as a [JSON](https://en.wikipedia.org/wiki/JSON).
 	"data": {
 		"8001267": [],
 		"8001340": [],
-		"8225151": [{
-			"id": "1|3349|0|82|17022017",
+        "220902004": [{
+			"id": "1|1533|8|82|16032017",
 			"type": "bus",
 			"trainId": null,
-			"line": "319",
-			"number": 4213,
-			"departure": 1487341140,
+			"lineId": "4:TIC---:13",
+			"line": "13",
+			"number": 180,
+			"departure": 1489658400,
 			"delay": 0,
-			"live": false,
-			"departureISO": "2017-02-17T15:19:00+01:00",
-			"destination": "Piennes-Zone d'activités",
-			"destinationId": 8225751
+			"live": true,
+			"departureISO": "2017-03-16T11:00:00+01:00",
+			"destination": "Esch/Alzette, Gare",
+			"destinationId": 220402034
 		}, {
-			"id": "1|3349|1|82|17022017",
+			"id": "1|1968|2|82|16032017",
 			"type": "bus",
 			"trainId": null,
-			"line": "319",
-			"number": 4214,
-			"departure": 1487351940,
+			"lineId": "3:RGM---:212",
+			"line": "212",
+			"number": 1182,
+			"departure": 1489658520,
 			"delay": 0,
 			"live": false,
-			"departureISO": "2017-02-17T18:19:00+01:00",
-			"destination": "Piennes-Zone d'activités",
-			"destinationId": 8225751
+			"departureISO": "2017-03-16T11:02:00+01:00",
+			"destination": "Luxembourg, Monterey Parc",
+			"destinationId": 200405004
 		} {
-            ...
-        }],
-		"8225172": [{
-			"id": "1|3353|0|82|17022017",
-			"type": "bus",
-			"trainId": null,
-			"line": "319",
-			"number": 4224,
-			"departure": 1487342820,
-			"delay": 0,
-			"live": false,
-			"departureISO": "2017-02-17T15:47:00+01:00",
-			"destination": "Luxembourg, Gare routière",
-			"destinationId": 200405036
-		}, {
             ...
         }]
     }
