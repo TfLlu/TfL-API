@@ -1,8 +1,8 @@
 'use strict';
 
-var _carpark = require('../service/occupancy/carpark');
+var _agencies = require('../service/agencies');
 
-var carpark = _interopRequireWildcard(_carpark);
+var agencies = _interopRequireWildcard(_agencies);
 
 var _config = require('../config');
 
@@ -19,10 +19,9 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 var newData = [];
 var cache;
 
-const CACHE_TTL = (0, _config2.default)('CACHE_TTL_CARPARK', true);
-const CRAWL_TTL = (0, _config2.default)('CRAWL_TTL_CARPARK', true);
-const PUB_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_occupancy_carpark';
-const CACHE_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_occupancy_carpark';
+const CACHE_TTL = (0, _config2.default)('CACHE_TTL_AGENCIES', true);
+const CRAWL_TTL = (0, _config2.default)('CRAWL_TTL_AGENCIES', true);
+const CACHE_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_agencies';
 
 var nextCrawlTimeoutHandle = null;
 var nextCrawlStartTime = null;
@@ -47,7 +46,7 @@ const nextCrawl = () => {
         try {
             return crawl();
         } catch (err) {
-            console.log('CARPARK CRAWLER ERROR', err.message);
+            console.log('AGENCIES CRAWLER ERROR', err.message);
         }
     });
 };
@@ -59,21 +58,14 @@ const loadCache = (() => {
         }
 
         try {
-            cache = yield carpark.load();
+            cache = yield agencies.load();
 
             yield _redis.redis.set(CACHE_TABLE, JSON.stringify(cache), 'EX', CACHE_TTL);
-
-            for (let i = 0; i < cache.features.length; i++) {
-                let id = cache.features[i].properties.id;
-
-                yield _redis.redis.set(CACHE_TABLE + '_' + id, JSON.stringify(cache.features[i]), 'EX', CACHE_TTL);
-            }
-
             if (process.env.TRAVIS) {
                 process.exit();
             }
         } catch (err) {
-            console.log('CARPARK CRAWLER LOAD CACHE ERROR', err.message);
+            console.log('AGENCIES CRAWLER LOAD CACHE ERROR', err.message);
         }
 
         return true;
@@ -91,63 +83,14 @@ const crawl = (() => {
         }
 
         try {
-            newData = yield carpark.load();
+            newData = yield agencies.load();
         } catch (err) {
             return nextCrawl();
-        }
-
-        // update
-        var updatedCarparks = cache.features.filter(function (row) {
-            var oldRow = newData.features.find(function (row2) {
-                return row2.properties.id === row.properties.id;
-            });
-            return oldRow && JSON.stringify(row) != JSON.stringify(oldRow);
-        });
-
-        // update
-        if (updatedCarparks.length) {
-            _redis.redis.publish(PUB_TABLE, JSON.stringify({
-                type: 'update',
-                data: updatedCarparks.map(carpark.compileStream)
-            }));
-        }
-
-        // new
-        var newCarparks = newData.features.filter(function (row) {
-            return !cache.features.find(function (row2) {
-                return row2.properties.id === row.properties.id;
-            });
-        });
-
-        if (newCarparks.length) {
-            _redis.redis.publish(PUB_TABLE, JSON.stringify({
-                type: 'new',
-                data: newCarparks.map(carpark.compileStream)
-            }));
-        }
-
-        // deleted
-        var deletedCarparks = cache.features.filter(function (row) {
-            return !newData.features.find(function (row2) {
-                return row2.properties.id === row.properties.id;
-            });
-        });
-        if (deletedCarparks.length) {
-            _redis.redis.publish(PUB_TABLE, JSON.stringify({
-                type: 'delete',
-                data: deletedCarparks.map(carpark.compileStream)
-            }));
         }
 
         cache = newData;
 
         yield _redis.redis.set(CACHE_TABLE, JSON.stringify(cache), 'EX', CACHE_TTL);
-
-        for (let i = 0; i < cache.features.length; i++) {
-            let id = cache.features[i].properties.id;
-
-            yield _redis.redis.set(CACHE_TABLE + '_' + id, JSON.stringify(cache.features[i]), 'EX', CACHE_TTL);
-        }
 
         nextCrawl();
     });

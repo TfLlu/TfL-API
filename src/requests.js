@@ -72,6 +72,11 @@ export const transitfeedsStopTimes = () => {
     return run('transitfeeds', url);
 };
 
+export const transitfeedsAgencies = () => {
+    const url = config('URL_TRANSITFEEDS_AGENCIES', true);
+    return run('transitfeeds', url);
+};
+
 export const luxairportDepartures = () => {
     const url = config('URL_LUXAIRPORT_PLANE_DEPARTURES', true);
     return run('luxairport', url);

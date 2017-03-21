@@ -45,20 +45,16 @@ export const load = () => {
 };
 
 export const get = async carPark => {
-    try {
-        var carParkSplit = carPark.split(':');
-        var provider = carParkSplit[0];
-        switch (provider){
-        case 'vdl':
-            carPark = await vdl.get(carParkSplit[1]);
-            break;
-        default:
-            throw new Error('not found');
-        }
-        return compileCarPark(provider, carPark);
-    } catch (err) {
-        throw new Boom.notFound('Carpark [' + carPark + '] not found or unavailable');
-    }
+    return redis.get(CACHE_NAME + '_' + carPark)
+        .then(
+            function (result) {
+                if (result && result !== '') {
+                    return result;
+                } else {
+                    throw new Boom.serverUnavailable('Data from carpark [' + carPark + '] is temporarily unavailable');
+                }
+            }
+        );
 };
 
 redisPubSub.subscribe(STREAM_NAME);

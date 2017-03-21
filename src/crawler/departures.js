@@ -1,7 +1,6 @@
 import * as departures from '../service/stoppoint/departures';
 import config          from '../config';
 import {redis}         from '../redis';
-import moment          from 'moment';
 
 const CACHE_TTL              = config('CACHE_TTL_STOPPOINT_DEPARTURE', true);
 const CRAWL_TTL              = config('CRAWL_TTL_STOPPOINT_DEPARTURE', true);
@@ -10,9 +9,11 @@ const PUB_TABLE              = config('NAME_VERSION', true) + '_stoppoint_depart
 const CACHE_TABLE            = config('NAME_VERSION', true) + '_cache_stoppoint_departures';
 const CACHE_STOPPOINTS_TABLE = config('NAME_VERSION', true) + '_cache_stoppoint';
 const MAX_CONCURRENT_CRAWLS  = config('CRAWL_MAX_CONCURRENT_STOPPOINT_DEPARTURE', true);
+const CACHE_AGENCIES         = config('NAME_VERSION', true) + '_cache_agencies';
 
 var cache = {};
 var JobsToAdd;
+var agencies;
 var stopPointsToCrawl = [];
 var currentlyCrawling = [];
 
@@ -24,7 +25,7 @@ const worker = async retry => {
     while(retry) {
         retry--;
         try {
-            var newData = await departures.load(stopPointID, CRAWL_AMOUNT);
+            var newData = await departures.load(stopPointID, CRAWL_AMOUNT, agencies);
             break;
         } catch (err) {
             if (!err.code) {
@@ -125,8 +126,8 @@ const removeFromCrawlList = id => {
 };
 
 const crawl = async () => {
-    console.log(moment().format() + ' crawling');
     var result = await redis.get(CACHE_STOPPOINTS_TABLE);
+    agencies = JSON.parse(await redis.get(CACHE_AGENCIES));
     if (result && result !== '') {
         stopPointsToCrawl = (JSON.parse(result)).features;
     } else {

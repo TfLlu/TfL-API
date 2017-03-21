@@ -22,6 +22,7 @@ The response will be formatted as a [JSON](https://en.wikipedia.org/wiki/JSON).
 | **type**          | `string`  | - `'train'`<br />- `'bus'`        | type of transportation |
 | **trainId**       | `string`  | - `{trainId}`<br />- `NULL`       | train id _(null on busses)_ |
 | **line**          | `string`  | - `{line}`<br />- `NULL`          | bus or train line (currently null for all trains as info is missing on [Verkéiersverbond](https://data.public.lu/en/organizations/mobiliteitszentral/) API) |
+| **lineId**        | `string`  | `{lineId}`                        | bus or train line identifier (can be used to map departure to a [line](/RESTAPIs/Line/index.md)) |
 | **number**        | `integer` | `{number}`                        | number given by [Verkéiersverbond](https://data.public.lu/en/organizations/mobiliteitszentral/). _Do not trust it to be unique_ |
 | **departure**     | `integer` | `{departure}`                     | calculated real life departure of train/bus in [Unix time](https://en.wikipedia.org/wiki/Unix_time) |
 | **delay**         | `integer` | `{delay}`                         | offset between `{departure}` and scheduled departure in seconds |
@@ -34,41 +35,44 @@ The response will be formatted as a [JSON](https://en.wikipedia.org/wiki/JSON).
 **GET** https://api.tfl.lu/v1/StopPoint/Departures/200405035/3
 ```json
 [{
-	"id": "1|637|57|82|14022017",
+	"id": "1|6459|0|82|16032017",
 	"type": "bus",
 	"trainId": null,
-	"line": "22",
-	"number": 2261,
-	"departure": 1487085900,
-	"delay": 0,
-	"live": true,
-	"departureISO": "2017-02-14T16:25:00+01:00",
-	"destination": "Strassen, Primeurs",
-	"destinationId": 200901024
-}, {
-	"id": "1|1305|3|82|14022017",
-	"type": "train",
-	"trainId": "RB 5836",
-	"line": "",
-	"number": 5836,
-	"departure": 1487085900,
+	"lineId": "3:RGTR--:194",
+	"line": "194",
+	"number": 671,
+	"departure": 1489655040,
 	"delay": 0,
 	"live": false,
-	"departureISO": "2017-02-14T16:25:00+01:00",
-	"destination": "Arlon, Gare",
-	"destinationId": 300000003
+	"departureISO": "2017-03-16T10:04:00+01:00",
+	"destination": "Sandweiler, Am Eck",
+	"destinationId": 200601001
 }, {
-	"id": "1|616|38|82|14022017",
+	"id": "1|290|12|82|16032017",
 	"type": "bus",
 	"trainId": null,
-	"line": "21",
-	"number": 2236,
-	"departure": 1487086080,
+	"lineId": "1:AVL---:18",
+	"line": "18",
+	"number": 2277,
+	"departure": 1489655280,
 	"delay": 60,
 	"live": true,
-	"departureISO": "2017-02-14T16:28:00+01:00",
-	"destination": "Eich, Centre Culturel",
-	"destinationId": 200410001
+	"departureISO": "2017-03-16T10:08:00+01:00",
+	"destination": "Kirchberg, Luxexpo Entrée Sud Quai 1",
+	"destinationId": 200417023
+}, {
+	"id": "1|512|9|82|16032017",
+	"type": "bus",
+	"trainId": null,
+	"lineId": "1:AVL---:4",
+	"line": "4",
+	"number": 3204,
+	"departure": 1489655340,
+	"delay": 60,
+	"live": true,
+	"departureISO": "2017-03-16T10:09:00+01:00",
+	"destination": "Limpertsberg, Lycée Michel Lucius",
+	"destinationId": 200419022
 }]
 ```
 

@@ -1,4 +1,4 @@
-import { transitfeedsRoutes, transitfeedsTrips, transitfeedsStopTimes } from '../../requests';
+import { transitfeedsRoutes, transitfeedsTrips, transitfeedsStopTimes, transitfeedsAgencies } from '../../requests';
 
 const CSVtoArray = text => {
     var re_valid = /^\s*(?:'[^\\]*(?:\\[\S\s][^\\]*)*'|"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,"\s\\]*(?:\s+[^,"\s\\]+)*)\s*(?:,\s*(?:'[^\\]*(?:\\[\S\s][^\\]*)*'|"[^"\\]*(?:\\[\S\s][^"\\]*)*"|[^,"\s\\]*(?:\s+[^,"\s\\]+)*)\s*)*$/;
@@ -62,6 +62,10 @@ export const routes = async () => {
     return routes;
 };
 
+export const agencies = async () => {
+    return await getAgencies();
+};
+
 const getRoutes = async () => {
     var routes = handleCSV(await transitfeedsRoutes());
     return routes.map(compileRoute);
@@ -91,6 +95,19 @@ const getStopTimes = async () => {
         stopTimes[stopTime[0]].push(stopTime[3]);
     }
     return stopTimes;
+};
+
+const getAgencies = async () => {
+    var agenciesRaw = handleCSV(await transitfeedsAgencies());
+    var agencies = {};
+    for (let i=0;i<agenciesRaw.length;i++) {
+        let agency = CSVtoArray(agenciesRaw[i]);
+        if (!agencies[agency[1].substring(0,3)]) {
+            agencies[agency[1].substring(0,3)] = agency[0];
+        }
+    }
+    return agencies;
+
 };
 
 const compileRoute = route => {

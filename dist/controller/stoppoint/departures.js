@@ -22,6 +22,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 const STREAM_CLIENTS_KEY = (0, _config2.default)('NAME_VERSION', true) + '_stream_clients_stoppoint_departures';
+const CACHE_AGENCIES = (0, _config2.default)('NAME_VERSION', true) + '_cache_agencies';
 
 const index = exports.index = (() => {
     var _ref = _asyncToGenerator(function* (ctx) {
@@ -65,7 +66,7 @@ const limit = exports.limit = (() => {
             } else if (ctx.params.limit <= cache_count) {
                 ctx.body = JSON.parse((yield departures.get(parseInt(ctx.params.stopPoint)))).slice(0, parseInt(ctx.params.limit));
             } else {
-                ctx.body = yield departures.load(parseInt(ctx.params.stopPoint), parseInt(ctx.params.limit));
+                ctx.body = yield departures.load(parseInt(ctx.params.stopPoint), parseInt(ctx.params.limit), JSON.parse((yield _redis.redis.get(CACHE_AGENCIES))));
             }
         } catch (boom) {
             ctx.body = boom.output.payload;

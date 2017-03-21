@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.luxairportDepartures = exports.transitfeedsStopTimes = exports.transitfeedsTrips = exports.transitfeedsRoutes = exports.cita = exports.aev = exports.meteolux = exports.mobiliteitDeparture = exports.mobiliteitStoppoints = exports.vdl = exports.openov = exports.velok = exports.veloh = undefined;
+exports.luxairportDepartures = exports.transitfeedsAgencies = exports.transitfeedsStopTimes = exports.transitfeedsTrips = exports.transitfeedsRoutes = exports.cita = exports.aev = exports.meteolux = exports.mobiliteitDeparture = exports.mobiliteitStoppoints = exports.vdl = exports.openov = exports.velok = exports.veloh = undefined;
 
 var _config = require('./config');
 
@@ -76,6 +76,11 @@ const transitfeedsTrips = exports.transitfeedsTrips = () => {
 
 const transitfeedsStopTimes = exports.transitfeedsStopTimes = () => {
     const url = (0, _config2.default)('URL_TRANSITFEEDS_STOP_TIMES', true);
+    return run('transitfeeds', url);
+};
+
+const transitfeedsAgencies = exports.transitfeedsAgencies = () => {
+    const url = (0, _config2.default)('URL_TRANSITFEEDS_AGENCIES', true);
     return run('transitfeeds', url);
 };
 
