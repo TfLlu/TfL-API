@@ -12,5 +12,22 @@ import * as highway from './highway';
 import * as line from './line';
 import * as route from './line/route';
 import * as mode from './line/mode';
+import * as airport from './airport';
 
-export default { home, test, bikepoint, occupancy, carpark, stoppoint, departures, journey, weather, airquality, highway, line, route, mode };
+export default {
+    home,
+    test,
+    bikepoint,
+    occupancy,
+    carpark,
+    stoppoint,
+    departures,
+    journey,
+    weather,
+    airquality,
+    highway,
+    line,
+    route,
+    mode,
+    airport
+};

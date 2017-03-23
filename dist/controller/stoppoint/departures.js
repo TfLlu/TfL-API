@@ -42,10 +42,7 @@ const index = exports.index = (() => {
 const get = exports.get = (() => {
     var _ref2 = _asyncToGenerator(function* (ctx) {
         try {
-            ctx.body = yield departures.loadPlanes(parseInt(ctx.params.stopPoint));
-            /*ctx.body = await departures.get(
-                parseInt(ctx.params.stopPoint)
-            );*/
+            ctx.body = yield departures.get(parseInt(ctx.params.stopPoint));
         } catch (boom) {
             ctx.body = boom.output.payload;
             ctx.status = boom.output.statusCode;

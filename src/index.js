@@ -53,6 +53,8 @@ router.get('/Line/:line/StopPoints',                     controller.line.stopPoi
 router.get('/Line/Mode/:mode',                           controller.mode.get);
 router.get('/Line/:line/Route',                          controller.route.byLine);
 router.get('/Line/Mode/:mode/Route',                     controller.mode.getRoutes);
+router.get('/AirPort/Departures',                        controller.airport.departuresIndex);
+router.get('/AirPort/Arrivals',                          controller.airport.arrivalsIndex);
 
 app.use(monitor())
    .use(middleware.responseTime())
