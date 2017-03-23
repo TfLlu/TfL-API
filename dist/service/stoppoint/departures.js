@@ -3,11 +3,15 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.streamSingle = exports.fireHose = exports.all = exports.load = exports.get = exports.index = undefined;
+exports.streamSingle = exports.fireHose = exports.all = exports.loadPlanes = exports.load = exports.get = exports.index = undefined;
 
 var _mobiliteit = require('../../source/stoppoint/mobiliteit');
 
 var mobiliteit = _interopRequireWildcard(_mobiliteit);
+
+var _luxairport = require('../../source/stoppoint/luxairport');
+
+var luxairport = _interopRequireWildcard(_luxairport);
 
 var _stoppoint = require('../stoppoint');
 
@@ -129,6 +133,16 @@ const load = exports.load = (() => {
 
     return function load(_x2, _x3, _x4) {
         return _ref3.apply(this, arguments);
+    };
+})();
+
+const loadPlanes = exports.loadPlanes = (() => {
+    var _ref4 = _asyncToGenerator(function* () {
+        return yield luxairport.departures();
+    });
+
+    return function loadPlanes() {
+        return _ref4.apply(this, arguments);
     };
 })();
 

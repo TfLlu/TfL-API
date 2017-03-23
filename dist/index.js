@@ -80,6 +80,8 @@ router.get('/Line/:line/StopPoints', _controller2.default.line.stopPoints);
 router.get('/Line/Mode/:mode', _controller2.default.mode.get);
 router.get('/Line/:line/Route', _controller2.default.route.byLine);
 router.get('/Line/Mode/:mode/Route', _controller2.default.mode.getRoutes);
+router.get('/AirPort/Departures', _controller2.default.airport.departuresIndex);
+router.get('/AirPort/Arrivals', _controller2.default.airport.arrivalsIndex);
 
 app.use((0, _monitor2.default)()).use(_monitor.middleware.responseTime()).use((() => {
     var _ref = _asyncToGenerator(function* (ctx, next) {

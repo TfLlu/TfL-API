@@ -1,7 +1,7 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _home = require('./home');
@@ -60,6 +60,26 @@ var _mode = require('./line/mode');
 
 var mode = _interopRequireWildcard(_mode);
 
+var _airport = require('./airport');
+
+var airport = _interopRequireWildcard(_airport);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-exports.default = { home, test, bikepoint, occupancy, carpark, stoppoint, departures, journey, weather, airquality, highway, line, route, mode };
+exports.default = {
+    home,
+    test,
+    bikepoint,
+    occupancy,
+    carpark,
+    stoppoint,
+    departures,
+    journey,
+    weather,
+    airquality,
+    highway,
+    line,
+    route,
+    mode,
+    airport
+};
