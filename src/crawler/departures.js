@@ -139,9 +139,6 @@ const crawl = async () => {
         return item.properties.id;
     });
 
-    stopPointsToCrawl = [];
-    stopPointsToCrawl.push(200501001);
-
     while (stopPointsToCrawl.length !== 0) {
         JobsToAdd = Math.min(MAX_CONCURRENT_CRAWLS, stopPointsToCrawl.length) - currentlyCrawling.length;
 
