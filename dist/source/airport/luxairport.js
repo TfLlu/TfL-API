@@ -65,7 +65,6 @@ const filterOutTakenOff = planes => {
         if (plane.statusCode == 10) {
             return false;
         }
-        console.log('filterOutTakenOff', plane);
         return true;
     });
     return sortByExpectedTime(planes);
@@ -76,7 +75,6 @@ const filterOutArrived = planes => {
         if (plane.statusCode == 13) {
             return false;
         }
-        console.log('filterOutArrived', plane);
         return true;
     });
     return sortByExpectedTime(planes);
