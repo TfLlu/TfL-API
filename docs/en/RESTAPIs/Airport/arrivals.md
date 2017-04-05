@@ -1,7 +1,7 @@
 {% extends "/docs.md" %}
 {% block content %}
 # GET Airport/Arrivals
-Returns the upcomig airplane arrivals from [LuxAirport](https://www.lux-airport.lu/).
+Returns the upcoming airplane arrivals from [LuxAirport](https://www.lux-airport.lu/).
 
 ## Resource URL
     https://api.tfl.lu/v1/Airport/Arrivals
