@@ -27,32 +27,35 @@ The response will be formatted as a [JSON](https://en.wikipedia.org/wiki/JSON).
 **GET** https://api.tfl.lu/v1/Airport/Arrivals
 ```json
 [{
-	"id": 34055,
+	"id": 37087,
 	"airline": "LUXAIR",
-	"flight": "LG8856",
-	"destination": "Vienna",
+	"flight": "LG9472",
+	"destination": "Berlin-Tegel",
 	"via": null,
-	"scheduled": 1490277600,
-	"real": 1490277600,
-	"status": "Expected"
+	"scheduled": 1491381600,
+	"real": 1491382200,
+	"status": "Expected",
+	"statusCode": 9
 }, {
-	"id": 34039,
-	"airline": "LUFTHANSA",
-	"flight": "LH398",
-	"destination": "Frankfurt",
+	"id": 37129,
+	"airline": "TAP - Air Portugal",
+	"flight": "TP694",
+	"destination": "Lisbon",
 	"via": null,
-	"scheduled": 1490305800,
-	"real": null,
-	"status": null
+	"scheduled": 1491387300,
+	"real": 1491388200,
+	"status": "Expected",
+	"statusCode": 9
 }, {
-	"id": 34042,
-	"airline": "FLY BE",
-	"flight": "BE443",
-	"destination": "Birmingham",
+	"id": 37148,
+	"airline": "Ryanair",
+	"flight": "FR5054",
+	"destination": "Madrid",
 	"via": null,
-	"scheduled": 1490277600,
-	"real": 1490277360,
-	"status": "Expected"
+	"scheduled": 1491387600,
+	"real": 1491387900,
+	"status": "Expected",
+	"statusCode": 9
 }, {
     ...
 }]

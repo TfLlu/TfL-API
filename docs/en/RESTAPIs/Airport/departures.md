@@ -27,32 +27,35 @@ The response will be formatted as a [JSON](https://en.wikipedia.org/wiki/JSON).
 **GET** https://api.tfl.lu/v1/Airport/Departures
 ```json
 [{
-	"id": 34055,
+	"id": 37036,
 	"airline": "LUXAIR",
-	"flight": "LG8856",
-	"destination": "Vienna",
+	"flight": "LG4607",
+	"destination": "London-City",
 	"via": null,
-	"scheduled": 1490277600,
-	"real": 1490277600,
-	"status": "Expected"
-}, {
-	"id": 34039,
-	"airline": "LUFTHANSA",
-	"flight": "LH398",
-	"destination": "Frankfurt",
-	"via": null,
-	"scheduled": 1490305800,
+	"scheduled": 1491387900,
 	"real": null,
-	"status": null
+	"status": null,
+	"statusCode": 4
 }, {
-	"id": 34042,
-	"airline": "FLY BE",
-	"flight": "BE443",
-	"destination": "Birmingham",
+	"id": 37032,
+	"airline": "LUXAIR",
+	"flight": "LG5483",
+	"destination": "Prague",
 	"via": null,
-	"scheduled": 1490277600,
-	"real": 1490277360,
-	"status": "Expected"
+	"scheduled": 1491388800,
+	"real": null,
+	"status": null,
+	"statusCode": 4
+}, {
+	"id": 37023,
+	"airline": "LUXAIR",
+	"flight": "LG8255",
+	"destination": "Nice",
+	"via": null,
+	"scheduled": 1491389700,
+	"real": null,
+	"status": null,
+	"statusCode": 4
 }, {
     ...
 }]
