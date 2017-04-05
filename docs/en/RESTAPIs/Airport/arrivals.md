@@ -20,7 +20,7 @@ The response will be formatted as a [JSON](https://en.wikipedia.org/wiki/JSON).
 | **scheduled**   | `integer` | `{scheduled}`             | Time at which the arrival is scheduled |
 | **real**        | `integer` | -`{real}`<br />- `NULL`   | Real time of the arrival |
 | **status**      | `string`  | -`{status}`<br />- `NULL` | Status of the arrival |
-| **statusCode**  | `integer` | -`{statusCode}            | StatusCode of the arrival (refer to data.public.lu for LuxAirport's documentation on this) |
+| **statusCode**  | `integer` | -`{statusCode}`           | StatusCode of the arrival (refer to data.public.lu for LuxAirport's documentation on this) |
 
 
 ## Sample request & response
