@@ -19,8 +19,8 @@ const load = exports.load = (() => {
     var _ref = _asyncToGenerator(function* () {
         var raw = yield (0, _requests.luxairportArrivalsAndDepartures)();
         return {
-            departures: filterOutPast(raw['arrivals'].map(compilePlaneInfo)),
-            arrivals: filterOutPast(raw['departures'].map(compilePlaneInfo))
+            departures: filterOutTakenOff(raw['departures'].map(compilePlaneInfo)),
+            arrivals: filterOutArrived(raw['arrivals'].map(compilePlaneInfo))
         };
     });
 
@@ -41,7 +41,8 @@ const compilePlaneInfo = plane => {
         via: handleVia(plane.airportStepover),
         scheduled: scheduled,
         real: estimated,
-        status: handleStatus(plane.remarks)
+        status: handleStatus(plane.remarks),
+        statusCode: parseInt(plane.statusCode)
     };
 };
 
@@ -59,13 +60,29 @@ const handleStatus = status => {
     return status;
 };
 
-const filterOutPast = planes => {
+const filterOutTakenOff = planes => {
     planes = planes.filter(plane => {
-        if (plane.real) {
-            return plane.real > (0, _moment2.default)().unix();
+        if (plane.statusCode == 10) {
+            return false;
         }
-        return plane.scheduled > (0, _moment2.default)().unix();
+        console.log('filterOutTakenOff', plane);
+        return true;
     });
-    planes.sort((a, b) => a.estimated - b.estimated);
+    return sortByExpectedTime(planes);
+};
+
+const filterOutArrived = planes => {
+    planes = planes.filter(plane => {
+        if (plane.statusCode == 13) {
+            return false;
+        }
+        console.log('filterOutArrived', plane);
+        return true;
+    });
+    return sortByExpectedTime(planes);
+};
+
+const sortByExpectedTime = planes => {
+    planes.sort((a, b) => a.scheduled - b.scheduled);
     return planes;
 };

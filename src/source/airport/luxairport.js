@@ -4,8 +4,8 @@ import moment                   from 'moment';
 export const load = async () => {
     var raw = await luxairportArrivalsAndDepartures();
     return {
-        departures: filterOutPast(raw['arrivals'  ].map(compilePlaneInfo)),
-        arrivals:   filterOutPast(raw['departures'].map(compilePlaneInfo))
+        departures: filterOutTakenOff(raw['departures'].map(compilePlaneInfo)),
+        arrivals:   filterOutArrived (raw['arrivals'  ].map(compilePlaneInfo))
     };
 };
 
@@ -21,7 +21,8 @@ const compilePlaneInfo = plane => {
         via:         handleVia(plane.airportStepover),
         scheduled:   scheduled,
         real:        estimated,
-        status:      handleStatus(plane.remarks)
+        status:      handleStatus(plane.remarks),
+        statusCode:  parseInt(plane.statusCode)
     };
 };
 
@@ -39,13 +40,29 @@ const handleStatus = status => {
     return status;
 };
 
-const filterOutPast = planes => {
+const filterOutTakenOff = planes => {
     planes = planes.filter(plane => {
-        if (plane.real) {
-            return plane.real > moment().unix();
+        if (plane.statusCode == 10) {
+            return false;
         }
-        return plane.scheduled > moment().unix();
+        console.log('filterOutTakenOff', plane);
+        return true;
     });
-    planes.sort((a,b) => a.estimated - b.estimated);
+    return sortByExpectedTime(planes);
+};
+
+const filterOutArrived = planes => {
+    planes = planes.filter(plane => {
+        if (plane.statusCode == 13) {
+            return false;
+        }
+        console.log('filterOutArrived', plane);
+        return true;
+    });
+    return sortByExpectedTime(planes);
+};
+
+const sortByExpectedTime = planes => {
+    planes.sort((a,b) => a.scheduled - b.scheduled);
     return planes;
 };
