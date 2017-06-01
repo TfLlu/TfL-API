@@ -1,5 +1,6 @@
 import config  from './config';
 import request from './request';
+import qs from 'qs';
 
 const run = (name, url) => {
     return request(url, { name })
@@ -48,8 +49,13 @@ export const meteolux = () => {
 };
 
 export const aev = (measurement) => {
-    const url = config('URL_WEATHER_AEV', true) + measurement;
-    return run('aev', url);
+    return request.post(config('URL_WEATHER_AEV', true), qs.stringify({
+        P_OPERATION: 'DATA',
+        V_MEANTYPE: '1HOUR',
+        V_POLLUTANT: measurement
+    })).then(function(res) {
+        return res.data;
+    });
 };
 
 export const cita = () => {

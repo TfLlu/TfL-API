@@ -13,6 +13,10 @@ var _request = require('./request');
 
 var _request2 = _interopRequireDefault(_request);
 
+var _qs = require('qs');
+
+var _qs2 = _interopRequireDefault(_qs);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const run = (name, url) => {
@@ -55,8 +59,13 @@ const meteolux = exports.meteolux = () => {
 };
 
 const aev = exports.aev = measurement => {
-    const url = (0, _config2.default)('URL_WEATHER_AEV', true) + measurement;
-    return run('aev', url);
+    return _request2.default.post((0, _config2.default)('URL_WEATHER_AEV', true), _qs2.default.stringify({
+        P_OPERATION: 'DATA',
+        V_MEANTYPE: '1HOUR',
+        V_POLLUTANT: measurement
+    })).then(function (res) {
+        return res.data;
+    });
 };
 
 const cita = exports.cita = () => {
