@@ -35,7 +35,13 @@ export const lines = async () => {
 export const routes = async () => {
     var routes      = await getRoutes();
     var tripsByLine = await getTrips();
-    var stopTimes   = await getStopTimes();
+
+    var stopTimes = {}
+    try {
+        stopTimes = await getStopTimes()
+    } catch (err) {
+        console.log('Could not load stoptimes', err)
+    }
 
     var stopPoints = {};
     for (var line in tripsByLine) {

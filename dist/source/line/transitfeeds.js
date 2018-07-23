@@ -50,7 +50,13 @@ const routes = exports.routes = (() => {
     var _ref2 = _asyncToGenerator(function* () {
         var routes = yield getRoutes();
         var tripsByLine = yield getTrips();
-        var stopTimes = yield getStopTimes();
+
+        var stopTimes = {};
+        try {
+            stopTimes = yield getStopTimes();
+        } catch (err) {
+            console.log('Could not load stoptimes', err);
+        }
 
         var stopPoints = {};
         for (var line in tripsByLine) {
