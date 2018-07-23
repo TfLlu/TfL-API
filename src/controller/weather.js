@@ -14,7 +14,6 @@ export const current = async ctx => {
 };
 
 export const streamSingle = async ({ emit, disconnect }) => {
-    console.log('hellow');
     redis.incr(STREAM_CLIENTS_KEY);
     var res = weather.fireHose(data => {
         emit(data);
