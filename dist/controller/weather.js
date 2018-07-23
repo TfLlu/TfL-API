@@ -40,7 +40,6 @@ const current = exports.current = (() => {
 
 const streamSingle = exports.streamSingle = (() => {
     var _ref2 = _asyncToGenerator(function* ({ emit, disconnect }) {
-        console.log('hellow');
         _redis.redis.incr(STREAM_CLIENTS_KEY);
         var res = weather.fireHose(function (data) {
             emit(data);
