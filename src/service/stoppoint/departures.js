@@ -15,7 +15,7 @@ export const index = async () => {
                 if (result && result !== '') {
                     return result;
                 } else {
-                    throw new Boom.serverUnavailable('Departures are temporarily unavailable');
+                    throw Boom.serverUnavailable('Departures are temporarily unavailable');
                 }
             }
         );
@@ -28,7 +28,7 @@ export const get = async stopPoint => {
                 if (result && result !== '') {
                     return result;
                 } else {
-                    throw new Boom.serverUnavailable('Departures from stoppoint [' + stopPoint + '] are temporarily unavailable');
+                    throw Boom.serverUnavailable('Departures from stoppoint [' + stopPoint + '] are temporarily unavailable');
                 }
             }
         );
@@ -97,7 +97,7 @@ export const all = () => {
                 if (result && result !== '') {
                     return JSON.parse(result);
                 } else {
-                    throw new Boom.serverUnavailable('all /StopPoint/Departures endpoints are temporarily unavailable');
+                    throw Boom.serverUnavailable('all /StopPoint/Departures endpoints are temporarily unavailable');
                 }
             }
         );

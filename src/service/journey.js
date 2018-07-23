@@ -5,6 +5,6 @@ export const plan = async (from, to) => {
     try {
         return await openOV.plan(from, to);
     } catch (boom) {
-        throw new Boom.serverUnavailable('The Journey planner is temporarily unavailable');
+        throw Boom.serverUnavailable('The Journey planner is temporarily unavailable');
     }
 };

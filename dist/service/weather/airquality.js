@@ -27,7 +27,7 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 const CACHE_NAME = (0, _config2.default)('NAME_VERSION', true) + '_cache_weather_airquality';
 const STREAM_NAME = (0, _config2.default)('NAME_VERSION', true) + '_weather_airquality';
-const UNAVAILABLE_ERROR = new _boom2.default.serverUnavailable('all /Weather/Airquality endpoints are temporarily unavailable');
+const UNAVAILABLE_ERROR = _boom2.default.serverUnavailable('all /Weather/Airquality endpoints are temporarily unavailable');
 
 const load = exports.load = (() => {
     var _ref = _asyncToGenerator(function* () {
@@ -63,7 +63,7 @@ const get = exports.get = (() => {
                 return weatherStations[i];
             }
         }
-        throw new _boom2.default.notFound('Weather stations [' + weatherStation + '] not found');
+        throw _boom2.default.notFound('Weather stations [' + weatherStation + '] not found');
     });
 
     return function get(_x) {

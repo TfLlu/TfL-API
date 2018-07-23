@@ -26,14 +26,14 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 const CACHE_NAME = (0, _config2.default)('NAME_VERSION', true) + '_cache_line';
-const UNAVAILABLE_ERROR = new _boom2.default.serverUnavailable('all /Line endpoints are temporarily unavailable');
+const UNAVAILABLE_ERROR = _boom2.default.serverUnavailable('all /Line endpoints are temporarily unavailable');
 
 const load = exports.load = (() => {
     var _ref = _asyncToGenerator(function* () {
         try {
             return yield transitfeeds.lines();
         } catch (err) {
-            throw new _boom2.default.serverUnavailable('the /Line endpoint is temporarily unavailable' + err);
+            throw _boom2.default.serverUnavailable('the /Line endpoint is temporarily unavailable' + err);
         }
     });
 
@@ -63,7 +63,7 @@ const get = exports.get = (() => {
                 throw UNAVAILABLE_ERROR;
             }
         }).catch(function () {
-            throw new _boom2.default.notFound('Line [' + line + '] not found');
+            throw _boom2.default.notFound('Line [' + line + '] not found');
         });
     });
 
@@ -81,7 +81,7 @@ const getStopPoints = exports.getStopPoints = (() => {
                 throw UNAVAILABLE_ERROR;
             }
         }).catch(function () {
-            throw new _boom2.default.notFound('Line [' + line + '] not found');
+            throw _boom2.default.notFound('Line [' + line + '] not found');
         });
     });
 

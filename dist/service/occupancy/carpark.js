@@ -33,7 +33,7 @@ const all = exports.all = () => {
         if (result && result !== '') {
             return result;
         } else {
-            throw new _boom2.default.serverUnavailable('all /Occupancy/CarPark endpoints are temporarily unavailable');
+            throw _boom2.default.serverUnavailable('all /Occupancy/CarPark endpoints are temporarily unavailable');
         }
     });
 };
@@ -55,7 +55,7 @@ const load = exports.load = () => {
             features: items
         };
     }, () => {
-        throw new _boom2.default.serverUnavailable('all /Occupancy/Carpark endpoints are temporarily unavailable');
+        throw _boom2.default.serverUnavailable('all /Occupancy/Carpark endpoints are temporarily unavailable');
     });
 };
 
@@ -65,7 +65,7 @@ const get = exports.get = (() => {
             if (result && result !== '') {
                 return result;
             } else {
-                throw new _boom2.default.serverUnavailable('Data from carpark [' + carPark + '] is temporarily unavailable');
+                throw _boom2.default.serverUnavailable('Data from carpark [' + carPark + '] is temporarily unavailable');
             }
         });
     });

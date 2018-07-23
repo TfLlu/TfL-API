@@ -4,7 +4,7 @@ import Boom              from 'boom';
 
 const CACHE_NAME       = config('NAME_VERSION', true) + '_cache_line_mode_';
 const CACHE_MODE_TABLE = config('NAME_VERSION', true) + '_cache_line_route_mode_';
-const UNAVAILABLE_ERROR = new Boom.serverUnavailable('all /Line/Mode endpoints are temporarily unavailable');
+const UNAVAILABLE_ERROR = Boom.serverUnavailable('all /Line/Mode endpoints are temporarily unavailable');
 
 export const get = mode => {
     return redis.get(CACHE_NAME + mode)
@@ -18,7 +18,7 @@ export const get = mode => {
             }
         )
         .catch(() => {
-            throw new Boom.notFound('Mode [' + mode + '] not found');
+            throw Boom.notFound('Mode [' + mode + '] not found');
         });
 };
 
@@ -34,6 +34,6 @@ export const getRoutes = mode => {
             }
         )
         .catch(() => {
-            throw new Boom.notFound('Mode [' + mode + '] not found');
+            throw Boom.notFound('Mode [' + mode + '] not found');
         });
 };

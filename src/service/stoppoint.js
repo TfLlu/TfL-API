@@ -28,7 +28,7 @@ const getStopPointsFromRedisCache = () => {
                 if (result && result !== '') {
                     return JSON.parse(result);
                 } else {
-                    throw new Boom.serverUnavailable('all /BikePoints endpoints are temporarily unavailable');
+                    throw Boom.serverUnavailable('all /BikePoints endpoints are temporarily unavailable');
                 }
             }
         );
@@ -52,7 +52,7 @@ export const get = async stopPoint => {
             return stopPoints[i];
         }
     }
-    throw new Boom.notFound('Stop point [' + stopPoint + '] not found');
+    throw Boom.notFound('Stop point [' + stopPoint + '] not found');
 };
 
 export const getByName = async name => {

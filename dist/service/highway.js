@@ -27,14 +27,14 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 const CACHE_NAME = (0, _config2.default)('NAME_VERSION', true) + '_cache_highway';
 const STREAM_NAME = (0, _config2.default)('NAME_VERSION', true) + '_highway';
-const UNAVAILABLE_ERROR = new _boom2.default.serverUnavailable('the /Highway endpoint is temporarily unavailable');
+const UNAVAILABLE_ERROR = _boom2.default.serverUnavailable('the /Highway endpoint is temporarily unavailable');
 
 const load = exports.load = (() => {
     var _ref = _asyncToGenerator(function* () {
         try {
             return yield cita.all();
         } catch (err) {
-            throw new _boom2.default.serverUnavailable('the /Highway endpoint is temporarily unavailable' + err);
+            throw _boom2.default.serverUnavailable('the /Highway endpoint is temporarily unavailable' + err);
         }
     });
 
@@ -63,7 +63,7 @@ const get = exports.get = (() => {
                 return highways[i];
             }
         }
-        throw new _boom2.default.notFound('Highway [' + highway + '] not found');
+        throw _boom2.default.notFound('Highway [' + highway + '] not found');
     });
 
     return function get(_x) {

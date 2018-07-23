@@ -33,7 +33,7 @@ const load = exports.load = (() => {
         try {
             return yield meteolux.current();
         } catch (err) {
-            throw new _boom2.default.serverUnavailable('The /weather endpoint is temporarily unavailable');
+            throw _boom2.default.serverUnavailable('The /weather endpoint is temporarily unavailable');
         }
     });
 
@@ -47,7 +47,7 @@ const current = exports.current = () => {
         if (result && result !== '') {
             return result;
         } else {
-            throw new _boom2.default.serverUnavailable('the /Weather endpoint is temporarily unavailable');
+            throw _boom2.default.serverUnavailable('the /Weather endpoint is temporarily unavailable');
         }
     });
 };

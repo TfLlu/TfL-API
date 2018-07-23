@@ -67,7 +67,7 @@ const getStopPointsFromRedisCache = () => {
         if (result && result !== '') {
             return JSON.parse(result);
         } else {
-            throw new _boom2.default.serverUnavailable('all /BikePoints endpoints are temporarily unavailable');
+            throw _boom2.default.serverUnavailable('all /BikePoints endpoints are temporarily unavailable');
         }
     });
 };
@@ -91,7 +91,7 @@ const get = exports.get = (() => {
                 return stopPoints[i];
             }
         }
-        throw new _boom2.default.notFound('Stop point [' + stopPoint + '] not found');
+        throw _boom2.default.notFound('Stop point [' + stopPoint + '] not found');
     });
 
     return function get(_x) {

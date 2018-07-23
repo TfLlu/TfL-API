@@ -19,7 +19,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 const CACHE_NAME = (0, _config2.default)('NAME_VERSION', true) + '_cache_line_mode_';
 const CACHE_MODE_TABLE = (0, _config2.default)('NAME_VERSION', true) + '_cache_line_route_mode_';
-const UNAVAILABLE_ERROR = new _boom2.default.serverUnavailable('all /Line/Mode endpoints are temporarily unavailable');
+const UNAVAILABLE_ERROR = _boom2.default.serverUnavailable('all /Line/Mode endpoints are temporarily unavailable');
 
 const get = exports.get = mode => {
     return _redis.redis.get(CACHE_NAME + mode).then(function (result) {
@@ -29,7 +29,7 @@ const get = exports.get = mode => {
             throw UNAVAILABLE_ERROR;
         }
     }).catch(() => {
-        throw new _boom2.default.notFound('Mode [' + mode + '] not found');
+        throw _boom2.default.notFound('Mode [' + mode + '] not found');
     });
 };
 
@@ -41,6 +41,6 @@ const getRoutes = exports.getRoutes = mode => {
             throw UNAVAILABLE_ERROR;
         }
     }).catch(() => {
-        throw new _boom2.default.notFound('Mode [' + mode + '] not found');
+        throw _boom2.default.notFound('Mode [' + mode + '] not found');
     });
 };

@@ -4,13 +4,13 @@ import {redis}           from '../../redis';
 import Boom              from 'boom';
 
 const CACHE_NAME  = config('NAME_VERSION', true) + '_cache_line_route';
-const UNAVAILABLE_ERROR = new Boom.serverUnavailable('all /Line/Route endpoints are temporarily unavailable');
+const UNAVAILABLE_ERROR = Boom.serverUnavailable('all /Line/Route endpoints are temporarily unavailable');
 
 export const load = async () => {
     try {
         return await transitfeeds.routes();
     } catch (err) {
-        throw new Boom.serverUnavailable('the /Line/Route endpoint is temporarily unavailable' + err);
+        throw Boom.serverUnavailable('the /Line/Route endpoint is temporarily unavailable' + err);
     }
 };
 
@@ -42,6 +42,6 @@ export const byLine = line => {
             }
         )
         .catch(() => {
-            throw new Boom.notFound('Line [' + line + '] not found');
+            throw Boom.notFound('Line [' + line + '] not found');
         });
 };

@@ -26,14 +26,14 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 const CACHE_NAME = (0, _config2.default)('NAME_VERSION', true) + '_cache_agencies';
-const UNAVAILABLE_ERROR = new _boom2.default.serverUnavailable('agencies are temporarily unavailable');
+const UNAVAILABLE_ERROR = _boom2.default.serverUnavailable('agencies are temporarily unavailable');
 
 const load = exports.load = (() => {
     var _ref = _asyncToGenerator(function* () {
         try {
             return yield transitfeeds.agencies();
         } catch (err) {
-            throw new _boom2.default.serverUnavailable('agencies are temporarily unavailable' + err);
+            throw _boom2.default.serverUnavailable('agencies are temporarily unavailable' + err);
         }
     });
 

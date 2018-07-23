@@ -4,13 +4,13 @@ import {redis}           from '../redis';
 import Boom              from 'boom';
 
 const CACHE_NAME  = config('NAME_VERSION', true) + '_cache_agencies';
-const UNAVAILABLE_ERROR = new Boom.serverUnavailable('agencies are temporarily unavailable');
+const UNAVAILABLE_ERROR = Boom.serverUnavailable('agencies are temporarily unavailable');
 
 export const load = async () => {
     try {
         return await transitfeeds.agencies();
     } catch (err) {
-        throw new Boom.serverUnavailable('agencies are temporarily unavailable' + err);
+        throw Boom.serverUnavailable('agencies are temporarily unavailable' + err);
     }
 };
 

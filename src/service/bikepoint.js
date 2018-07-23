@@ -9,7 +9,7 @@ import Boom                 from 'boom';
 
 const CACHE_NAME  = config('NAME_VERSION', true) + '_cache_bikepoint';
 const STREAM_NAME = config('NAME_VERSION', true) + '_bikepoint';
-const UNAVAILABLE_ERROR = new Boom.serverUnavailable('all /BikePoints endpoints are temporarily unavailable');
+const UNAVAILABLE_ERROR = Boom.serverUnavailable('all /BikePoints endpoints are temporarily unavailable');
 
 var fuzzyOptions = {
     extract: function(obj) { return obj.properties.name + obj.properties.address + obj.properties.city; }
@@ -77,7 +77,7 @@ export const get = async bikePoint => {
             return bikePoints[i];
         }
     }
-    throw new Boom.notFound('Bike point [' + bikePoint + '] not found');
+    throw Boom.notFound('Bike point [' + bikePoint + '] not found');
 };
 
 export const around = async (lon, lat, radius) => {

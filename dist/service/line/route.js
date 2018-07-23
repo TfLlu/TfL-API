@@ -26,14 +26,14 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 const CACHE_NAME = (0, _config2.default)('NAME_VERSION', true) + '_cache_line_route';
-const UNAVAILABLE_ERROR = new _boom2.default.serverUnavailable('all /Line/Route endpoints are temporarily unavailable');
+const UNAVAILABLE_ERROR = _boom2.default.serverUnavailable('all /Line/Route endpoints are temporarily unavailable');
 
 const load = exports.load = (() => {
     var _ref = _asyncToGenerator(function* () {
         try {
             return yield transitfeeds.routes();
         } catch (err) {
-            throw new _boom2.default.serverUnavailable('the /Line/Route endpoint is temporarily unavailable' + err);
+            throw _boom2.default.serverUnavailable('the /Line/Route endpoint is temporarily unavailable' + err);
         }
     });
 
@@ -62,6 +62,6 @@ const byLine = exports.byLine = line => {
             throw UNAVAILABLE_ERROR;
         }
     }).catch(() => {
-        throw new _boom2.default.notFound('Line [' + line + '] not found');
+        throw _boom2.default.notFound('Line [' + line + '] not found');
     });
 };

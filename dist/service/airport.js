@@ -33,7 +33,7 @@ const departures = exports.departures = (() => {
             if (result && result !== '') {
                 return result;
             } else {
-                throw new _boom2.default.serverUnavailable('Airport departures are temporarily unavailable');
+                throw _boom2.default.serverUnavailable('Airport departures are temporarily unavailable');
             }
         });
     });
@@ -49,7 +49,7 @@ const arrivals = exports.arrivals = (() => {
             if (result && result !== '') {
                 return result;
             } else {
-                throw new _boom2.default.serverUnavailable('Airport arrivals are temporarily unavailable');
+                throw _boom2.default.serverUnavailable('Airport arrivals are temporarily unavailable');
             }
         });
     });

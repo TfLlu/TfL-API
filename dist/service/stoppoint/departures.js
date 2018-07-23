@@ -42,7 +42,7 @@ const index = exports.index = (() => {
             if (result && result !== '') {
                 return result;
             } else {
-                throw new _boom2.default.serverUnavailable('Departures are temporarily unavailable');
+                throw _boom2.default.serverUnavailable('Departures are temporarily unavailable');
             }
         });
     });
@@ -58,7 +58,7 @@ const get = exports.get = (() => {
             if (result && result !== '') {
                 return result;
             } else {
-                throw new _boom2.default.serverUnavailable('Departures from stoppoint [' + stopPoint + '] are temporarily unavailable');
+                throw _boom2.default.serverUnavailable('Departures from stoppoint [' + stopPoint + '] are temporarily unavailable');
             }
         });
     });
@@ -137,7 +137,7 @@ const all = exports.all = () => {
         if (result && result !== '') {
             return JSON.parse(result);
         } else {
-            throw new _boom2.default.serverUnavailable('all /StopPoint/Departures endpoints are temporarily unavailable');
+            throw _boom2.default.serverUnavailable('all /StopPoint/Departures endpoints are temporarily unavailable');
         }
     });
 };

@@ -10,7 +10,7 @@ export const load = async () => {
     try {
         return await meteolux.current();
     } catch (err) {
-        throw new Boom.serverUnavailable('The /weather endpoint is temporarily unavailable');
+        throw Boom.serverUnavailable('The /weather endpoint is temporarily unavailable');
     }
 };
 
@@ -21,7 +21,7 @@ export const current = () => {
                 if (result && result !== '') {
                     return result;
                 } else {
-                    throw new Boom.serverUnavailable('the /Weather endpoint is temporarily unavailable');
+                    throw Boom.serverUnavailable('the /Weather endpoint is temporarily unavailable');
                 }
             }
         );

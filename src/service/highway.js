@@ -5,13 +5,13 @@ import Boom                 from 'boom';
 
 const CACHE_NAME  = config('NAME_VERSION', true) + '_cache_highway';
 const STREAM_NAME = config('NAME_VERSION', true) + '_highway';
-const UNAVAILABLE_ERROR = new Boom.serverUnavailable('the /Highway endpoint is temporarily unavailable');
+const UNAVAILABLE_ERROR = Boom.serverUnavailable('the /Highway endpoint is temporarily unavailable');
 
 export const load = async () => {
     try {
         return await cita.all();
     } catch (err) {
-        throw new Boom.serverUnavailable('the /Highway endpoint is temporarily unavailable' + err);
+        throw Boom.serverUnavailable('the /Highway endpoint is temporarily unavailable' + err);
     }
 };
 
@@ -38,7 +38,7 @@ export const get = async highway => {
             return highways[i];
         }
     }
-    throw new Boom.notFound('Highway [' + highway + '] not found');
+    throw Boom.notFound('Highway [' + highway + '] not found');
 };
 
 redisPubSub.subscribe(STREAM_NAME);

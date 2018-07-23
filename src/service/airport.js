@@ -12,7 +12,7 @@ export const departures = async () => {
                 if (result && result !== '') {
                     return result;
                 } else {
-                    throw new Boom.serverUnavailable('Airport departures are temporarily unavailable');
+                    throw Boom.serverUnavailable('Airport departures are temporarily unavailable');
                 }
             }
         );
@@ -25,7 +25,7 @@ export const arrivals = async () => {
                 if (result && result !== '') {
                     return result;
                 } else {
-                    throw new Boom.serverUnavailable('Airport arrivals are temporarily unavailable');
+                    throw Boom.serverUnavailable('Airport arrivals are temporarily unavailable');
                 }
             }
         );

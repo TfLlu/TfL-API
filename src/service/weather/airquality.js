@@ -5,7 +5,7 @@ import Boom                 from 'boom';
 
 const CACHE_NAME  = config('NAME_VERSION', true) + '_cache_weather_airquality';
 const STREAM_NAME = config('NAME_VERSION', true) + '_weather_airquality';
-const UNAVAILABLE_ERROR = new Boom.serverUnavailable('all /Weather/Airquality endpoints are temporarily unavailable');
+const UNAVAILABLE_ERROR = Boom.serverUnavailable('all /Weather/Airquality endpoints are temporarily unavailable');
 
 export const load = async () => {
     try {
@@ -38,7 +38,7 @@ export const get = async weatherStation => {
             return weatherStations[i];
         }
     }
-    throw new Boom.notFound('Weather stations [' + weatherStation + '] not found');
+    throw Boom.notFound('Weather stations [' + weatherStation + '] not found');
 };
 
 redisPubSub.subscribe(STREAM_NAME);

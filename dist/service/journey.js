@@ -24,7 +24,7 @@ const plan = exports.plan = (() => {
         try {
             return yield openOV.plan(from, to);
         } catch (boom) {
-            throw new _boom2.default.serverUnavailable('The Journey planner is temporarily unavailable');
+            throw _boom2.default.serverUnavailable('The Journey planner is temporarily unavailable');
         }
     });
 
