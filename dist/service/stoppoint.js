@@ -67,7 +67,7 @@ const getStopPointsFromRedisCache = () => {
         if (result && result !== '') {
             return JSON.parse(result);
         } else {
-            throw _boom2.default.serverUnavailable('all /BikePoints endpoints are temporarily unavailable');
+            throw _boom2.default.serverUnavailable('all /StopPoint endpoints are temporarily unavailable');
         }
     });
 };

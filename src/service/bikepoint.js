@@ -9,7 +9,7 @@ import Boom                 from 'boom';
 
 const CACHE_NAME  = config('NAME_VERSION', true) + '_cache_bikepoint';
 const STREAM_NAME = config('NAME_VERSION', true) + '_bikepoint';
-const UNAVAILABLE_ERROR = Boom.serverUnavailable('all /BikePoints endpoints are temporarily unavailable');
+const UNAVAILABLE_ERROR = Boom.serverUnavailable('all /BikePoint endpoints are temporarily unavailable');
 
 var fuzzyOptions = {
     extract: function(obj) { return obj.properties.name + obj.properties.address + obj.properties.city; }
